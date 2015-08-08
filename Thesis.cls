@@ -98,6 +98,10 @@
 \renewcommand{\chaptermark}[1]{\btypeout{\thechapter\space #1}\markboth{\@chapapp\ \thechapter\ #1}{\@chapapp\ \thechapter\ #1}}
 \renewcommand{\sectionmark}[1]{}
 \renewcommand{\subsectionmark}[1]{}
+% Set the beginning of every chapter to whathever is inside the last pair of brackets
+\renewcommand{\chaptername}{} 
+% Suppres the chapter's numbering
+%\renewcommand{\thechapter}{}
 \def\cleardoublepage{\clearpage\if@twoside \ifodd\c@page\else
 \hbox{}
 \thispagestyle{empty}

@@ -25,6 +25,8 @@
 %	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
 
+
+
 \documentclass[11pt, oneside]{Thesis} % The default font size and one-sided printing (no margin offsets)
 
 \graphicspath{{Pictures/}} % Specifies the directory where pictures are stored
@@ -129,7 +131,7 @@ Date:\\
 
 \pagestyle{empty} % No headers or footers for the following pages
 
-\null\vfill % Add some space to move the quote down the page a bit
+\null\vfill % Add some space to move the quote down the page a bit    \renewcommand{\chaptername}{}
 
 \textit{``Thanks to my solid academic training, today I can write hundreds of words on virtually any topic without possessing a shred of information, which is how I got a good job in journalism."}
 
@@ -154,7 +156,7 @@ The Thesis Abstract is written here (and usually kept to just this page). The pa
 
 \clearpage % Start a new page
 
-%----------------------------------------------------------------------------------------
+%----------------------------------------------------------------------------------------    \renewcommand{\chaptername}{}
 %	ACKNOWLEDGEMENTS
 %----------------------------------------------------------------------------------------
 
@@ -173,7 +175,7 @@ The acknowledgements and the people to thank go here, don't forget to include yo
 \pagestyle{fancy} % The page style headers have been "empty" all this time, now use the "fancy" headers as defined before to bring them back
 
 \lhead{\emph{Contents}} % Set the left side page header to "Contents"
-\tableofcontents % Write out the Table of Contents
+\tableofcontents % Write out the Table of Contents    \renewcommand{\chaptername}{}
 
 \lhead{\emph{List of Figures}} % Set the left side page header to "List of Figures"
 \listoffigures % Write out the List of Figures
@@ -253,7 +255,7 @@ $\omega$ & angular frequency & rads$^{-1}$ \\
 % Include the chapters of the thesis as separate files from the Chapters folder
 % Uncomment the lines as you write the chapters
 
-%\input{Chapters/Chapter1}
+\input{Chapters/1_Introduzione}
 %\input{Chapters/Chapter2} 
 %\input{Chapters/Chapter3}
 %\input{Chapters/Chapter4} 
