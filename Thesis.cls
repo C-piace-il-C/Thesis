@@ -189,9 +189,9 @@
 
 \thesistitle{Test ed ottimizzazione di un algoritmo per video compressione H265 su piattaforma ARM embedded} % Your thesis title - this is used in the title and abstract
 %-------------------------------------------------  
-\supervisor{Prof. Ing. Marco \textsc{Raggio} } % You supervisor's name - this is used in the title page
+\supervisor{(Titoli) Marco \textsc{Raggio} } % You supervisor's name - this is used in the title page
 %-------------------------------------------------
-\correlatore{Ing. Paolo \textsc{Lambruschini}}
+\correlatore{(Titoli) Paolo \textsc{Lambruschini}}
 %-------------------------------------------------   
 \examiner{} % Your examiner's name - this is not currently used anywhere in the template, cite it with \examname if you want it
 %-------------------------------------------------   
