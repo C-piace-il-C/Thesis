@@ -163,6 +163,7 @@
 \newcommand*{\supervisor}[1]{\def\supname{#1}}
 \newcommand*{\thesistitle}[1]{\def\ttitle{#1}}
 \newcommand*{\examiner}[1]{\def\examname{#1}}
+\newcommand*{\correlatore}[1]{\def\crelator{#1}}
 \newcommand*{\degree}[1]{\def\degreename{#1}}
 \newcommand*{\newlineauthors}[1]{\def\nauthors{#1}}
 \newcommand*{\inlineauthors}[1]{\def\iauthors{#1}}
@@ -189,6 +190,8 @@
 \thesistitle{Test ed ottimizzazione di un algoritmo per video compressione H265 su piattaforma ARM embedded} % Your thesis title - this is used in the title and abstract
 %-------------------------------------------------  
 \supervisor{Prof. Ing. Marco \textsc{Raggio} } % You supervisor's name - this is used in the title page
+%-------------------------------------------------
+\correlatore{Ing. Paolo \textsc{Lambruschini}}
 %-------------------------------------------------   
 \examiner{} % Your examiner's name - this is not currently used anywhere in the template, cite it with \examname if you want it
 %-------------------------------------------------   
