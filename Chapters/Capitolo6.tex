@@ -1,4 +1,4 @@
-% Chapter Template
+% Chapter 
 
 \chapter{Il progetto} % Main chapter title
 
@@ -11,7 +11,26 @@
 %----------------------------------------------------------------------------------------
 
 \section{Il setup della piattaforma}
-
+La prima decisione che ha riguardato la piattaforma è stato il sistema 
+operativo da installare. Vi sono a disposizione diversi sistemi 
+Unix-like\footnote{http://www.lemaker.org/portal.php?mod=list\&catid=4}, 
+dai più personalizzabili (come Gentoo o Arch Linux) a quelli più
+ \emph{user-friendly} (come Lubuntu); la nostra scelta è ricaduta su Bananian, 
+una distribuzione che deriva da Debian 7, appositamente ottimizzata per il 
+Banana Pi, che abbiamo ritenuto essere il giusto compromesso tra usabilità
+e assenza di software preinstallato a noi non necessario. \\
+Nonostante la possibilità di lavorare senza ambiente grafico, da terminale, 
+risparmiando qualche decina di \emph{megabyte} di RAM, abbiamo deciso di 
+avvalerci di LXDE, un ambiente desktop estremamente leggero, in modo da 
+velocizzare la maggior parte delle nostre interazioni con il sistema. \\
+Essendo tre persone a lavorare su una sola piattaforma, abbiamo optato 
+per collocare la \emph{board} in un laboratorio dell'università dotandola
+di un sistema di controllo remoto basato su \emph{virtual network computing} 
+(VNC), un sistema che utilizza un protocollo \emph{remote framebuffer} (RBF) 
+l'accesso remoto alle interfacce grafiche utente (meglio conosciute come 
+\textbf{GUI}s, \textbf{G}raphical \textbf{U}ser \textbf{I}nterfaces). Inoltre, 
+per facilitare l'accesso ai dati presenti sulle periferiche di memorizzazione, 
+abbiamo dotato il Banana Pi di un server \emph{file transfer protocol} (FTP).
 %----------------------------------------------------------------------------------------
 %	SECTION 2
 %----------------------------------------------------------------------------------------
