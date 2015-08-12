@@ -20,17 +20,28 @@ una distribuzione che deriva da Debian 7, appositamente ottimizzata per il
 Banana Pi, che abbiamo ritenuto essere il giusto compromesso tra usabilità
 e assenza di software preinstallato a noi non necessario. \\
 Nonostante la possibilità di lavorare senza ambiente grafico, da terminale, 
-risparmiando qualche decina di \emph{megabyte} di RAM, abbiamo deciso di 
-avvalerci di LXDE, un ambiente desktop estremamente leggero, in modo da 
+risparmiando qualche decina di \emph{megabyte} di RAM, inizialmente abbiamo 
+deciso di avvalerci di LXDE, un ambiente desktop estremamente leggero, in modo da 
 velocizzare la maggior parte delle nostre interazioni con il sistema. \\
+\\ \\
 Essendo tre persone a lavorare su una sola piattaforma, abbiamo optato 
-per collocare la \emph{board} in un laboratorio dell'università dotandola
+per collocare la \emph{board} in un laboratorio dell'università, dotandola
 di un sistema di controllo remoto basato su \emph{virtual network computing} 
 (VNC), un sistema che utilizza un protocollo \emph{remote framebuffer} (RBF) 
-l'accesso remoto alle interfacce grafiche utente (meglio conosciute come 
+per l'accesso remoto alle interfacce grafiche utente (meglio conosciute come 
 \textbf{GUI}s, \textbf{G}raphical \textbf{U}ser \textbf{I}nterfaces). Inoltre, 
 per facilitare l'accesso ai dati presenti sulle periferiche di memorizzazione, 
 abbiamo dotato il Banana Pi di un server \emph{file transfer protocol} (FTP).
+\\ \\ 
+Tuttavia, nella fase finale del progetto, l'intefaccia grafica è stata 
+abbandonata in modo da permettere una risposta del sistema più immediata e una 
+minore allocazione di risorse; è stato dunque possibile disattivare 
+l'accelerazione hardware, necessaria in un ambiente grafico, permettendo il 
+risparmio di circa 30MB di RAM. Insieme alla GUI è stata accantonato il 
+controllo remoto tramite VNC (fortemente dispendioso a causa del suo approccio 
+\emph{pixel-based}) a favore di un accesso tramite SSH (\emph{secure shell}), 
+più essenziale e meno dispersivo.
+
 %----------------------------------------------------------------------------------------
 %	SECTION 2
 %----------------------------------------------------------------------------------------
@@ -42,7 +53,17 @@ abbiamo dotato il Banana Pi di un server \emph{file transfer protocol} (FTP).
 %----------------------------------------------------------------------------------------
 
 \section{I software di encoding presi in considerazione}
-
+Inizialmente, tre software di encoding sono stati individuati come possibili
+candidati per il progetto:
+\begin{itemize}
+\item f265
+\item HM (\textbf{H}EVC Test \textbf{M}odel)
+\item x265
+\end{itemize}
+Il primo è stato subito scartato non appena è stato chiaro che il sorgente non 
+è compatibile con la piattaforma in nostro possesso (il codice è stato scritto 
+unicamente per architettura x86).
+I rimanenti due sono stati oggetto di 
 %----------------------------------------------------------------------------------------
 %	SECTION 4
 %----------------------------------------------------------------------------------------
