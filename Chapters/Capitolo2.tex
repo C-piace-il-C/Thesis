@@ -82,6 +82,21 @@ sempre più complesse.
 // Passare dalla legge di Moore al parallelismo: perché ad un certo \\
 // punto è servito mettere più \emph{core} sullo stesso \emph{die}?
 
+A metà del 2005 si era giunti ad un punto in cui non era più possibile 
+aumentare la potenza di calcolo di un processore semplicemente introducendo
+più transistor e incrementando la frequenza di lavoro: sebbene Intel avesse 
+dichiarato possibile raggiungere frequenze pari a 10GHz, dovette presto 
+ricredersi quando, raggiunti i 3.8GHz con il Pentium 4 670, si verificarono 
+fenomeni di dispersione di potenza nei transistor ad un ulteriore aumento della 
+frequenza, con un processo produttivo di 90nm.
+Questo, e le temperature raggiunte da così tanti transistor che operano a 
+frequenze così elevate, ha reso necessario un cambio di mentalità, facendo 
+passare da una ``corsa al GHz'' a un inclusione di più processori (che 
+prendono il nome di \emph{core}) sullo stesso \emph{die}. 
+Le configurazioni \emph{multi core} hanno permesso che continuasse il 
+\emph{trend} dell'incremento della potenza in concomitanza con il crescere 
+del numero dei transistor, introducendo però una grande complicazione nella 
+progettazione di un software che volesse sfruttare questo parallelismo.
 %-----------------------------------
 %	SUBSECTION 2
 %-----------------------------------
