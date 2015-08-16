@@ -97,6 +97,51 @@ Le configurazioni \emph{multi core} hanno permesso che continuasse il
 \emph{trend} dell'incremento della potenza in concomitanza con il crescere 
 del numero dei transistor, introducendo però una grande complicazione nella 
 progettazione di un software che volesse sfruttare questo parallelismo.
+È infatti necessario prestare particolari accorgimenti nella realizzazione 
+di codici parallelizzati, in quanto è molto probabile, se non si presta la 
+dovuta attenzione, creare situazioni di \emph{race condition}, in cui due (o 
+più) \emph{thread} devono accedere e modificare la stessa risorsa globale; 
+senza una sincronizzazione o la definizione di una operazione mutuamente 
+esclusiva, il comportamento dei due \emph{thread} non è prevedibile a priori. 
+Ad esempio, se entrambi cercassero di accedere alla stessa variabile per 
+incrementarla, a seconda dell'ordine in cui verranno eseguite queste operazioni 
+cambierà il risultato ottenuto:
+\begin{table}[htbp]
+  \centering
+  \subfloat[Comportamento corretto \label{tab:corretto}]
+  {
+    \centering
+    \begin{tabular}{c|c|c|c}
+      \multicolumn{1}{c|}{\textbf{Thread 1}}  	&
+      \multicolumn{1}{c|}{\textbf{Thread 2}}  	&
+      \multicolumn{1}{c|}{}			&
+      \multicolumn{1}{c} {\textbf{Valore}}	\\
+      \hline
+      Read value     &                & $\leftarrow $ & 0 \\
+      Increase value &                &               & 0 \\
+      Write back     &                & $\rightarrow$ & 1 \\
+                     & Read value     & $\leftarrow $ & 1 \\
+                     & Increase value &               & 1 \\
+                     & Write back     & $\rightarrow$ & 2 \\
+    \end{tabular}
+  }\qquad\qquad 
+  \subfloat[Comportamento non corretto \label{tab:non_corretto}]{
+    \centering
+    \begin{tabular}{c|c|c|c}
+      \multicolumn{1}{c|}{\textbf{Thread 1}}  	&
+      \multicolumn{1}{c|}{\textbf{Thread 2}}  	&
+      \multicolumn{1}{c|}{}			&
+      \multicolumn{1}{c} {\textbf{Valore}}	\\
+      \hline
+      Read value     &                & $\leftarrow $  & 0 \\
+                     &  Read value    & $\leftarrow $  & 0 \\
+      Increase value &                &                & 0 \\
+                     & Increase value &                & 0 \\
+      Write back     &                & $\rightarrow$  & 1 \\
+                     & Write back     & $\rightarrow$  & 1 \\
+    \end{tabular}
+  }
+\end{table}
 %-----------------------------------
 %	SUBSECTION 2
 %-----------------------------------
