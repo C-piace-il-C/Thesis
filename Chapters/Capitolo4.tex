@@ -10,7 +10,38 @@
 %	SECTION 1
 %----------------------------------------------------------------------------------------
 
-\section{Suddivisione in blocchi dell'immagine}
+\section{Suddivisione in blocchi dell'immagine} 
+Un'immagine viene inizialmente suddivisa in \emph{coding tree unit} (CTU), di 
+forma quadrata e dimensione costante per tutta la sequenza video: 64x64, 32x32 
+o 16x16 pixel. Questa ``flessibilità'' nella dimensione del blocco fondamentale 
+della suddivisione è stata introdotta da HEVC, in quanto tutti i suoi 
+predecessori utilizzano un \emph{macroblocco} di 16x16 pixel; ciò permette a 
+HEVC di sapersi adattare meglio a -e comprimere maggiormente- video di diverse 
+dimensioni.
+Il CTU è un'unità logica che consiste di tre ulteriori blocchi: Luma, 
+ChromaB e ChromaR (Y, Cb e Cr). Ognuno di questi blocchi è un 
+\emph{coding tree block} (CTB), ed è della stessa dimensione relativa 
+del CTU, sebbene la dimensione effettiva di ogni blocco sia regolata dal 
+\emph{chroma sampling format}: se il formato fosse 4:2:0, tipico di questi 
+encoding, il blocco Y sarebbe 64x64 pixel, mentre i due blocchi di crominanza 
+risulterebbero di 32x32 pixel. Quando un blocco risulta più piccolo del 
+CTU di partenza (in questo caso, e quasi sempre, i due di crominanza) 
+subisce un \emph{upscaling}: questo comporta una minore definizione e una 
+maggiore compressione dell'immagine finale, resa ammissibile dalla maggiore 
+sensibilità dell'apparato visivo umano alla luminanza rispetto al colore.
+// Qui servirebbe un'immagine
+Il CTB può essere ulteriormente suddiviso in \emph{coding blocks} (CB), che 
+sono il punto in cui viene decisa quale tipo di \emph{prediction} utilizzare.
+Supponendo di avere un CTB di dimensione 64x64 la suddivisione può essere 
+effettuata con CB grandi 64x64, 32x32, 16x16 o 8x8: nello stesso gruppo di 
+CTB la dimensione dei CB deve essere omogenea, mentre può differire tra CTB di 
+CTU diversi. Il CB, così come il CTB, consiste ancora nei tre blocchi Y, Cb e 
+Cr, che definiscono un \emph{coding unit} (CU), ovverò l'unità in cui viene 
+codificato il tipo di predizione. La scelta di quest'ultima è autonoma per ogni 
+CU.
+// E qui ne servirebbe un'altra
+
+
 
 %----------------------------------------------------------------------------------------
 %	SECTION 2
