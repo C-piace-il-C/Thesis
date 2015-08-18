@@ -34,16 +34,23 @@ sensibilità dell'apparato visivo umano alla luminanza rispetto al colore.
     \includegraphics[scale=0.20]{Figures/CTU-CTB}
   \caption{Suddivisione del CTU in CTB}
 \end{figure}
+// Rivedere questo paragrafo: ovunque viene detto che il CTB è suddiviso \\
+// in CU. \\
 Il CTB può essere ulteriormente suddiviso in \emph{coding blocks} (CB), che 
 sono il punto in cui viene decisa quale tipo di \emph{prediction} utilizzare.
 Supponendo di avere un CTB di dimensione 64x64 la suddivisione può essere 
-effettuata con CB grandi 64x64, 32x32, 16x16 o 8x8: nello stesso gruppo di 
-CTB la dimensione dei CB deve essere omogenea, mentre può differire tra CTB di 
-CTU diversi. Il CB, così come il CTB, consiste ancora nei tre blocchi Y, Cb e 
+effettuata con CB grandi 64x64, 32x32, 16x16 o 8x8, ottenendo una struttura
+detta \emph{quad-tree}, in cui il CTB è suddiviso ricorsivamente. 
+Il CB, così come il CTB, consiste ancora nei tre blocchi Y, Cb e 
 Cr, che definiscono un \emph{coding unit} (CU), ovverò l'unità in cui viene 
 codificato il tipo di predizione. La scelta di quest'ultima è autonoma per ogni 
 CU.
-// E qui ne servirebbe un'altra
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.50]{Figures/CTB-CU-CB}
+  \caption[Suddivisione del CTB in CU]{Suddivisione di un CTB 64x64 in una 
+struttura a quadtree}
+\end{figure}
 
 
 %----------------------------------------------------------------------------------------
