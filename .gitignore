@@ -2,7 +2,7 @@
 # Do not add the .pdf created in the main folder, add a .pdf if it's located
 # in another folder (e.g., the Pictures folder)
 /*.pdf
-
+/Figures/*converted-to.pdf
 ### TeX-related files
 ## Core latex/pdflatex auxiliary files:
 *.aux
