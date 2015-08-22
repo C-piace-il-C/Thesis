@@ -49,7 +49,16 @@ CU.
   \centering
   \includegraphics[scale=0.50]{Figures/CTB-CU-CB}
   \caption[Suddivisione del CTB in CU]{Suddivisione di un CTB 64x64 in una 
-struttura a quadtree}
+struttura a \emph{quadtree}}
+\end{figure}
+In caso ci sia bisogno di una maggiore precisione nella predizione (e.g., 
+oggetti minuscoli che si muovono in un CB 8x8) è possibile suddividere il
+\emph{coding block} in \emph{prediction block}, che non seguono la struttura 
+a quadtree dei blocchi precedenti:
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.50]{Figures/PB}
+  \caption{Possibili strutture di un \emph{prediction block}}
 \end{figure}
 %----------------------------------------------------------------------------------------
 %	SECTION 2
