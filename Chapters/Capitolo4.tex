@@ -52,14 +52,21 @@ CU.
 struttura a \emph{quadtree}}
 \end{figure}
 In caso ci sia bisogno di una maggiore precisione nella predizione (e.g., 
-oggetti minuscoli che si muovono in un CB 8x8) è possibile suddividere il
-\emph{coding block} in \emph{prediction block}, che non seguono la struttura 
-a quadtree dei blocchi precedenti:
+oggetti minuscoli che si muovono in un CB 8x8) è possibile suddividere i
+\emph{coding block} in \emph{prediction block} (PB), che non seguono la 
+struttura a quadtree dei blocchi precedenti:
 \begin{figure}[H]
   \centering
   \includegraphics[scale=0.50]{Figures/PB}
   \caption{Possibili strutture di un \emph{prediction block}}
 \end{figure}
+Un PB definisce una regione che, per effettuare una predizione, utilizza gli 
+stessi parametri di movimento: il numero di ipotesi di movimento (che può 
+valere uno o due a seconda che si usi l'immagine precedente o quest'ultima 
+e le successiva per cercare il blocco che si è mosso) e, per ognuna di queste, 
+l'indice dell'immagine di riferimento e il vettore di movimento.
+L'insieme dei tre PB, che possiedono lo stesso tipo di suddivisione, 
+forma una \emph{prediction unit} (PU).
 %----------------------------------------------------------------------------------------
 %	SECTION 2
 %----------------------------------------------------------------------------------------
