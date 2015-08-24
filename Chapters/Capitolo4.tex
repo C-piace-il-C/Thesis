@@ -77,7 +77,16 @@ viene chiamata \emph{residual quadtree} (RQT); solitamente la suddivisione
 %----------------------------------------------------------------------------------------
 
 \section{Intra prediction}
-
+Su un blocco di campioni contigui che possiedono gli stessi parametri 
+predittivi, siano essi CB o PB, verrà eseguita la stessa 
+\emph{intra prediction}.
+Di quest'ultima esistono due tipologie a seconda delle caratteristiche 
+del blocco: in caso di figure e strutture geometriche sarà utilizzata 
+la \emph{angular prediction}, viceversa, se la predizione viene eseguita 
+su contenuti meno strutturati, sarà eseguita una \emph{planar + DC prediction}. 
+In entrambi i casi, la predizione si basa sui campioni contigui (o 
+\emph{neighbour}) al blocco che si trovano a sinistra e a destra di 
+quest'ultimo.
 %-----------------------------------
 %       SUBSECTION 1
 %-----------------------------------
