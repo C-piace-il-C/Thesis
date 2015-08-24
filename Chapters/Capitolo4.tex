@@ -87,11 +87,24 @@ su contenuti meno strutturati, sarà eseguita una \emph{planar + DC prediction}.
 In entrambi i casi, la predizione si basa sui campioni contigui (o 
 \emph{neighbour}) al blocco che si trovano a sinistra e a destra di 
 quest'ultimo.
+
+\paragraph*{Pre-filtering}
+Prima di effettuare una delle due predizioni è possibile eseguire uno 
+\emph{smoothing filter} sui campioni di riferimento, che dipende dal tipo di 
+predizione che verrà successivamente eseguita. Le due possibilità sono le 
+seguenti:
+\begin{enumerate}
+\item Un semplice \emph{lowpass filter} lineare con risposta all'impulso 
+[1 2 1]/4 (a)
+\item Se la dimensione del TB è 32x32 e i campioni di riferimento sono 
+abbastanza ``morbidi'', questi vengono sostituiti con le corrispondenti 
+interpolazioni lineari dei cambioni agli estremi (b)
+\end{enumerate}
 %-----------------------------------
 %       SUBSECTION 1
 %-----------------------------------
 
-\subsection{Motion Estimation}
+\subsection{Placeholder}
 
 %-----------------------------------
 %       SUBSECTION 2
