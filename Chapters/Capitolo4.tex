@@ -53,8 +53,9 @@ struttura a \emph{quadtree}}
 \end{figure}
 In caso ci sia bisogno di una maggiore precisione nella predizione (e.g., 
 oggetti minuscoli che si muovono in un CB 8x8) è possibile suddividere i
-\emph{coding block} in \emph{prediction block} (PB), che non seguono la 
-struttura a quadtree dei blocchi precedenti:
+\emph{coding block} in \emph{prediction block} (PB), che, in caso di 
+\emph{inter prediction}, possono non seguire la struttura a \emph{quadtree} dei
+blocchi precedenti:
 \begin{figure}[H]
   \centering
   \includegraphics[scale=0.50]{Figures/PB}
@@ -67,11 +68,15 @@ e le successiva per cercare il blocco che si è mosso) e, per ognuna di queste,
 l'indice dell'immagine di riferimento e il vettore di movimento.
 L'insieme dei tre PB, che possiedono lo stesso tipo di suddivisione, 
 forma una \emph{prediction unit} (PU).
+Per effettuare la codifica del segnale di errore un CB viene suddiviso in 
+\emph{transform block}, dando forma ad una struttura a \emph{quadtree} che 
+viene chiamata \emph{residual quadtree} (RQT); solitamente la suddivisione 
+è mantenuta uguale per i TB Luma e Chroma.
 %----------------------------------------------------------------------------------------
 %	SECTION 2
 %----------------------------------------------------------------------------------------
 
-\section{Encoder}
+\section{Intra prediction}
 
 %-----------------------------------
 %       SUBSECTION 1
