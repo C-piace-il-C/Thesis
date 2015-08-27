@@ -114,8 +114,38 @@ interpolazioni lineari dei cambioni agli estremi (b)
 %       SUBSECTION 1
 %-----------------------------------
 
-\subsection{Placeholder}
-
+\subsection{Angular prediction}
+Per la predizione angolare l'encoder deve scegliere uno tra 33 possibili angoli:
+ questo tipo di predizione stima in modo accurato le strutture direzionali che 
+sono tipicamente presenti nelle foto, tra cui le più frequenti risultano essere
+ quelle orizzontali e verticali.
+Per far fronte a quest'ultima circostanza, H.265 predispone gli angoli in modo 
+che siano presenti in numero maggiore intorno alle due direzioni più frequenti;
+ il numero totale di angoli e la loro disposizione è il risultato della ricerca 
+di un buon \emph{trade-off} tra qualità e complessità computazionale 
+dell'encoder.
+\\
+// Immagine qui
+\\
+Gli angoli prendono il nome di ``modi predittivi'' (\emph{prediction modes}) e 
+il loro raggruppamento è diviso tra orizzontali e verticali.
+Nell'immagine di cui sopra si può notare come gli angoli ``orizzontali'' siano 
+quelli il cui segmento ha la sua origine in un campione collocato a sinistra, 
+mentre l'origine del segmento degli angoli ``verticali'' risiede in un campione 
+posizionato in alto.\\
+Il parametro angolare $A$ indica la posizione, in termini di campioni, rispetto 
+al campione centrale (che ha valore $0$).
+Utilizzando il raggruppamento e il parametro $A$ è possibile identificare 
+univocamente un modo predittivo; prendendo nuovamente in esame l'immagine la 
+sigla $H+2$ corrisponde al modo predittivo 9, la sigla $H-2$ al modo predittivo 
+11 e così via.\\
+Per effettuare le predizioni dei campioni di un blocco viene prima costruito, 
+per comodità, un array che contiene i campioni di riferimento riposizionati 
+nell'ordine che risulta più conveniente per il modo predittivo scelto; infatti 
+ogni campione $p[x][y]$ da predire viene ottenuto mediante l'interpolazione dei 
+due campioni contigui all'interno dell'array di riferimento, con il fattore di 
+interpolazione che risulta essere proporzionale all'angolo -o modo predittivo- 
+selezionato.
 %-----------------------------------
 %       SUBSECTION 2
 %-----------------------------------
