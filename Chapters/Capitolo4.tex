@@ -61,7 +61,7 @@ blocchi precedenti:
   \includegraphics[scale=0.50]{Figures/PB}
   \caption{Possibili strutture di un \emph{prediction block}}
 \end{figure}
-Un PB definisce una regione che per effettuare una predizione utilizza gli 
+Un PB definisce una regione che, per effettuare una predizione, utilizza gli 
 stessi parametri di movimento: il numero di ipotesi di movimento (che può 
 valere uno o due a seconda che si usi l'immagine precedente o quest'ultima 
 e le successiva per cercare il blocco che si è mosso) e, per ognuna di queste, 
@@ -150,8 +150,24 @@ selezionato.
 %       SUBSECTION 2
 %-----------------------------------
 
-\subsection{Transform, Scaling \& Quantization}
+\subsection{DC + Planar prediction }
+\paragraph*{DC} La predizione DC prevede un valore costante per tutto il 
+blocco, determinato dalla media dei valori dei campioni di riferimento che si 
+trovano sopra e a sinistra del blocco.
 
+\paragraph*{Planar} La predizione ``planare'' genera un blocco che presenta 
+colori morbidi e privi di discontinuità marcate anche ai bordi. Questo è 
+ottenuto tramite una semplice interpolazione, punto per punto, dei campioni di 
+riferimento (evidenziati in giallo) con i loro estremi (evidenziati in grigio):
+\begin{align*}
+p[x][y] = 
+%\left
+[&\fcolorbox{yellow}{white}{(N-1-x)*p(-1,y)}+
+  \fcolorbox{black!50}{white}{(x+1)*p(N,-1)}+\\
+ &\fcolorbox{yellow}{white}{(N-1-y)*p(x,-1)}+
+  \fcolorbox{black!50}{white}{(y+1)*p(-1,N)}+N] \gg log_2(N+1)
+%\right]
+\end{align*} 
 %-----------------------------------
 %       SUBSECTION 3
 %-----------------------------------
