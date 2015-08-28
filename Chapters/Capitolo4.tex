@@ -169,12 +169,59 @@ p[x][y] =
 %\right]
 \end{align*} 
 dove $NxN$ è la dimensione del TB.
+\\
+// Inserire immagine
+\\ 
+L'immagine mostra come il risultato (c) sia la media di due interpolazioni: una 
+orizzontale (a) e una verticale (b).
 %-----------------------------------
 %       SUBSECTION 3
 %-----------------------------------
 
-\subsection{CABAC Entropy Coding}
+\subsection{Post-filtering}
+Esistono tre casi in cui è necessario eseguire anche un filtraggio successivo, 
+tipicamente quelli in cui si presentano brusche discontinuità ai bordi, e sono 
+gli \emph{angular mode} esattamente orizzontali e verticali e la 
+\emph{DC prediction}.
+Il fatto che venga eseguito in sole tre evenienze è determinato dalla volontà 
+di limitare la complessità computazionale di fronte a svantaggi che possono 
+risultare  marginali, come nel caso delle predizioni diagonali, e dalla ricerca 
+di un buon rapporto tra qualità e precedente complessità.
+In seguito a test sperimentali è stato notato che le predizioni dei canali 
+Chroma risultano sempre relativamente morbide; conseguentemente questo 
+filtraggio viene eseguito solo sui canali Luma, e consiste nella modifica dei 
+pixel ai bordi all'interno del blocco, secondo le seguenti modalità:
+\begin{enumerate}
+\item \emph{Angular prediction}, angolo verticale: \\
+\begin{align*}
+p(0,y)\mathrel{+}=\left(\frac{p*(-1,y)-p*(-1,-1)}{2}\right) 
+\forall y \in {[0,N-1]}
+\end{align*}
 
+\item \emph{Angular prediction}, angolo orizzontale: \\
+\begin{align*}
+p(x,0)\mathrel{+}=\left(\frac{p*(x,-1)-p*(-1,-1)}{2}\right) 
+\forall x \in {[0,N-1]}
+\end{align*}
+
+\item{ \emph{DC prediction}, posto $dcVal$ il valore della posizione: \\
+\begin{align*}
+p(0,0)=(p*(-1,0)+2dcVal+p*(0,-1)+2)*4
+\end{align*}
+
+Con i campioni ai bordi filtrati nel seguente modo:
+\begin{align*}
+p(x,0)&=(p*(x,-1)+3dcVal+2)*4 \forall y \in {[0,N-1]} \\
+p(0,y)&=(p*(-1,y)+3dcVal+2)*4 \forall y \in {[0,N-1]}
+\end{align*}
+
+Dove $dcVal \in {[0,1]}$
+}
+\end{enumerate}
+
+L'immagine seguente mostra un esempio di CTB Luma interamente predetto intra: \\
+
+// Inserire immagine
 %----------------------------------------------------------------------------------------
 %       SECTION 3
 %----------------------------------------------------------------------------------------
