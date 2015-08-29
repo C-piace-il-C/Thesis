@@ -266,11 +266,23 @@ dell'elevata flessibilità delle strutture di predizione.
 Il \emph{worst case scenario} presenta 16 $MV$ per lato da tenere in 
 considerazione (come mostrato nell'immagine successiva), che porterebbe a 
 complessità di codifica troppo elevate.
-\\
-// Inserire immagine
-\\
+
+\begin{figure}[H]
+  \captionsetup{justification=raggedright}
+  \centering
+  \includegraphics[scale=0.45]{Figures/Inter_pred_2}
+  \begin{flushleft}
+    \caption[Numero massimo di \emph{motion vector} in H.265 e H.264]
+    {Numero massimo di \emph{motion vector} in H.265 (a sinistra) e H.264 \\
+      (a destra). CTU0 possiede 16 PB Luma 8x4 contigui a CTU1 che è composto da
+      un solo PB Luma 64x64. MB0 (\emph{Macro Block)} contiene quattro 
+      partizioni di predizione 4x4 affiancate a MB1 che consta di una 
+      partizione 16x16. }
+  \end{flushleft}
+\end{figure}
+
 H.265 mette a disposizione un algoritmo per la costruzione di vettori 
-\emph{candidate MVP} chiamato \emph{advanced motion vector prediction} (MVP), 
+\emph{candidate MVP} chiamato \emph{advanced motion vector prediction} (AMVP), 
 ottenuto in seguito ad esperimenti esaustivi volti a trovare oredizioni che 
 minimizzassero la complessità di codifica pur mantenendo buoni livelli di 
 predizione (i.e., bassa entropia del segnale di errore MVD).\\
