@@ -226,8 +226,117 @@ L'immagine seguente mostra un esempio di CTB Luma interamente predetto intra: \\
 %       SECTION 3
 %----------------------------------------------------------------------------------------
 
-\section{Decoder}
+\section{Inter Prediction}
+L'\emph{inter prediction} sfrutta la correlazione temporale dei frame per 
+ottenere una \emph{motion compensated prediction} (MCP), ovvero un PB predetto 
+a partire da PB ``predittori'' che appartegono a frame precedentemente 
+decodificati, supponendo che nel PB predetto essi siano traslati: 
+\\
+// Inserire immagine
+\\
+Per ogni PB l'encoder ricava un vettore ${(\Delta x,\Delta y,\Delta t)}$ 
+chiamato \emph{motion data}, dove ${(\Delta x,\Delta y)}$ è il 
+\emph{motion vector} e indica la traslazione compiuta dal PB in questione, 
+mentre ${(\Delta t)}$ è l'indice temporale dell'immagine a cui appartiene il PB 
+predittore.
+È anche possibile effettuare una ``bipredizione'': in questo caso si usano 
+due \emph{motion data} ottenendo due MCP di cui viene ricavata la media (che 
+può anche essere pesata) per ottenere il risultato, come illustra la figura 
+precedente.
+\\
+Viene inoltre sfruttata la correlazione spaziale (ma sempre legata al tempo) 
+dei \emph{motion vector}, basata sulla supposizione che i \emph{motion vector} 
+relativi a PB spazialmente vicini non differiscano eccessivamente, eccezion 
+fatta per eventuali punti di discontinuità come i cambi di oggetto. È inoltre 
+ipotizzata una discreta continuità nel tempo per quanto riguarda i movimenti 
+dell'intero \emph{frame}, escludendo variazioni brusche come i cambi di scena.
+\\
+Tutto questo viene tradotto nel concetto di \emph{motion vector predictor} 
+(MVP); invece di trasmettere un \emph{motion vector} per ogni PB l'encoder 
+trasmette l'errore o la \emph{motion vector difference} (MVD), tra quello 
+predetto a partire da blocchi spazialmente o temporalmente contigui e quello 
+normalmente calcolato con $MVD=MV-MP$.
+Il decoder riceve la MVD e la sintassi necessaria a determinare il MVP (ovvero 
+il tipo di predizione da utilizzare) e può dunque ricavare $MV$ come $MVD+MVP$.
+ 
+Sebbene gli algoritmi che hanno preceduto H.265 (H.264, AVC) possiedano questo 
+tipo di predizione, essi si limitano a calcolare $MVP$ come una media dei $MV$ 
+vicini spazialmente: questa strategia non è più applicabile in HEVC a causa 
+dell'elevata flessibilità delle strutture di predizione.
+Il \emph{worst case scenario} presenta 16 $MV$ per lato da tenere in 
+considerazione (come mostrato nell'immagine successiva), che porterebbe a 
+complessità di codifica troppo elevate.
+\\
+// Inserire immagine
+\\
+H.265 mette a disposizione un algoritmo per la costruzione di vettori 
+\emph{candidate MVP} chiamato \emph{advanced motion vector prediction} (MVP), 
+ottenuto in seguito ad esperimenti esaustivi volti a trovare oredizioni che 
+minimizzassero la complessità di codifica pur mantenendo buoni livelli di 
+predizione (i.e., bassa entropia del segnale di errore MVD).\\
+Una parte della sintassi di HEVC serve a comunicare al decoder quale MVP 
+utilizzare tra quelli candidati, che sono due e scelti nei modi seguenti:
+\begin{itemize}
+\item Due \emph{spatial candidate} che derivano da cinque blocchi spazialmente 
+vicini;
+\item Viene tenuto come riserva un \emph{temporal candidate} derivato da due 
+blocchi co-locati e temporalmente vicini:
+\begin{itemize}
+\item Nel caso che i due \emph{spatial candidate} siano uguali, o se uno di loro
+ non sia disponibile, i due vettori candidati saranno uno spaziale e uno 
+temporale;
 
+\item Se entrambi i candidati spaziali non fossero disponibili, verrà 
+considerato il vettore candidato temporale di riserva ed uno 
+\emph{zero motion vector};
+
+\item Nell'eventualità che sia i candidati spaziali sia i candidati temporali 
+non siano disponibili, entrambi i candidati saranno \emph{zero motion vector}.
+\end{itemize}
+\end{itemize}
+
+Gli \emph{spatial candidate} sono ottenuti prendendo in considerazione cinque 
+blocchi spazialmente vicini suddivisi in due gruppi: il gruppo A contenente i 
+due blocchi in basso a sinistra rispetto a quello che si vuole predire, il 
+gruppo B con al suo interno tre blocchi in alto.
+Generalmente, se i vettori dei blocchi considerati sono ricondicibili allo 
+stesso \emph{reference id} (l'indice dell'immagine a cui fanno 
+riferimento) di quello del blocco che si vuole predire, tali vettori saranno 
+MVP.
+Viceversa, MVP sarà il vettore scalato secondo una formula che dipende dalla 
+differenza temporale dei \emph{reference id}.
+Non sono invece presi in considerazione blocchi a destra o in basso dal 
+momento che tali PB non sono ancora stati decodificati e non sono disponibili 
+al decoder per la predizione.
+\\
+Per quanto concerne il \emph{temporal candidate} si lavora su una immagine 
+co-locata e temporalmente vicina della quale, in fase di decodifica, si 
+possiedono tutte le informazioni (ovvero un frame già decodificato); diversi 
+esperimenti hanno dimostrato che i blocchi da prendere in considerazione sono 
+due: quello al centro e quello in basso a destra rispettivamente alla posizione 
+del blocco che si vuole predire.
+Specificamente il vettore viene predetto utilizzando sempre il blocco in basso 
+a destra, salvo la mancanza di disponibilità d quest'ultimo; ciò significa che 
+esso risiede fuori dai bordi dell'immagine o viola vincoli imposti per motivi 
+di memoria.
+\newline \\
+Infine HEVC risolve un problema legato alla struttura di suddivisione delle 
+immagini \emph{quadtree}: quest'ultime permettono una grande flessibilità 
+delle dimensioni dei blocchi con un basso costo di \emph{overhead} in termini 
+di \emph{bit rate}. Per l'\emph{inter prediction} la struttura a \emph{quadtree}
+ permette di suddividere minuziosamente quelle parti di immagine dhe presentano 
+bruschi movimenti rispetto alle parti più statiche che non richiedono una 
+grande informazione di movimento. Questo tipo di raggruppamento, tuttavia, 
+origina facilmente bordi ineffettivi (\emph{over segmentation}); HEVC dispone 
+di un  algoritmo di \emph{block merging} che consente di raggruppare PB con 
+uguali parametri di predizione in modo da trasmetterne una sola copia.
+\\
+Nell'esempio mostrato dall'immagine seguente la parte a) è l'immagine 
+originale, b) è l'immagine scomposta in PB secondo la struttura a 
+\emph{quadtree} mentre c) mostra il risultato del \emph{block merging}.
+\\
+// Inserire immagine 
+\\
 %-----------------------------------
 %       SUBSECTION 1
 %-----------------------------------
