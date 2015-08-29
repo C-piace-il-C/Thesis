@@ -6,9 +6,9 @@
 
 \lhead{Capitolo 4. \emph{L'algoritmo H265}} % Change X to a consecutive number; this is for the header on each page - perhaps a shortened title
 
-%----------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------
 %	SECTION 1
-%----------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------
 
 \section{Suddivisione in blocchi dell'immagine} 
 Un'immagine viene inizialmente suddivisa in \emph{coding tree unit} (CTU), di 
@@ -72,10 +72,9 @@ Per effettuare la codifica del segnale di errore un CB viene suddiviso in
 \emph{transform block}, dando forma ad una struttura a \emph{quadtree} che 
 viene chiamata \emph{residual quadtree} (RQT); solitamente la suddivisione 
 è mantenuta uguale per i TB Luma e Chroma.
-%----------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------
 %	SECTION 2
-%----------------------------------------------------------------------------------------
-
+%-------------------------------------------------------------------------------
 \section{Intra prediction}
 Su un blocco di campioni contigui che possiedono gli stessi parametri 
 predittivi, siano essi CB o PB, verrà eseguita la stessa 
@@ -162,10 +161,10 @@ riferimento (evidenziati in giallo) con i loro estremi (evidenziati in grigio):
 \begin{align*}
 p[x][y] = 
 %\left
-[&\fcolorbox{yellow}{white}{(N-1-x)*p(-1,y)}+
-  \fcolorbox{black!50}{white}{(x+1)*p(N,-1)}+\\
- &\fcolorbox{yellow}{white}{(N-1-y)*p(x,-1)}+
-  \fcolorbox{black!50}{white}{(y+1)*p(-1,N)}+N] \gg log_2(N+1)
+[&\fcolorbox{yellow}{white}{$(N-1-x)*p(-1,y)$}+
+  \fcolorbox{black!50}{white}{$(x+1)*p(N,-1)$}+\\
+ &\fcolorbox{yellow}{white}{$(N-1-y)*p(x,-1)$}+
+  \fcolorbox{black!50}{white}{$(y+1)*p(-1,N)$}+N] \gg log_2(N+1)
 %\right]
 \end{align*} 
 dove $NxN$ è la dimensione del TB.
@@ -222,9 +221,9 @@ Dove $dcVal \in {[0,1]}$
 L'immagine seguente mostra un esempio di CTB Luma interamente predetto intra: \\
 
 // Inserire immagine
-%----------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------
 %       SECTION 3
-%----------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------
 
 \section{Inter Prediction}
 L'\emph{inter prediction} sfrutta la correlazione temporale dei frame per 
@@ -349,32 +348,48 @@ originale, b) è l'immagine scomposta in PB secondo la struttura a
 \\
 // Inserire immagine 
 \\
-%-----------------------------------
-%       SUBSECTION 1
-%-----------------------------------
+%-------------------------------------------------------------------------------
+%       SECTION 4
+%-------------------------------------------------------------------------------
 
-\subsection{Intra Prediction}
+\section{Transform and Quantization}
+Nel \emph{block-based video coding} i segnali di errore residui che derivano 
+dalle predizioni intra o inter vengono trasformati e quantizzati prima di 
+essere trasmessi.
+Più nel dettaglio, un'immagine è suddivisa in blocchi quadrati di dimensione $NxN$, dove $N=2^M$ con $M \in \mathbb{N}$. Per ogni blocco esisterà un blocco 
+residuo $U$ che verrà trasformato e quantizzato. \\
+L'immagine mostra il percorso dei dati durante la fase di encoding (a) e 
+di decoding (b):
+\begin{figure}[H]
+  \centering
+  \begin{tabular}{cc}
+    \subfloat[]{\includegraphics[scale=.66]{Figures/Transf_and_quant_a}}
+    &\qquad
+    \subfloat[]{\includegraphics[scale=.66]{Figures/Transf_and_quant_b}}
+  \end{tabular}
+  \caption{\emph{Data flow} di encoding e decoding.}
+\end{figure}
+\subsection{Transform}
+Tipicamente le trasformate sono delle matrici costruite in modo tale che, in 
+assenza di quantizzazione, sommando trasformata e trasformata inversa si 
+ottenga un risultato praticamente lossless.
+HEVC utilizza due tipologie di trasformate, ovvero quelle derivate dalla DCT e
+quelle derivate dalla DST; fornisce inoltre delle matrici precostruite per 
+eseguire l'antitrasformata DCT e DST per tutte le possibili dimensioni dei 
+blocchi: $4x4$, $8x8$, $16x16$ e $32x32$.
+Queste matrici contengono approssimazioni ad interi con precisione finita dei 
+coefficienti di trasformazione DCT-II; questo sistema riduce di molto la 
+complessità di encoder e decoder, e risolve un problema che era presente in 
+H.261, ovvero la deriva dovuta a lievi disallineamenti nella rappresentazione 
+fixed point dei coefficienti tra la matrice di trasformazione, costruita 
+arbitrariamente dal'implementatore dell'encoder, e quella di antitrasformazione 
+fornita dallo standard. \\
+Errori di questo tipo si ripercuotono amplificati in ogni immagine successiva, 
+costringendo a dover trovare un modo di ovviare al problema (il sopracitato 
+H.261 costringeva un aggiornamento periodico del segnale che consisteva in una 
+immagine codificata interamente intra).
+\subsection{Quantization}
 
-%-----------------------------------
-%       SUBSECTION 2
-%-----------------------------------
 
-\subsection{Inter Prediction}
 
-%-----------------------------------
-%       SUBSECTION 3
-%-----------------------------------
 
-\subsection{Scaling \& Inverse Transform}
-
-%-----------------------------------
-%       SUBSECTION 4
-%-----------------------------------
-
-\subsection{In-Loop Filter}
-
-%-----------------------------------
-%       SUBSECTION 5
-%-----------------------------------
-
-\subsection{DPB \& Output}
