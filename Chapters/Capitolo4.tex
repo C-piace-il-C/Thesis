@@ -389,7 +389,28 @@ costringendo a dover trovare un modo di ovviare al problema (il sopracitato
 H.261 costringeva un aggiornamento periodico del segnale che consisteva in una 
 immagine codificata interamente intra).
 \subsection{Quantization}
-
-
-
-
+Con ``quantizzazione'' si intende la divisione dei valori trasformati 
+utilizzando un passo di quantizzazione $Q_s$ (\emph{quantization step}) definito
+ attraverso il parametro di quantizzazione $Q_p$ come segue:
+\begin{align*}
+Q_s = \left(2^{\frac{1}{6}}\right)^{(Q_p-4)}
+\end{align*}
+Dalla formula si può notare come una variazione di $1$ per $Q_p$ si traduca in 
+una moltiplicazione di $Q_s$ per un fattore $2^{\frac{1}{6}}\approx 1.12$, ovvero 
+nell'incremento di $Q_s$ del $12\%$. Una variazione di $6$ si traduce in un 
+raddoppiamento di $Q_s$ \\
+Si può anche eseguire una quantizzazione \emph{frequency dependent} specificando
+ una matrice $w$ con un valore di quantizzazione per ogni frequenza, con un 
+risultato che risulta il seguente:
+\begin{align*}
+q[x][y] = \frac{tc[x][y]}{q[x][y]*Q_s}+offset
+\end{align*}
+dove $tc$ sono i coefficienti trasformati. \\
+Si ottiene una compressione in quanto i valori, una volta quantizzati, verranno 
+arrotondati all'intero più vicino. Il fine è quello di portare a 0 il maggior 
+numero possibile di coefficienti in modo che la codifica successiva (marcata 
+come \emph{Entropy encode}) sia in grado di comprimere al meglio la sequenza in 
+uscita; dividendo un intero per un numero più grande il risultato sarà più 
+vicino a zero. Tipicamente le matrici di quantizzazione possiedono valori più 
+grandi alle basse frequenze e viceversa alle alte, perché il contenuto utile 
+per il sistema visivo umano è concentrato alle basse frequenze.
