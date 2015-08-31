@@ -462,9 +462,17 @@ campioni rispetto ad una delle funzioni continue più semplici, ovvero una rampa
 che attraversa il confine \textbf{/*(di che cosa?)*/}. Se questo indice supera 
 una certa soglia, che dipende dal passo di quantizzazione $Q_p$ secondo una 
 \emph{look-up table}, si esegue il filtraggio.
-\\
-// Inserire immagine
-\\
+
+\begin{figure}[H]
+  \captionsetup{justification=raggedright}
+  \centering
+  \includegraphics[scale=0.45]{Figures/Deblocking_filter}
+    \caption[Filtraggio \emph{deblocking} di tipo \textbf{normal}]
+    {Filtraggio \emph{deblocking} di tipo \textbf{normal}: la linea nera mostra
+      il confine originale del blocco, la linea grigia tratteggiata quello 
+      nuovo}
+\end{figure}
+
 L'immagine mostra il risultato di un filtraggio \textbf{normal} eseguito su un 
 vettore di 8 campioni, con questi ultimi appartenenti a due blocchi confinanti 
 chiamati $P$ e $Q$. \\
