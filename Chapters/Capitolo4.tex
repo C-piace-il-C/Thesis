@@ -420,7 +420,32 @@ per il sistema visivo umano è concentrato alle basse frequenze.
 %-------------------------------------------------------------------------------
 
 \section{In-Loop Filters}
-
+Lo standard ibrido di codifica HEVC scompone i frame attraverso una struttura a 
+blocchi per effettuare la compressione; questa suddivisione porta spesso alla 
+comparsa di artefatti che danno alle sequenze video un'aspetto quadrettato, 
+peggiorandone la qualità visiva. Un esempio tipico di causa della discontinuità 
+tra i blocchi è la predizione inter di due blocchi contigui che nel frame
+ di riferimento erano distanti, oppure anche la codifica di due blocchi contigui
+ con modalità predittive differenti (due intra diversi, una inter e una intra, 
+etc.). Per porre rimedio a questi artefatti lo standard HEVC specifica due 
+filtraggi: il \emph{deblocking filter} e il \emph{sample adaptive offset} (SAO).
+\\ \\
+Questi filtraggi sono chiamati \emph{in-loop filters} perché vengono eseguiti 
+all'interno dei cicli di encoding/decoding, e i risultati vengono utilizzati 
+nei cicli successivi oltre che durante la visualizzazione delle sequenze 
+decodificate; in questo modo si trae vantaggio da questa procedura anche durante
+ il decoding dei frame successivi, preché le predizioni inter vengono effettuate
+ a valle di frame reference di maggiore qualità.
+\\ \\
+Il \emph{deblocking filter} si occupa di smussare i confini tra due blocchi in 
+cui è presente una discontinuità, cercando di lavorare solo su quelle 
+introdotte durante la compressione e non quelle originariamente presenti nella 
+sequenza. \\
+Il SAO, invece, si occupa di ridurre gli artefatti dovuti a trasformazioni e 
+quantizzazioni grossolane (chiamati \emph{ringing artifacts}), ed opera 
+sull'output del \emph{deblocking filter} in cascata. \\
+Visto che i due filtraggi operano su due artefatti diversi, i loro benefici 
+sono additivi se eseguiti insieme.
 \subsection{Deblocking filter}
 
 \subsection{Sample Adaptive Offset - SAO}
