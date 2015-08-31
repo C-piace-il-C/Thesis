@@ -446,6 +446,39 @@ quantizzazioni grossolane (chiamati \emph{ringing artifacts}), ed opera
 sull'output del \emph{deblocking filter} in cascata. \\
 Visto che i due filtraggi operano su due artefatti diversi, i loro benefici 
 sono additivi se eseguiti insieme.
-\subsection{Deblocking filter}
-
+\subsection{Deblocking Filter}
+Il \emph{deblocking filter} si applica solo ai confini tra blocchi di tipo CU, 
+PU o TU e non al loro interno; durante la codifica  l'encoder considera gruppi 
+di quattro vettori di campioni perpendicolari ai confini dei blocchi. 
+Specificamente l'encoder esegue alcuni controlli sul primo e sul quarto vettore 
+per decidere:
+\begin{itemize}
+\item Se eseguire il filtraggio o meno;
+\item In caso positivo quale filtraggio applicare tra \textbf{normal} e 
+\textbf{strong}.
+\end{itemize}
+Questi semplici controlli misurano un indice di distorsione dei vettori di 
+campioni rispetto ad una delle funzioni continue più semplici, ovvero una rampa 
+che attraversa il confine \textbf{/*(di che cosa?)*/}. Se questo indice supera 
+una certa soglia, che dipende dal passo di quantizzazione $Q_p$ secondo una 
+\emph{look-up table}, si esegue il filtraggio.
+\\
+// Inserire immagine
+\\
+L'immagine mostra il risultato di un filtraggio \textbf{normal} eseguito su un 
+vettore di 8 campioni, con questi ultimi appartenenti a due blocchi confinanti 
+chiamati $P$ e $Q$. \\
+In generale, un filtraggio \textbf{normal} può arrivare a modificare fino a due
+campioni per lato avvicinandoli alla rampa, come accade nell'immagine.
+Il filtraggio \textbf{strong} viene utilizzato nelle aree che racchiudono 
+contenuti a bassa frequenza, ovverosia quelle in cui il sistema visivo umano è 
+più sensibile alle discontinuità, e consiste in un filtraggio lineare lowpass 
+che comprende tre campioni per lato.
+\\ \\
+Il filtraggio \emph{deblocking} descritto interessa solamente il canale luma, 
+dal momento che per i canali chroma si opera un filtraggio analogo ma più 
+grossolano, in cui vengono eseguiti molti meno controlli e vengono considerati 
+meno campioni: ciò permette di ridurre la complessità dell'encoder a fronte di 
+una bassa perdita di qualità, sempre considerando il fatto che i canali chroma 
+sono meno importanti per il sistema visivo umano.
 \subsection{Sample Adaptive Offset - SAO}
