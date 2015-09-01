@@ -492,3 +492,49 @@ sono meno importanti per il sistema visivo umano.
 \\
 L'immagine mostra il risultato del \emph{deblocking filter} su un frame.
 \subsection{Sample Adaptive Offset - SAO}
+Il SAO è un filtraggio che mira ad eliminare i \emph{ringing artifacts} 
+scaturiti dalla trasformazione e quantizzazione del segnale residuo, e 
+comprende due tecniche di filtraggio: \emph{Edge Offset} (\textbf{EO}) e 
+\emph{Band Offset} (\textbf{BO}).\\
+La scelta tra questi due tipi di filtraggio avviene a livello di CTU, ricordando
+che  algoritmi di \emph{merging} consentono di raggruppare più CTU con parametri
+SAO uguali in modo tale da trasmetterne una sola copia, così da ridurre la 
+ridondanza di informazioni collaterali.
+\\ \\
+L'\emph{edge offset} si occupa di compensare il fenomeno di Gibbs (\emph{Gibbs
+phenomenon}) mostrato nell'immagine.
+\\
+// Inserire immagine
+\\
+Il taglio delle frequenze più alte comporta una distorsione che presenta valli e
+picchi locali pronunciati; il filtraggio consiste inizialmente nella 
+classificazione di ogni campione come valle locale, picco locale, angolo concavo
+e angolo convesso (\emph{local peak/valley}, \emph{convex/concave corner}).
+La classificazione viene fatta confrontando il valore del campione selezionato 
+con quello dei due campioni vicini (detti \emph{neighbour}) che possono essere 
+scelti lungo quattro direzioni: orizzontale, verticale, $45^{\circ}$ e 
+$135^{\circ}$. In seguito, a seconda della classificazione, viene applicato un
+\emph{offset} positivo o negativo al campione: per ogni blocco di filtraggio EO
+l'encoder sceglie e comunica il modulo di quattro valori di offset (uno per ogni
+classe), questo significa che all'interno di un unico blocco EO tutti i campioni
+appartenenti alla stessa classe condividono lo stesso \emph{offset}.
+\\ \\
+Il \emph{band offset} è pensato per ridurre l'errore dovuto alla cattiva 
+quantizzazione del residuo delle predizioni o a sfasamenti dei vettori di moto 
+predetti rispetto a quelli reali. Questo tipo di errore risulta relativamente 
+costante al variare dei campioni e può essere corretto, almeno in media, con un 
+\emph{offset} costante, come mostrato in figura.
+\\
+// Inserire immagine
+\\
+Eventualmente, HEVC permette ulteriori miglioramenti specificando quattro 
+\emph{offset}. \\
+Il range dei vaori dei campioni viene suddiviso in 32 bande omogenee; se i 
+campioni fossero ad 8 bit, con valori da 0 a 255, le bande avrebbero ampiezza 
+pari a 8. A questo punto l'encoder sceglie le quattro bande contigue che 
+raccologono la maggior percentuale di errore rispetto al segnale originale e 
+determina quattro valori di offset, ovverosia uno per ogni banda. 
+Successivamente viene applicato l'\emph{offset} corrispettivo a tutti i campioni
+il cui valore rientra all'interno di una delle suddette quattro bande; per ogni 
+blocco BO l'encoder deve dunque comunicare l'indice della prima delle quattro 
+bande e i valori di offset.
