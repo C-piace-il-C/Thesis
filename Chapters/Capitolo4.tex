@@ -367,6 +367,11 @@ di decoding (b):
   \end{tabular}
   \caption{\emph{Data flow} di encoding e decoding.}
 \end{figure}
+
+%-----------------------------------
+%       SUBSECTION 1
+%-----------------------------------
+
 \subsection{Transform}
 Tipicamente le trasformate sono delle matrici costruite in modo tale che, in 
 assenza di quantizzazione, sommando trasformata e trasformata inversa si 
@@ -386,6 +391,11 @@ Errori di questo tipo si ripercuotono amplificati in ogni immagine successiva,
 costringendo a dover trovare un modo di ovviare al problema (il sopracitato 
 H.261 costringeva un aggiornamento periodico del segnale che consisteva in una 
 immagine codificata interamente intra).
+
+%-----------------------------------
+%       SUBSECTION 2
+%-----------------------------------
+
 \subsection{Quantization}
 Con ``quantizzazione'' si intende la divisione dei valori trasformati 
 utilizzando un passo di quantizzazione $Q_s$ (\emph{quantization step}) definito
@@ -444,6 +454,11 @@ quantizzazioni grossolane (chiamati \emph{ringing artifacts}), ed opera
 sull'output del \emph{deblocking filter} in cascata. \\
 Visto che i due filtraggi operano su due artefatti diversi, i loro benefici 
 sono additivi se eseguiti insieme.
+
+%-----------------------------------
+%       SUBSECTION 1
+%-----------------------------------
+
 \subsection{Deblocking Filter}
 Il \emph{deblocking filter} si applica solo ai confini tra blocchi di tipo CU, 
 PU o TU e non al loro interno; durante la codifica  l'encoder considera gruppi 
@@ -491,6 +506,11 @@ sono meno importanti per il sistema visivo umano.
 // Inserire immagine
 \\
 L'immagine mostra il risultato del \emph{deblocking filter} su un frame.
+
+%-----------------------------------
+%       SUBSECTION 2
+%-----------------------------------
+
 \subsection{Sample Adaptive Offset - SAO}
 Il SAO è un filtraggio che mira ad eliminare i \emph{ringing artifacts} 
 scaturiti dalla trasformazione e quantizzazione del segnale residuo, e 
