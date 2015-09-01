@@ -564,7 +564,31 @@ bande e i valori di offset.
 %-------------------------------------------------------------------------------
 
 \section{CABAC}
-
+Il \emph{Context-Based Adaptive Binary Arithmetic Coding} (CABAC) è il blocco 
+finale all'interno del ciclo di codifica ceh esegue una compressione 
+\emph{lossless} sui dati binari che vengono posti subito dopo in uscita 
+all'encoder. La conpressione si basa sulle proprietà statistiche dei dati 
+relative al loro contesto di codifica (da qui il \emph{context-based}), cercando
+di rendere la dimensione in bit di una parola di codice proporzionale in modo 
+logaritmico alla probabilità del dato che essa codifica (dal teorema di Shannon:
+\textbf{/*QUALE?*/} la codifica ottima pesa $-log_2p$). \\
+CABAC opera solamente sui \emph{syntax element} all'interno del \emph{binary 
+stream}, ovvero quei dati che contengono principalmente i parametri che 
+riguardano gli algoritmi di codifica; il suo compito è dunque quello di ridurre
+l'\emph{overhead} della side information dovuta alla flessibilità dell'encoder 
+video ibrido. \\
+L'immagine mostra il percorso di compressione di un singolo \emph{syntax 
+element} all'interno del CABAC (con i possibili colli di bottiglia evidenziati 
+in rosso):
+\\
+// Inserire immagine
+\\
+Il primo passaggio consiste nella binarizzazione del \emph{syntax element} 
+sostituendolo con una stringa di simboli binari; succesivamente si verifica 
+la parte \emph{context-based}, ovvero l'assegnazione di una probabilità ad ogni 
+simbolo. Infine la stringa di simboli relativi al \emph{syntax element} viene 
+codificata (i.e., associata alla parola di codice) tramite codifica aritmetica e
+posta in uscita.
 %-----------------------------------
 %       SUBSECTION 1
 %-----------------------------------
