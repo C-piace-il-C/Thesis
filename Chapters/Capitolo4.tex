@@ -565,7 +565,7 @@ bande e i valori di offset.
 
 \section{CABAC}
 Il \emph{Context-Based Adaptive Binary Arithmetic Coding} (CABAC) è il blocco 
-finale all'interno del ciclo di codifica ceh esegue una compressione 
+finale all'interno del ciclo di codifica che esegue una compressione 
 \emph{lossless} sui dati binari che vengono posti subito dopo in uscita 
 all'encoder. La conpressione si basa sulle proprietà statistiche dei dati 
 relative al loro contesto di codifica (da qui il \emph{context-based}), cercando
@@ -594,7 +594,32 @@ posta in uscita.
 %-----------------------------------
 
 \subsection{Binarization}
+Uno schema di binarizzazione è una mappa che associa ad ogni valore numerico 
+un'unica sequenza di cifre binarie (chiamate ``bins'', \emph{binary symbols}) 
+in maniera univocamente decifrabile. Lo schema di binarizzazione viene scelto a
+seconda del tipo di \emph{syntax element}, con gli schemi principali che 
+risultano essere i seguenti:
+\begin{itemize}
+\item \emph{Fixed Length}: un valore numerico viene rappresentato con la 
+  classica numerazione a base binaria. Se si usassero tre bin si potrebbero 
+  mappare fino a otto valori: $0 \rightarrow 000$, $1 \rightarrow 001$, 
+  {\ldots}, $6 \rightarrow 110$, $7 \rightarrow 111$
 
+\item \emph{Unary} (U): per rappresentare il numero $N$ si utilizzano 
+  esattamente $N$ simboli $1$ seguiti da uno $0$, ad esempio $5 \rightarrow 
+  111110$
+
+\item \emph{Truncated Unary} (TrU): considerando $cMax$ il valore massimo che 
+  si desidera binarizzare, verrà effettuata una binarizzazione \emph{Unary} 
+  per tutti i numeri eccezion fatta per $cMax$ che non verrà terminato con $0$.
+
+\item \emph{K-th Under Truncated Rice} (TRk): Sia N il numero che si vuole 
+  binarizzare $\Rightarrow V = \left\lfloor\frac{N}{2^k}\right\rfloor$. In 
+  questo modo sono stati rimossi i $k$ bit meno significativi di $N$; il 
+  risultato si ottiene affiancando alla rappresentazione \textbf{TrU} di $V$ 
+  quella \emph{Fixed Length} del valore dei $k$ bit meno significativi.
+
+\end{itemize}
 %-----------------------------------
 %       SUBSECTION 2
 %-----------------------------------
