@@ -625,7 +625,31 @@ risultano essere i seguenti:
 %-----------------------------------
 
 \subsection{Context Modeling}
+Questa è la fase in cui avvengono tutte le decisioni \emph{context-based}, tra
+cui la prima è la scelta della modalità di codifica che può essere \emph{
+regular} o \emph{bypass}. Nel secondo caso si suppone una densità di probabilità
+uniforme e si associa $0.5$ di default ad ogni bit. La codifica \emph{regular}
+può invece dare una probabilità basata sul tipo di \emph{syntax element} e sulla
+posizione del bin, oppure selezionare un modello probabillistico per il bin 
+basandosi su informazioni correlate (come valori vicini spazialmente). \\
+Questi modelli, detti \emph{context models}, contengono la probabilità di '1' e
+'0' di ogni bin; ognuno di questi modelli possiede due parametri  da 7 bit, con
+i primi 6 che codificano uno dei 63 stati che rappresentano la probabilità 
+$P_{LPS}$ del simbolo meno probabile, mentre l'ultimo bit rappresenta il valore 
+del simbolo più probabile $V_{MPS}$. \\
+I due parametri specificano dunque il valore della probabilità del simbolo meno
+probabile nel caso in cui quello più probabile sia 1 oppure 0. Tali parametri 
+variano al variare del bin secondo la formula:
 
+\[ P_{LPS} = 
+\begin{cases}
+  \alpha * P_{LPS},         & \quad \text{se bin = } V_{MPS} \\
+  1- \alpha *(1-P_{LPS}),   & \quad \text{altrimenti} \\
+\end{cases}
+\]
+
+che deve essere letta come una riassegnazione di valore del parametro all'arrivo
+di un bin; quando i parametri raggiungono il valore massimo vengono riscalati.
 %-----------------------------------
 %       SUBSECTION 3
 %-----------------------------------
