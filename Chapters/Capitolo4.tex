@@ -635,16 +635,16 @@ basandosi su informazioni correlate (come valori vicini spazialmente). \\
 Questi modelli, detti \emph{context models}, contengono la probabilità di '1' e
 '0' di ogni bin; ognuno di questi modelli possiede due parametri  da 7 bit, con
 i primi 6 che codificano uno dei 63 stati che rappresentano la probabilità 
-$P_{LPS}$ del simbolo meno probabile, mentre l'ultimo bit rappresenta il valore 
-del simbolo più probabile $V_{MPS}$. \\
+$p_{LPS}$ del simbolo meno probabile, mentre l'ultimo bit rappresenta il valore 
+del simbolo più probabile $v_{MPS}$. \\
 I due parametri specificano dunque il valore della probabilità del simbolo meno
 probabile nel caso in cui quello più probabile sia 1 oppure 0. Tali parametri 
 variano al variare del bin secondo la formula:
 
-\[ P_{LPS} = 
+\[ p_{LPS} = 
 \begin{cases}
-  \alpha * P_{LPS},         & \quad \text{se bin = } V_{MPS} \\
-  1- \alpha *(1-P_{LPS}),   & \quad \text{altrimenti} \\
+  \alpha * p_{LPS},         & \quad \text{se bin = } v_{MPS} \\
+  1- \alpha *(1-p_{LPS}),   & \quad \text{altrimenti} \\
 \end{cases}
 \]
 
@@ -655,3 +655,21 @@ di un bin; quando i parametri raggiungono il valore massimo vengono riscalati.
 %-----------------------------------
 
 \subsection{Arithmetic Coding}
+Il \emph{Regular Arithmetic Encoder} prende in ingresso una sequenza di $N$ bin
+insieme ai relativi valori di $p_{LPS}$, ne calcola la codifica aritmetica e la 
+manda in uscita. La codifica aritmetica consiste nella suddivisione ricorsiva
+di un intervallo, inizialmente lungo $1$, in due intervalli pesati sulle 
+probabilità dei simboli: se il primo simbolo corrispondesse al $MPS$ e si 
+avesse $p_{LPS}=0.2$, allora l'intervallo verrebbe suddiviso in due intervalli,
+il primo, relativo a al $LPS$ lungo $0.2$, il secondo, relativo al $MPS$ lungo
+$0.8$. Visto che il simbolo uscito è un $MPS$ l'intervallo verrà suddiviso in
+due intervalli della lunghezza di $0.8*0.2=0.16$ e $0.8*0.8= 0.64$. \\
+Supponendo che il secondo simbolo sia un $LPS$ verrà scelto l'intervallo lungo
+0.16 (che va da $0.8$ a $0.96$ nell'intervallo iniziale) e così via fino ad
+ottenere l'intervallo finale $F={[a,b[}$ che rappresenta l'intera stringa di
+$N$ bin. \\
+La codifica aritmetica di $F$ è la sequenza di bit minima che si riferisce ad un
+intervallo completamente contenuto in $F$: l'intervallo cui si riferisc una
+sequenza di bit (e non di bin) si può pensare come l'intervallo che si
+otterrebbe mediante l'algoritmo precedentemente descritto se la suddivisione
+fosse sempre binaria , ovvero quando $p_{LPS} = p_{MPS} = 0.5$.
