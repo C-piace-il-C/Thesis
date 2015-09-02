@@ -102,6 +102,119 @@ I rimanenti due sono stati oggetto di
 %-----------------------------------
 
 \subsection{Compilation flags}
+Per prima cosa abbiamo dedicato del tempo allo studio delle opzioni di 
+compilazione fornite da GCC (\emph{GNU Compiler Collection}) al fine di partire 
+da una ``base stabile" da ottimizzare.\\
+Particolare attenzione è stata dedicata ai \emph{flag} dedicati al 
+miglioramento delle performance ed a quelli specifici per ARM.\\
+\\
+Senza alcuna opzione di compilazione espressa l'obiettivo del compilatore è 
+quello di ridurre il più possibile il costo della compilazione e di rendere al 
+contempo praticabile il \emph{debug} del programma. Per rendere possibile il 
+//debug ciò è necessario in primo luogo che ogni \emph{statement} sia 
+indipendente: è possibile fermare l'esecuzione in qualsiasi punto utilizzando 
+un \emph{breakpoint} al fine di assegnare a piacere valori alle variabili e/o 
+di modificare il \emph{program counter}, ottenendo i risultati attesi dal 
+codice.\\
+\\
+Il compilatore ottimizza il codice basandosi sulla conoscenza che ha del 
+programma. Non tutte le ottimizzazioni sono controllabili direttamente via 
+\emph{flag}.\\
+\\
+Passiamo ora ad una breve descrizione delle opzioni utilizzate e dei loro 
+effetti sull'eseguibile generato.
+
+Famiglia `-O': opzioni dedicate all'ottimizzazione delle performance e/o della 
+dimensione del compilato. La `O' è un diminutivo di ``Optimize".\\
+Si distinguono vari livelli di ottimizzazione messi a disposizione dal 
+compilatore GCC:
+\begin{itemize}
+\item \verb|-O0|\\
+Opzione predefinita: riduce il tempo di compilazione cercando di dare la 
+migliore esperienza di \emph{debug} possibile.
+\item \verb|-O / -O1|\\
+Abilita tutte le opzioni specificate da \verb|-O0|.\\
+Il compilatore cerca di ridurre la dimensione del compilato ed il tempo di 
+esecuzione utilizzando \emph{flag} che non peggiorano drasticamente il tempo 
+di compilazione.
+\item \verb|-O2|\\
+Abilita tutte le opzioni specificate da \verb|-O / -O1|.\\
+Vengono eseguite tutte le ottimizzazioni che non coinvolgono un 
+\emph{trade-off} spazio-velocità. Rispetto al precedente migliora le 
+prestazioni allungando il tempo di compilazione.
+\item \verb|-Os|\\
+Abilita tutte le opzioni specificate da \verb|-O2| che tipicamente non 
+aumentano la dimensione dell'eseguibile. Vengono eseguite tutte le 
+ottimizzazioni a favore dello spazio occupato dal compilato. La `s' è un 
+diminutivo di ``size".
+\item \verb|-O3|\\
+Abilita tutte le opzioni specificate da \verb|-O2|.\\
+Vengono eseguite tutte le ottimizzazioni a favore della velocità di esecuzione. 
+Il tempo di compilazione aumenta così come lo spazio occupato dall'eseguibile 
+generato. E' il massimo livello di ottimizzazione possibile insieme ad 
+\verb|-Ofast|.
+\item \verb|-Ofast|\\
+Abilita tutte le opzioni specificate da \verb|-O3|.\\
+Ignora l'adesione rigorosa allo standard abilitando \verb|-ffast-math|.
+\item \verb|-Og|\\
+Ottimizza l'esperienza di \emph{debug} abilitando tutte le opzioni che non 
+interferiscono con quest'ultimo.
+\end{itemize}
+
+Opzioni di ottimizzazione indipendenti dall'hardware:
+\begin{itemize}
+\item \verb|-ftree-vectorize|\\
+Abilita la vettorizzazione dei \emph{tree}.
+// Che cos'è un tree?\\
+Il compilatore cerca di riorganizzare dati in vettori permettendo così 
+l'utilizzo di istruzioni SIMD (\emph{Single Instruction Multiple Data}) al fine 
+di migliorare il tempo di esecuzione del codice.\\
+Essa abilita inoltre \verb|-ftree-loop-vectorize| e 
+\verb|-ftree-slp-vectorize|, che abilitano rispettivamente la vettorizzazione 
+dei \emph{loop} e dei \emph{basic block}.
+\item \verb|-finline-functions|\\
+Considera tutte le funzioni come candidate per un possibile \emph{inlining}, 
+anche quelle che non sono dichiarate esplicitamente come \verb|inline|.\\
+Il compilatore decide attraverso un calcolo euristico di effettuare o no 
+l'\emph{inlining} della funzione. 
+\item \verb|-funswitch-loops|\\
+Abilitata automaticamente con l'opzione \verb|-O3|.\\
+Sposta i \emph{branch} con condizioni che non dipendono dal \emph{loop} al di 
+fuori di quest'ultimo, duplicandolo su entrambi i \emph{branch} e modificandolo 
+tenendo conto del risultato della condizione.\\
+
+// Aggiungere -fwhole-program?
+\end{itemize}
+
+Opzioni di ottimizzazione specifiche per l'hardware ARM:
+
+\begin{itemize}
+\item \verb|-march|\\
+Specifica il nome dell'architettura ARM di destinazione.\\
+Questo parametro viene utilizzato da GCC per determinare che tipo di istruzioni 
+possono essere emesse quando viene generato il codice assembly relativo al 
+programma.
+\item \verb|-mtune|\\
+Specifica il nome del processore ARM per il quale GCC deve ottimizzare il 
+codice. Su alcune implementazioni possono essere ricavate prestazioni migliori 
+specificando questa opzione.
+\item \verb|-mfpu|\\
+Specifica quale hardware (o emulazione hardware) \emph{floating-point} è 
+disponibile sul dispositivo.\\
+Quest'opzione è \underline{necessaria} per poter utilizzare le varie SIMD (in 
+questo caso NEON) messe a disposizione dall'architettura ARM.
+\item \verb|-mfloat-abi|\\
+Specifica quale ABI (o \emph{Application Binary Interface}) utilizzare per le 
+operazioni \emph{floating-point}. // Che cos'è un ABI? \\
+Quest'opzione è \underline{necessaria} per poter utilizzare le varie SIMD (in 
+questo caso NEON) messe a disposizione dall'architettura ARM.
+\end{itemize}
+
+% -fopt-info-vec-optimized.
+% -std
+% -lpthread
+% Tentativi con -fwhole-program.
+% gcc-4.7 non vettorizzava ARM, gcc-4.9 sì.
 
 %-----------------------------------
 %       SUBSECTION 2
