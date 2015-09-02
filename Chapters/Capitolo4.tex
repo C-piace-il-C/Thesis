@@ -635,16 +635,16 @@ basandosi su informazioni correlate (come valori vicini spazialmente). \\
 Questi modelli, detti \emph{context models}, contengono la probabilità di '1' e
 '0' di ogni bin; ognuno di questi modelli possiede due parametri  da 7 bit, con
 i primi 6 che codificano uno dei 63 stati che rappresentano la probabilità 
-$P_{LPS}$ del simbolo meno probabile, mentre l'ultimo bit rappresenta il valore 
-del simbolo più probabile $V_{MPS}$. \\
+$p_{LPS}$ del simbolo meno probabile, mentre l'ultimo bit rappresenta il valore 
+del simbolo più probabile $v_{MPS}$. \\
 I due parametri specificano dunque il valore della probabilità del simbolo meno
 probabile nel caso in cui quello più probabile sia 1 oppure 0. Tali parametri 
 variano al variare del bin secondo la formula:
 
-\[ P_{LPS} = 
+\[ p_{LPS} = 
 \begin{cases}
-  \alpha * P_{LPS},         & \quad \text{se bin = } V_{MPS} \\
-  1- \alpha *(1-P_{LPS}),   & \quad \text{altrimenti} \\
+  \alpha * p_{LPS},         & \quad \text{se bin = } v_{MPS} \\
+  1- \alpha *(1-p_{LPS}),   & \quad \text{altrimenti} \\
 \end{cases}
 \]
 
