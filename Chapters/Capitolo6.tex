@@ -221,7 +221,50 @@ questo caso NEON) messe a disposizione dall'architettura ARM.
 %-----------------------------------
 
 \subsection{Assembly}
-
+// IMPOSTA FONT CONSOLAS PER I LISTATI \newline
+// INGRANDISCI IL FONT DI TESTO E LISTATI \newline
+Una delle prime ottimizzazioni tentate durante sviluppo del lavoro è stata
+ la stesura di funzioni in Assembly nel tentativo di ottimizzare alcune parti 
+ di codice delle funzioni più onerose di HM.
+Le principali caratteristiche del linguaggio Assembly ARM che si possono sfruttare per ottimizzare sono le istruzioni condizionali e il \emph{barrel shifter}. \newline
+Le istruzioni condizionali sono normali istruzioni la cui esecuzione dipende dal valore di determinati \emph{flag}. In questo modo è possibile evitare parecchi branch condizionali che rallentano il codice perché rompono la \emph{pipeline}.\newline
+Il \emph{barrel shifter} è un'unità che permette la pre-elaborazione di uno dei 
+due operandi di un'istruzione attraverso una normale operazione di shift. 
+//AGGIUNGI IMMAGINE BARREL SHIFTER \newline
+\paragraph*{Clamp} La funzione matematica $\text{clamp}(x) = 
+\max(a,\min(x,b))$, assente dalla libreria standard, viene implementata da 
+\verb+filter+ in questo modo:
+\lstinputlisting[language=C,stepnumber=0,caption=]{Codes/cclamp.c}
+Questo codice viene tradotto in \verb|-Ofast| in una dozzina di istruzioni con 
+due \emph{compare}. Notando che nel codice di HM \verb|minVal| vale sempre 0, è 
+possibile introdurre un'ottimizzazione che sfrutta il barrel shifter. \newline
+Segue il confronto tra l'estratto del codice Assembly generato da GCC (a 
+sinistra) e quello da noi scritto per eseguire clamp.
+// ALLINEA VERTICALMENTE I DUE LISTATI
+\begin{center}
+  \begin{tabular}{ l l }
+    \lstinputlisting[language=C,caption=]{Codes/armgccclamp.s} &
+    \lstinputlisting[language=C,stepnumber=0,caption=]{Codes/armclamp.s} \\
+  \end{tabular}
+\end{center}
+Per maggiore chiarezza il codice generato da GCC è stato commentato riga per 
+riga e viene discusso a seguire. \newline
+Le prime due linee caricano 0 e \verb|val|, che si trova nella posizione 
+puntata dallo \emph{stack pointer} + 4 rispettivamente nei registri \verb|r2| e 
+\verb|r3|.\newline La terza linea esegue l'operazione \verb|r3 - r2| 
+aggiornando i flag contenuti in \verb|CPSR| (Current Program Status 
+Register).\newline L'istruzione \verb|itt lt| abilita la condizione \verb|lt| 
+(lower than) per le successive due istruzioni, che verranno quindi eseguite 
+solo se \verb|r3| $<$ \verb|r2|. Ciò si riflette sull'\emph{opcode} delle due 
+istruzioni successive, che eredita il suffisso \verb|lt|. Queste istruzioni 
+mettono 0 in \verb|r3| e lo salvano in \verb|val|. \newline Le restanti 
+istruzioni eseguono il secondo \verb|if| in maniera analoga. \newline
+Nel nostro codice la terza linea compendia quello che in C sarebbe 
+\verb|if(r3 < 0) r3 = 0|. Il suffisso \verb|s| specifica che l'istruzione 
+aggiorna anche il 
+registro \verb|CPSR|, così, se il risultato è positivo (i.e. \verb|r3| $>$ 0), 
+si procede con le istruzioni 5 e 6 che sostituiscono \verb|maxVal| a \verb|r3| 
+nel caso in cui \verb|r3| $>$ \verb|maxVal|. 
 %-----------------------------------
 %       SUBSECTION 3
 %-----------------------------------
