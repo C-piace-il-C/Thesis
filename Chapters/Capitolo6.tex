@@ -322,13 +322,14 @@ due operandi di un'istruzione attraverso una normale operazione di shift.
 \paragraph*{Clamp} La funzione matematica $\text{clamp}(x) = 
 \max(a,\min(x,b))$, assente dalla libreria standard, viene implementata da 
 \verb+filter+ in questo modo:
-\lstinputlisting[language=C,stepnumber=0,caption=]{Codes/cclamp.c}
+\lstinputlisting[language=C,caption=]{Codes/cclamp.c}
 Questo codice viene tradotto in \verb|-Ofast| in una dozzina di istruzioni con 
 due \emph{compare}. Notando che nel codice di HM \verb|minVal| vale sempre 0, è 
 possibile introdurre un'ottimizzazione che sfrutta il barrel shifter. \newline
 Segue il confronto tra l'estratto del codice Assembly generato da GCC (a 
 sinistra) e quello da noi scritto per eseguire clamp.
 // ALLINEA VERTICALMENTE I DUE LISTATI
+\lstset{style=cstyle}
 \begin{center}
   \begin{tabular}{ l l }
     \lstinputlisting[language=C,caption=]{Codes/armgccclamp.s} &

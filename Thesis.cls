@@ -69,8 +69,8 @@
 \setlength{\parskip}{2.0ex plus0.5ex minus0.2ex}
 \usepackage{vmargin}
 
-\RequirePackage[utf8]{inputenc} % Allows the use of international characters (e.g. Umlauts)
-
+\RequirePackage[utf8]{inputenc} % Allows the use of international characters 
+%(e.g. Umlauts)
 %----------------------------------------------------------------------------------------
 %	MARGINS
 %----------------------------------------------------------------------------------------
@@ -294,6 +294,29 @@
   \global\let\date\relax
   \global\let\and\relax
   \cleardoublepage
+}
+%----------------------------------------------------------------------------------------
+%	CODE LISTINGS STYLE
+%----------------------------------------------------------------------------------------
+\lstdefinestyle{cstyle}{
+  numbers=left,
+  stepnumber=1,
+  firstnumber=1,
+  numberfirstline=true,
+  belowcaptionskip=1\baselineskip,
+  breaklines=true,
+  frame=lines,
+  xleftmargin=\parindent,
+  language=C,
+  showstringspaces=false,
+  basicstyle=\footnotesize\ttfamily,
+  keywordstyle=\bfseries\color{green!40!black},
+  commentstyle=\itshape\color{purple!40!black},
+  identifierstyle=\color{black},
+  stringstyle=\color{orange},
+}
+\lstset{
+  escapechar=@
 }
 %----------------------------------------------------------------------------------------
 %	ABSTRACT PAGE DESIGN
