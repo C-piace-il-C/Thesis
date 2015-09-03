@@ -162,6 +162,7 @@ interferiscono con quest'ultimo.
 \end{itemize}
 
 Opzioni di ottimizzazione indipendenti dall'hardware:
+
 \begin{itemize}
 \item \verb|-ftree-vectorize|\\
 Abilita la vettorizzazione dei \emph{tree}.
@@ -181,40 +182,109 @@ l'\emph{inlining} della funzione.
 Abilitata automaticamente con l'opzione \verb|-O3|.\\
 Sposta i \emph{branch} con condizioni che non dipendono dal \emph{loop} al di 
 fuori di quest'ultimo, duplicandolo su entrambi i \emph{branch} e modificandolo 
-tenendo conto del risultato della condizione.\\
-
+tenendo conto del risultato della condizione.
+\item \verb|-funroll-loops|\\
+Abilita l'\emph{unrolling} dei \emph{loop} per i quali è possibile determinare 
+il numero di iterazioni a \emph{compile time}.
 // Aggiungere -fwhole-program?
 \end{itemize}
 
 Opzioni di ottimizzazione specifiche per l'hardware ARM:
 
 \begin{itemize}
-\item \verb|-march|\\
+\item \verb|-march=|\emph{name}\\
 Specifica il nome dell'architettura ARM di destinazione.\\
 Questo parametro viene utilizzato da GCC per determinare che tipo di istruzioni 
 possono essere emesse quando viene generato il codice assembly relativo al 
 programma.
-\item \verb|-mtune|\\
+\item \verb|-mtune=|\emph{name}\\
 Specifica il nome del processore ARM per il quale GCC deve ottimizzare il 
 codice. Su alcune implementazioni possono essere ricavate prestazioni migliori 
 specificando questa opzione.
-\item \verb|-mfpu|\\
+\item \verb|-mfpu=|\emph{name}\\
 Specifica quale hardware (o emulazione hardware) \emph{floating-point} è 
 disponibile sul dispositivo.\\
 Quest'opzione è \underline{necessaria} per poter utilizzare le varie SIMD (in 
 questo caso NEON) messe a disposizione dall'architettura ARM.
-\item \verb|-mfloat-abi|\\
+\item \verb|-mfloat-abi=|\emph{name}\\
 Specifica quale ABI (o \emph{Application Binary Interface}) utilizzare per le 
 operazioni \emph{floating-point}. // Che cos'è un ABI? \\
 Quest'opzione è \underline{necessaria} per poter utilizzare le varie SIMD (in 
 questo caso NEON) messe a disposizione dall'architettura ARM.
 \end{itemize}
 
-% -fopt-info-vec-optimized.
-% -std
-% -lpthread
-% Tentativi con -fwhole-program.
-% gcc-4.7 non vettorizzava ARM, gcc-4.9 sì.
+Opzioni del linguaggio e del \emph{debug}.
+
+\begin{itemize}
+\item \verb|-fopt-info-|\emph{options}\\
+Mostra un \emph{log} contenente informazioni su ciò che è o non è stato 
+ottimizzato.
+\item \verb|-std=|\emph{name}\\
+Determina quale standard utilizzare per il linguaggio C da compilare.
+\item \verb|-pthread|\\
+Abilita il supporto al \emph{multithreading} con la libreria \emph{phtreads}.
+\end{itemize}
+
+Queste opzioni sono state testate modificando il file \verb|makefile.base|, 
+contenuto nella cartella \verb|/build/linux/common/|. Di seguito le linee 
+dall'originale:\\
+
+\begin{lstlisting}[language=make]
+# default cpp flags for all configurations
+CPPFLAGS          = -fPIC $(DEFS) -I$(CURDIR)/$(INC_DIR) $(USER_INC_DIRS) -Wall
+                    -Wshadow -Wno-sign-compare -Werror
+# debug cpp flags
+DEBUG_CPPFLAGS    = -g  -D_DEBUG
+# release cpp
+RELEASE_CPPFLAGS  = -O3 -Wuninitialized
+\end{lstlisting}
+
+Per prima cosa è stato cambiato il livello di ottimizzazione da \verb|-O3| a 
+\verb|-Ofast| per quanto riguarda i \verb|RELEASE_CPPFLAGS|.\\
+Questa modifica è stata effettuata al fine di migliorare le \emph{performance} 
+sulle operazioni matematiche, è stato inoltre verificato che il comportamento 
+del programma non fosse cambiato (\verb|-ffast-math| può portare a risultati 
+sbagliati in certe configurazioni).\\
+Assieme a suddetta modifica è stato cambiato il \emph{flag} \verb|-g| in 
+\verb|-Og| per quanto riguarda i \verb|DEBUG_CPPFLAGS|.\\
+Questo al fine di velocizzare il più possibile il \emph{debug} 
+dell'applicazione, particolarmente lento utilizzando \verb|-g|.\\
+Sono state poi inserite tutte le opzioni relative all'hardware ARM in 
+\verb|CPPFLAGS|, i \emph{flag} condivisi da tutte le configurazioni.\\
+Nello specifico sono state inserite le seguenti voci: \verb|-march=armv7-a|, 
+\verb|-mtune=cortex-a7|, \verb|-mfpu=neon|, \verb|-mfloat-abi=softfp|.\\
+Subito dopo questa modifica è stato ancora aggiunta ai \verb|RELEASE_CPPFLAGS| 
+l'opzione \verb|-ftree-vectorize|.\\
+\\
+Prima di iniziare la modifica vera e propria del codice è stata effettuata 
+un'analisi mediante l'utilizzo di \verb|-fopt-info-vec-optimized| al fine di 
+sapere cosa fosse stato già vettorizzato automaticamente da GCC. Questo ci ha 
+permesso di focalizzarci maggiormente sulle funzioni onerose non modificate.\\
+\\
+E' stato inoltre deciso di rendere \emph{multithread} il programma.\\
+E' stato in primo luogo provato il \emph{multithreading} offerto dallo standard 
+C++11, aggiungendo quindi \verb|-std=c++11| alle opzioni esistenti.\\
+Avendo però notato un degrado delle performance generali in \emph{single 
+thread}, sì è deciso di utilizzare la libreria \emph{pthreads} e quindi di 
+sostituire il \emph{flag} \verb|-std=c++11| con \verb|-pthread|.
+
+Il file \verb|makefile.base| finale è quindi il seguente:\\
+
+\begin{lstlisting}[language=make]
+# default cpp flags for all configurations
+CPPFLAGS          = -fPIC $(DEFS) -I$(CURDIR)/$(INC_DIR) $(USER_INC_DIRS) -Wall 
+                    -Wshadow -Wno-sign-compare -Werror -march=armv7-a 
+                    -mtune=cortex-a7 -mfpu=neon -pthread
+# debug cpp flags
+DEBUG_CPPFLAGS    = -Og  -D_DEBUG
+# release cpp
+RELEASE_CPPFLAGS  = -Ofast -Wuninitialized -ftree-vectorize
+\end{lstlisting}
+
+
+// Tentativi con -fwhole-program.\\
+// gcc-4.7 non vettorizzava ARM, gcc-4.9 sì.\\
+// Risultati\\
 
 %-----------------------------------
 %       SUBSECTION 2
