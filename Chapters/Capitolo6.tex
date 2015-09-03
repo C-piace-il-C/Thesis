@@ -234,7 +234,7 @@ dall'originale:\\
 CPPFLAGS          = -fPIC $(DEFS) -I$(CURDIR)/$(INC_DIR) $(USER_INC_DIRS) -Wall
                     -Wshadow -Wno-sign-compare -Werror
 # debug cpp flags
-DEBUG_CPPFLAGS    = -g  -D_DEBUG
+DEBUG_CPPFLAGS    = -g -D_DEBUG
 # release cpp
 RELEASE_CPPFLAGS  = -O3 -Wuninitialized
 \end{lstlisting}
@@ -274,9 +274,9 @@ Il file \verb|makefile.base| finale è quindi il seguente:\\
 # default cpp flags for all configurations
 CPPFLAGS          = -fPIC $(DEFS) -I$(CURDIR)/$(INC_DIR) $(USER_INC_DIRS) -Wall 
                     -Wshadow -Wno-sign-compare -Werror -march=armv7-a 
-                    -mtune=cortex-a7 -mfpu=neon -pthread
+                    -mtune=cortex-a7 -mfpu=neon -mfloat-abi=softfp -pthread
 # debug cpp flags
-DEBUG_CPPFLAGS    = -Og  -D_DEBUG
+DEBUG_CPPFLAGS    = -Og -D_DEBUG
 # release cpp
 RELEASE_CPPFLAGS  = -Ofast -Wuninitialized -ftree-vectorize
 \end{lstlisting}
