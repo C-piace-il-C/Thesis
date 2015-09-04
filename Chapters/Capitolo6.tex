@@ -311,15 +311,23 @@ RELEASE_CPPFLAGS  = -Ofast -Wuninitialized -ftree-vectorize
 \subsection{Assembly}
 // IMPOSTA FONT CONSOLAS PER I LISTATI \newline
 // INGRANDISCI IL FONT DI TESTO E LISTATI \newline
-Una delle prime ottimizzazioni tentate durante sviluppo del lavoro è stata
+Un'altra ottimizzazione sperimentata inizialmente è stata
  la stesura di funzioni in Assembly nel tentativo di ottimizzare alcune parti 
  di codice delle funzioni più onerose di HM.
-Le principali caratteristiche del linguaggio Assembly ARM che si possono sfruttare per ottimizzare sono le istruzioni condizionali e il \emph{barrel shifter}. \newline
-Le istruzioni condizionali sono normali istruzioni la cui esecuzione dipende dal valore di determinati \emph{flag}. In questo modo è possibile evitare parecchi branch condizionali che rallentano il codice perché rompono la \emph{pipeline}.\newline
-Il \emph{barrel shifter} è un'unità che permette la pre-elaborazione di uno dei 
-due operandi di un'istruzione attraverso una normale operazione di shift. 
+Le principali caratteristiche del linguaggio Assembly ARM che velocizzano un 
+programma sono le istruzioni condizionali e il \emph{barrel
+ 	 shifter}. \newline
+Le istruzioni condizionali sono normali istruzioni la cui esecuzione dipende
+dal valore di determinati \emph{flag}. In questo modo è possibile evitare
+parecchi branch condizionali che rallentano il codice perché rompono la
+\emph{pipeline}.\newline
+Il \emph{barrel shifter} è un'unità che compie una pre-elaborazione di uno dei 
+due operandi di un'istruzione attraverso una normale operazione di shift dei 
+bit. \newline
+//SPIGA PERCHE IL BARREL SHIFTER VELOCIZZA (NON AGGIUNGE TEMPO ESECUZIONE)
 //AGGIUNGI IMMAGINE BARREL SHIFTER \newline
-\paragraph*{Clamp} La funzione matematica $\text{clamp}(x) = 
+
+\par Per esempio, la funzione matematica $\text{clamp}(x) = 
 \max(a,\min(x,b))$, assente dalla libreria standard, viene implementata da 
 \verb+filter+ in questo modo:
 \lstinputlisting[language=C,caption=]{Codes/cclamp.c}
@@ -329,35 +337,61 @@ possibile introdurre un'ottimizzazione che sfrutta il barrel shifter. \newline
 Segue il confronto tra l'estratto del codice Assembly generato da GCC (a 
 sinistra) e quello da noi scritto per eseguire clamp.
 // ALLINEA VERTICALMENTE I DUE LISTATI
+
 \lstset{style=cstyle}
 \begin{center}
-  \begin{tabular}{ l l }
-    \lstinputlisting[language=C,caption=]{Codes/armgccclamp.s} &
-    \lstinputlisting[language=C,stepnumber=0,caption=]{Codes/armclamp.s} \\
-  \end{tabular}
+  \begin{tabularx}{\textwidth}{ X | c }
+  	\hline
+    \lstinputlisting[caption=]{Codes/armgccclamp.s}
+    \xdef\tempwidth{\thelstlisting\linewidth} &
+    \lstinputlisting[stepnumber=0,caption=]{Codes/armclamp.s} \\
+    \hline
+  \end{tabularx}
 \end{center}
 Per maggiore chiarezza il codice generato da GCC è stato commentato riga per 
 riga e viene discusso a seguire. \newline
-Le prime due linee caricano 0 e \verb|val|, che si trova nella posizione 
-puntata dallo \emph{stack pointer} + 4 rispettivamente nei registri \verb|r2| e 
-\verb|r3|.\newline La terza linea esegue l'operazione \verb|r3 - r2| 
-aggiornando i flag contenuti in \verb|CPSR| (Current Program Status 
-Register).\newline L'istruzione \verb|itt lt| abilita la condizione \verb|lt| 
-(lower than) per le successive due istruzioni, che verranno quindi eseguite 
-solo se \verb|r3| $<$ \verb|r2|. Ciò si riflette sull'\emph{opcode} delle due 
-istruzioni successive, che eredita il suffisso \verb|lt|. Queste istruzioni 
-mettono 0 in \verb|r3| e lo salvano in \verb|val|. \newline Le restanti 
-istruzioni eseguono il secondo \verb|if| in maniera analoga. \newline
+Le prime due linee caricano 0 e \verb|val|, che inizia a partire da 4 byte dalla
+ posizione puntata da \verb|SP| (Stack Pointer), rispettivamente nei registri
+  \verb|r2| e \verb|r3|.\newline La terza linea esegue l'operazione
+   \verb|r3 - r2| aggiornando i flag contenuti in \verb|CPSR| (Current Program 
+Status Register).\newline L'istruzione \verb|itt lt| abilita la condizione 
+\verb|lt| (lower than) per le successive due istruzioni, che verranno quindi 
+eseguite solo se \verb|r3| $<$ \verb|r2|. Ciò si riflette sull'\emph{opcode}
+delle due istruzioni successive, che eredita il suffisso \verb|lt|. Queste
+istruzioni mettono 0 in \verb|r3| e lo salvano in \verb|val|. \newline
+Le restanti istruzioni eseguono il secondo \verb|if| in maniera analoga.\newline
 Nel nostro codice la terza linea compendia quello che in C sarebbe 
 \verb|if(r3 < 0) r3 = 0|. Il suffisso \verb|s| specifica che l'istruzione 
 aggiorna anche il 
 registro \verb|CPSR|, così, se il risultato è positivo (i.e. \verb|r3| $>$ 0), 
 si procede con le istruzioni 5 e 6 che sostituiscono \verb|maxVal| a \verb|r3| 
-nel caso in cui \verb|r3| $>$ \verb|maxVal|. 
+nel caso in cui \verb|r3| $>$ \verb|maxVal|.
+\par Nonostante gli esiti positivi dell'ottimizzazione in fase di
+testing, dopo l'implementazione effettiva all'interno di HM la performance 
+dell'encoder è calata, come mostra la tabella.
+\begin{center}
+  \begin{tabular}{l | l | l}
+    & ASM & C \\ \hline
+    $8\cdot10^9$ clamp & $7065.6$ (ms) & $8072.7$ (ms) \\
+    $50$ frame \verb|highway_cif.yuv| & $1493.6142$ (s) &  $1408.4262$ (s) \\
+  \end{tabular}
+\end{center}
+Le righe della tabella mostrano rispettivamente una media delle prove
+fatte con un 
+codice di test 
+compilato in \verb|-Ofast| /*INSERISCI IL CODICE IN APPENDICE*/ e implementando
+l'ottimizzazione nel software.\newline
+Il motivo di tale discrepanza può essere visto 
+nel fatto che, vicino alla funzione Assembly inline, GCC è costretto ad 
+inserire un prologo ed un epilogo in cui salva e carica lo stato del programma, 
+mentre in una serie di test ciò non è necessario.\newline
+Una possibile soluzione consiste nel riscrivere l'intera funzione \verb|filter| 
+in Assembly in maniera da predisporre correttamente i dati, eventualmente
+ottimizzando anche altre parti del codice, ma è un'operazione che al momento 
+esula dalle nostre competenze. // PROVA A FARLO
 %-----------------------------------
 %       SUBSECTION 3
 %-----------------------------------
-
 \subsection{NEON intrinsics}
 
 %-----------------------------------
