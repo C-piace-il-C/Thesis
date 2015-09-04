@@ -8,7 +8,8 @@
 
 %-------------------------------------------------------------------------------
 %	SECTION 1
-%-------------------------------------------------------------------------------
+%-------
+------------------------------------------------------------------------
 
 \section{Suddivisione in blocchi dell'immagine} 
 Un'immagine viene inizialmente suddivisa in \emph{coding tree unit} (CTU), di 
@@ -577,12 +578,16 @@ stream}, ovvero quei dati che contengono principalmente i parametri che
 riguardano gli algoritmi di codifica; il suo compito è dunque quello di ridurre
 l'\emph{overhead} della side information dovuta alla flessibilità dell'encoder 
 video ibrido. \\
-L'immagine mostra il percorso di compressione di un singolo \emph{syntax 
-element} all'interno del CABAC (con i possibili colli di bottiglia evidenziati 
-in rosso):
-\\
-// Inserire immagine
-\\
+
+\begin{figure}[H]
+  \centering
+  \captionsetup{justification=raggedright}
+  \includegraphics[scale=0.35]{Figures/Cabac_overview}
+  \caption[Percorso di un \emph{syntax element} dentro CABAC]
+	  {Percorso di un singolo \emph{syntax element} all'interno di CABAC,
+	   con i possibili colli di bottiglia segnati in rosso.}
+\end{figure}
+
 Il primo passaggio consiste nella binarizzazione del \emph{syntax element} 
 sostituendolo con una stringa di simboli binari; succesivamente si verifica 
 la parte \emph{context-based}, ovvero l'assegnazione di una probabilità ad ogni 
