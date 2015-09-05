@@ -303,7 +303,6 @@ RELEASE_CPPFLAGS  = -Ofast -Wuninitialized -ftree-vectorize
 // Tentativi con -fwhole-program.\\
 // gcc-4.7 non vettorizzava ARM, gcc-4.9 sì.\\
 // Risultati\\
-
 %-----------------------------------
 %       SUBSECTION 2
 %-----------------------------------
@@ -389,10 +388,275 @@ Una possibile soluzione consiste nel riscrivere l'intera funzione \verb|filter|
 in Assembly in maniera da predisporre correttamente i dati, eventualmente
 ottimizzando anche altre parti del codice, ma è un'operazione che al momento 
 esula dalle nostre competenze. // PROVA A FARLO
+
 %-----------------------------------
 %       SUBSECTION 3
 %-----------------------------------
+
 \subsection{NEON intrinsics}
+
+Tra le varie ottimizzazioni che implicavano la modifica del codice, è stato 
+dato largo spazio alle SIMD di ARM: le cosiddette NEON.\\
+La tecnologia NEON permette di accelerare le operazioni matematiche più usate 
+permettendo di effettuare più calcoli in parallelo.\\
+Architettura introdotta con ARMv7, utilizza 32 registri a 64-bit interpretati 
+come ``vettori di elementi''. I registri possono essere accoppiati in modo da 
+lavorare con vettori a 128 bit, ognuno di essi può essere utilizzato come:
+
+\begin{itemize}
+  \item Un vettore con 2 elementi da 64 bit ciascuno.
+  \item Un vettore con 4 elementi da 32 bit ciascuno.
+  \item Un vettore con 8 elementi da 16 bit ciascuno.
+  \item Un vettore con 16 elementi da 8 bit ciascuno.
+\end{itemize}
+
+Tutti gli elementi (\emph{lanes}) di un vettore devono essere dello stesso 
+tipo, nello specifico possono essere:
+
+\begin{itemize}
+  \item Un intero \emph{signed} oppure \emph{unsigned}.
+  \item Un \emph{floating-point} a singola precisione: \verb|float|.
+\end{itemize}
+
+Ogni istruzione NEON effettua la \textbf{stessa} operazione su tutti i 
+\emph{lane}.\\
+
+Per poter utilizzare le \emph{intrinsic} NEON in un contesto C (ma anche C++) è 
+necessario includere la libreria \verb|arm_neon.h| ed aggiungere le opzioni di 
+compilazione relative all'hardware \emph{floating-point}: \verb|-mfpu=neon| e 
+\verb|-mfloat-abi=softfp|. Una spiegazione più approfondita dei sopracitati 
+\emph{flag} è stata data nella sezione dedicata alle opzioni di compilazione.\\
+
+Avendo alla mano i dati sulle funzioni più onerose in termini di istruzioni, 
+facendo un controllo incrociato con \emph{log} generato dall'opzione 
+\verb|-fopt-info-vec-optimized|, si è osservato che tutte le la quasi totalità 
+di quelle dedicate alla SAD (\emph{Sum of Absolute Differences}) era stata 
+automaticamente vettorizzata.\\
+
+Il lavoro con le \emph{intrinsic} è iniziato da lì. Verranno spiegati i 
+passaggi a partire dal codice originale di \verb|xGetSAD8|, il procedimento è 
+stato riprodotto in modo analogo per tutte le altre funzioni.\\
+
+%TODO sostituire [language=C] con lo stile personalizzato.
+\begin{lstlisting}[language=C]
+  Distortion uiSum = 0;
+  
+  for ( ; iRows != 0; iRows -= iSubStep)
+  {
+    uiSum += abs(piOrg[0] - piCur[0]);
+    uiSum += abs(piOrg[1] - piCur[1]);
+    uiSum += abs(piOrg[2] - piCur[2]);
+    uiSum += abs(piOrg[3] - piCur[3]);
+    uiSum += abs(piOrg[4] - piCur[4]);
+    uiSum += abs(piOrg[5] - piCur[5]);
+    uiSum += abs(piOrg[6] - piCur[6]);
+    uiSum += abs(piOrg[7] - piCur[7]);
+    
+    piOrg += iStrideOrg;
+    piCur += iStrideCur;
+  }
+\end{lstlisting}
+
+Dove \verb|Distortion| è del tipo \verb|uint32_t| (rappresentante un intero 
+\emph{unsigned} a 32-bit), mentre \verb|piOrg| e \verb|piCur| sono del tipo 
+\verb|int16_t *| (rappresentanti un \emph{array} di interi \emph{signed} a 
+16-bit).\\
+
+Il codice si presta molto bene ad essere vettorizzato utilizzando le SIMD NEON:
+
+%TODO sostituire [language=C] con lo stile personalizzato.
+\begin{lstlisting}[language=C]
+  // Set all v_iSum lanes to 0
+  int16x8_t v_iSum = vdupq_n_s16(0);
+  
+  for ( ; iRows != 0; iRows -= iSubStep)
+  {
+    // Load 8 elements into vector
+    int16x8_t v_piOrg = vld1q_s16(piOrg);
+    int16x8_t v_piCur = vld1q_s16(piCur);
+    
+    // v_iSum += |v_piOrg - v_piCur|
+    v_iSum = vabaq_s16(v_iSum0, v_piOrg, v_piCur);
+  
+    piOrg += iStrideOrg;
+    piCur += iStrideCur;
+  }
+  
+  // Sum all lanes in v_iSum
+  Distortion uiSum = (Distortion)(
+      vgetq_lane_s16(v_iSum, 0) + vgetq_lane_s16(v_iSum, 1) +
+      vgetq_lane_s16(v_iSum, 2) + vgetq_lane_s16(v_iSum, 3) +
+      vgetq_lane_s16(v_iSum, 4) + vgetq_lane_s16(v_iSum, 5) +
+      vgetq_lane_s16(v_iSum, 6) + vgetq_lane_s16(v_iSum, 7)
+    );
+\end{lstlisting}
+
+Le \emph{intrinsic} utilizzate sono le seguenti:
+
+\begin{itemize}
+  \item \verb|vdupq_n_s16(int16_t value)| (\emph{\textbf{V}ector 
+    \textbf{Dup}licate})\\
+      Carica in tutti gli elementi del vettore il valore espresso da 
+      \verb|value|.\\
+      La \verb|q| indica che l'operazione viene effettuata a 128 bit invece dei 
+      canonici 64, mentre \verb|s16| (\emph{\textbf{S}igned \textbf{16}}) 
+      indica il tipo dato di ogni elemento.
+  \item \verb|vld1q_s16(int16_t const * ptr)| (\emph{\textbf{V}ector 
+    \textbf{L}oa\textbf{d}})\\
+      Carica tutti gli elementi del vettore a partire da un \emph{array} dello 
+      stesso tipo presente in memoria.
+  \item \verb|vabaq_s16(int16x8_t a, int16x8_t b, int16x8_t c)| 
+    (\emph{\textbf{V}ector \textbf{Ab}solute Difference and 
+    \textbf{A}ccumulate})\\
+      Ritorna il valore assoluto della differenza tra \verb|b| e \verb|c| 
+      aggiungendoci il valore di \verb|a|.
+  \item \verb| vgetq_lane_s16(int16x8_t vec, int lane)| (\emph{\textbf{V}ector 
+    \textbf{Get} \textbf{Lane}})\\
+      Ritorna il valore dell'elemento \verb|lane|-\emph{esimo} del vettore 
+      \verb|vec|.      
+\end{itemize}
+
+E' stato osservato come sia più veloce l'utilizzo di \verb|vgetq_lane_s16| su 
+ogni componente di \verb|v_iSum| al fine di ricavare la somma di tutte le 
+componenti del vettore. Degno di nota il fatto che a partire da ARMv8 sia stata 
+inserita un'\emph{intrinsic} dedicata a questa operazione.\\
+
+Più spinosa è stata la vettorizzazione delle funzioni dedicate al calcolo della 
+trasformata Walsh–Hadamard su blocchi di immagine, già implementata nella sua 
+versione \emph{fast}. Questa categoria di funzioni è stata vettorizzata solo 
+parzialmente ma, essendo le più onerose, il miglioramento prestazionale è stato 
+significativo.\\
+
+Di seguito un estratto della versione originale di \verb|xCalcHADs4x4|, presa 
+come esempio:
+
+%TODO sostituire [language=C] con lo stile personalizzato.
+\begin{lstlisting}[language=C]
+  Int k;
+  Distortion satd = 0;
+  
+  TCoeff diff[16], m[16], d[16];
+  
+  for (k = 0; k < 16; k += 4)
+  {
+    diff[k+0] = piOrg[0] - piCur[0];
+    diff[k+1] = piOrg[1] - piCur[1];
+    diff[k+2] = piOrg[2] - piCur[2];
+    diff[k+3] = piOrg[3] - piCur[3];
+  
+    piCur += iStrideCur;
+    piOrg += iStrideOrg;
+  }
+  
+  m[ 0] = diff[ 0] + diff[12];
+  m[ 1] = diff[ 1] + diff[13];
+  m[ 2] = diff[ 2] + diff[14];
+  m[ 3] = diff[ 3] + diff[15];
+  
+  m[ 4] = diff[ 4] + diff[ 8];
+  m[ 5] = diff[ 5] + diff[ 9];
+  m[ 6] = diff[ 6] + diff[10];
+  m[ 7] = diff[ 7] + diff[11];
+  
+  m[ 8] = diff[ 4] - diff[ 8];
+  m[ 9] = diff[ 5] - diff[ 9];
+  m[10] = diff[ 6] - diff[10];
+  m[11] = diff[ 7] - diff[11];
+  
+  m[12] = diff[ 0] - diff[12];
+  m[13] = diff[ 1] - diff[13];
+  m[14] = diff[ 2] - diff[14];
+  m[15] = diff[ 3] - diff[15];
+  
+  d[ 0] = m[ 0] + m[ 4];
+  d[ 1] = m[ 1] + m[ 5];
+  d[ 2] = m[ 2] + m[ 6];
+  d[ 3] = m[ 3] + m[ 7];
+  d[ 4] = m[ 8] + m[12];
+  d[ 5] = m[ 9] + m[13];
+  d[ 6] = m[10] + m[14];
+  d[ 7] = m[11] + m[15];
+  d[ 8] = m[ 0] - m[ 4];
+  d[ 9] = m[ 1] - m[ 5];
+  d[10] = m[ 2] - m[ 6];
+  d[11] = m[ 3] - m[ 7];
+  d[12] = m[12] - m[ 8];
+  d[13] = m[13] - m[ 9];
+  d[14] = m[14] - m[10];
+  d[15] = m[15] - m[11];
+  
+  /* ... */
+\end{lstlisting}
+
+Dove \verb|Int| e \verb|TCoeff| sono entrambi del tipo \verb|int32_t| 
+(rappresentanti un intero \emph{signed} a 32-bit).\\
+
+In questo caso è stata mostrata solo la porzione di codice che ha subito 
+modifiche per un migliore raffronto.\\
+
+Viene ora presentata la versione vettorizzata.
+
+%TODO usare style
+\begin{lstlisting}[language=C]
+  Int k;
+  Distortion satd = 0;
+  
+  TCoeff m[16], d[16];
+  int32x4_t v_diff[4], v_m[4], v_d[4];
+  
+  for (k = 0; k < 4; k++)
+  {
+    int16x4_t v_piOrg = vld1_s16(piOrg);
+    int16x4_t v_piCur = vld1_s16(piCur);
+    
+    v_diff[k] = vsubl_s16(v_piOrg, v_piCur);
+  
+    piCur += iStrideCur;
+    piOrg += iStrideOrg;
+  }
+  
+  v_m[0] = vaddq_s32(v_diff[0], v_diff[3]);
+  v_m[1] = vaddq_s32(v_diff[1], v_diff[2]);
+  v_m[2] = vsubq_s32(v_diff[1], v_diff[2]);
+  v_m[3] = vsubq_s32(v_diff[0], v_diff[3]);
+  
+  // Store 'v_m' in 'm'
+  vst1q_s32(m     , v_m[0]);
+  vst1q_s32(m + 4 , v_m[1]);
+  vst1q_s32(m + 8 , v_m[2]);
+  vst1q_s32(m + 12, v_m[3]);
+  
+  v_d[0] = vaddq_s32(v_m[0], v_m[1]);
+  v_d[1] = vaddq_s32(v_m[2], v_m[3]);
+  v_d[2] = vsubq_s32(v_m[0], v_m[1]);
+  v_d[3] = vsubq_s32(v_m[3], v_m[2]);
+  
+  // Store 'v_d' in 'd'
+  vst1q_s32(d     , v_d[0]);
+  vst1q_s32(d + 4 , v_d[1]);
+  vst1q_s32(d + 8 , v_d[2]);
+  vst1q_s32(d + 12, v_d[3]);
+  
+  /* ... */
+\end{lstlisting}
+
+Oltre alle precedenti \emph{intrinsic} vengono utilizzate le seguenti:
+
+\begin{itemize}
+  \item \verb|vsubl_s16(int16x4_t a, int16x4_t b)| (\emph{\textbf{V}ector 
+    \textbf{Sub}tract \textbf{L}ong})\\
+      Calcola le differenze a 16-bit tra i vettori \verb|a| e \verb|b|, il 
+      risultato è salvato in un vettore a 32-bit.
+  \item \verb|vaddq_s32(int32x4_t a, int32x4_t b)| (\emph{\textbf{V}ector 
+    \textbf{Add}})\\
+      Calcola la somma a 32-bit tra i vettori \verb|a| e \verb|b|.
+  \item \verb|vaddq_s32(int32x4_t a, int32x4_t b)| (\emph{\textbf{V}ector 
+    \textbf{Sub}tract})\\
+      Calcola la differenza a 32-bit tra i vettori \verb|a| e \verb|b|.
+  \item \verb|vst1q_s32(int32_t * ptr, int32x4_t val)| (\emph{\textbf{V}ector 
+    \textbf{St}ore})\\
+      Salva il vettore \verb|val| nell'\emph{array} di destinazione \verb|ptr|.
+\end{itemize}
 
 %-----------------------------------
 %       SUBSECTION 4
