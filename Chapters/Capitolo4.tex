@@ -550,9 +550,17 @@ quantizzazione del residuo delle predizioni o a sfasamenti dei vettori di moto
 predetti rispetto a quelli reali. Questo tipo di errore risulta relativamente 
 costante al variare dei campioni e può essere corretto, almeno in media, con un 
 \emph{offset} costante, come mostrato in figura.
-\\
-// Inserire immagine
-\\
+
+\begin{figure}[H]
+  \centering
+  \captionsetup{justification=raggedright}
+	  \includegraphics[scale=0.5]{Figures/Band_offset}
+  \caption[Esempio di \emph{Band Offset}]
+  	  {Esempio di \emph{Band Offset}, in cui la linea tratteggiata
+	   rappresenta i campioni originali mentre la linea continua mostra
+	   i campioni ricostruiti.}
+\end{figure}
+
 Eventualmente, HEVC permette ulteriori miglioramenti specificando quattro 
 \emph{offset}. \\
 Il range dei vaori dei campioni viene suddiviso in 32 bande omogenee; se i 
