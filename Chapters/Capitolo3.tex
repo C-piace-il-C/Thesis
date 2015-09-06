@@ -39,6 +39,18 @@ parte di un calcolatore.
 
 \subsection{Compressione \emph{lossy}}
 
+Se l'applicazione non richiede una ricostruzione esatta del messaggio originale 
+è possibile utilizzare più efficienti algoritmi di compressione con perdita 
+(\emph{lossy}).
+Questa classe di algoritmi ha solitamente come fruitore del risultato l'uomo. 
+In questo caso vengono sfruttate le conoscenze che si hanno dell'apparato 
+audio-visivo al fine di rendere impercettibile la perdita d'informazione, in 
+aggiunta a tutte le tecniche di compressione \emph{lossless}.
+La resa in termini di dimensioni del compresso è molto superiore rispetto alla 
+variante senza perdita. Nel caso di audio ed immagini la dimensione del dato di 
+uscita rispetto all'originale passa in media dal $50\%$ della variante 
+\emph{lossless} al $10\%$ se viene utilizzata una compressione \emph{lossy}.
+
 %-------------------------------------------------------------------------------
 %	SECTION 2
 %-------------------------------------------------------------------------------
