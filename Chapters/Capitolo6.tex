@@ -664,6 +664,116 @@ Oltre alle precedenti \emph{intrinsic} vengono utilizzate le seguenti:
 
 \subsection{Switch}
 
+%TODO rivedere questa frase
+Tra le ottimizzazioni possibili è stato dedicato del tempo alla sostituzione 
+degli \verb|if| a valori costanti con equivalenti \verb|switch|.
+In questi casi, infatti, il compilatore genera una \emph{jump table} basandosi 
+sui valori che può assumere la variabile utilizzata per lo \verb|switch|.\\
+
+Avendo identificato tra le funzioni più onerose \verb|filter|, verranno ora 
+citati due spezzoni di codice da essa:
+
+%TODO aggiungere style
+\begin{lstlisting}
+  c[0] = coeff[0];
+  c[1] = coeff[1];
+  
+  if (N >= 4)
+  {
+    c[2] = coeff[2];
+    c[3] = coeff[3];
+  }
+  if (N >= 6)
+  {
+    c[4] = coeff[4];
+    c[5] = coeff[5];
+  }
+  if (N == 8)
+  {
+    c[6] = coeff[6];
+    c[7] = coeff[7];
+  }
+  
+  /* ... */
+  
+  sum    = src[col + 0 * cStride] * c[0];
+  sum   += src[col + 1 * cStride] * c[1];
+  
+  if (N >= 4)
+  {
+    sum += src[col + 2 * cStride] * c[2];
+    sum += src[col + 3 * cStride] * c[3];
+  }
+  if (N >= 6)
+  {
+    sum += src[col + 4 * cStride] * c[4];
+    sum += src[col + 5 * cStride] * c[5];
+  }
+  if (N == 8)
+  {
+    sum += src[col + 6 * cStride] * c[6];
+    sum += src[col + 7 * cStride] * c[7];
+  }
+\end{lstlisting}
+
+Analizzando il codice è stato appurato che la variabile \verb|N| può assumere 
+valori tra $4$ ed $8$. E' possibile quindi sostituire i blocchi di \verb|if| 
+con dei più efficienti \verb|switch|. 
+%Avendo cura di porre il caso più ricorrente per primo (\verb|N = 8|), è 
+%%%possibile rimpiazzare tutte le istruzioni condizionali con una somma ed un 
+%%%%\emph{jump} relativo.
+
+%TODO style
+\begin{lstlisting}
+switch (N)
+{
+  case 8:
+    c[7] = coeff[7];
+    c[6] = coeff[6];
+  case 7:
+  case 6:
+    c[5] = coeff[5];
+    c[4] = coeff[4];
+  case 5:
+  case 4:
+    c[3] = coeff[3];
+    c[2] = coeff[2];
+  default:
+    c[1] = coeff[1];
+    c[0] = coeff[0];
+    break;
+}
+
+/* ... */
+
+switch (N)
+{
+  case 8:
+    sum += src[col + 7 * cStride] * c[7];
+    sum += src[col + 6 * cStride] * c[6];
+  case 7:
+  case 6:
+    sum += src[col + 5 * cStride] * c[5];
+    sum += src[col + 4 * cStride] * c[4];
+  case 5:
+  case 4:
+    sum += src[col + 3 * cStride] * c[3];
+    sum += src[col + 2 * cStride] * c[2];
+  default:
+    sum += src[col + 1 * cStride] * c[1];
+    sum += src[col + 0 * cStride] * c[0];
+    break;
+}
+\end{lstlisting}
+
+Riorganizzando il codice come sopra è possibile incrementare le prestazioni: 
+viene effettuato un solo \emph{jump} all'istruzione corretta. Le seguenti sono 
+già riordinate in modo tale da velocizzare il più possibile l'esecuzione del 
+codice.\\
+
+Questa modifica ha, ovviamente, un bassissimo impatto sulle prestazioni 
+complessive del codice. E' stata implementata esclusivamente a scopo didattico.
+
 %-----------------------------------
 %       SUBSECTION 5
 %-----------------------------------
