@@ -178,11 +178,24 @@ Tra le trasformate si ricordano:
 
 \section{Compressione video}
 
+La compressione di dati assume un ruolo fondamentale nella trasmissione o 
+memorizzazione di sequenze video. Citando l'introduzione: è assolutamente 
+impensabile non comprimere uno \emph{stream} a 1080p, che occupa circa 187 MB 
+per secondo di video. Vediamo ora i principi base che governano tutti gli 
+algoritmi di compressione d'immagini in sequenza.
+
 %-----------------------------------
 %       SUBSECTION 1
 %-----------------------------------
 
 \subsection{Ridondanza spaziale}
+
+Sfrutta il fatto che ogni immagine (\emph{frame}) del video, presa 
+singolarmente, può essere compressa. Valgono infatti tutte le teorie della 
+compressione di immagini trattate nel capitolo precedente.
+La sola ridondanza spaziale non è però sufficiente per garantire una buona 
+dimensione del video compresso, a meno ovviamente di non rinunciare a parecchia 
+qualità.
 
 %-----------------------------------
 %       SUBSECTION 2
