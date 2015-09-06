@@ -65,6 +65,48 @@ uscita rispetto all'originale passa in media dal $50\%$ della variante
 
 \subsection{Utilizzo delle trasformate}
 
+I metodi più diffusi per quanto riguarda la compressione di immagini prevedono 
+l'utilizzo di trasformate con lo scopo di rendere l'immagine più adatta ad 
+essere codificata.
+Essa viene prima divisa in blocchi di dimensioni ridotte, $N \cdot N$, 
+solitamente quadrate e non superiori a $64 \cdot 64$.\\
+
+Su ogni blocco viene effettuata separatamente una trasformata, il cui obiettivo 
+è quello di de-correlare il più possibile il segnale originale. La bontà di una 
+trasformata viene solitamente definita in base alle sue capacità di 
+de-correlazione e d'implementazione veloce.\\
+
+Tra le trasformate si ricordano:
+
+\begin{itemize}
+  
+  \item \textbf{\emph{Discrete Fourier transform} (DFT)}\\
+    Largamente utilizzata in analisi e filtraggio, ha la proprietà di avere un 
+    nucleo separabile (rendendo possibile quindi il calcolo della trasformata 
+    isolatamente su righe e colonne). Ha una sua implementazione veloce, 
+    \emph{Fast Fourier transform} (FFT), che rende il suo utilizzo molto 
+    appetibile.
+    
+  \item \textbf{\emph{Karhunen–Loève transform} (KLT)}\\
+    Fornisce il miglior compattamento d'energia rispetto alle altre 
+    trasformazioni possibili. Purtroppo la mancanza di un algoritmo veloce e la 
+    necessità di uno studio della covarianza dell'immagine da comprimere per 
+    generare le funzioni base la rendono scarsamente utilizzata.
+    
+  \item \textbf{\emph{Discrete Cosine transform} (DCT)}\\
+    Molto simile alla DFT, utilizza come funzioni base solo coseni.
+    Permette di ottenere una de-correlazione molto simile a quella ottenibile 
+    trasformando con KLT. La presenza di un algoritmo veloce la rende tutt'ora 
+    la trasformata più utilizzata per la compressione d'immagini.
+   
+  \item \textbf{\emph{Walsh-Hadamard transform (WHT)}}\\
+    La peggiore in termini di compattamento d'energia, ha la proprietà di poter 
+    essere eseguita con sole somme e sottrazioni ed ha una sua versione 
+    \emph{fast}. Il bassissimo costo computazionale l'ha resa largamente 
+    utilizzata.
+    
+\end{itemize}
+
 %-----------------------------------
 %       SUBSECTION 2
 %-----------------------------------
