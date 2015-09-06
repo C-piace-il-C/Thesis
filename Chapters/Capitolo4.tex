@@ -73,6 +73,9 @@ Per effettuare la codifica del segnale di errore un CB viene suddiviso in
 \emph{transform block}, dando forma ad una struttura a \emph{quadtree} che 
 viene chiamata \emph{residual quadtree} (RQT); solitamente la suddivisione 
 è mantenuta uguale per i TB Luma e Chroma.
+
+% Senza questo \newpage le immagini successive sono posizionate un po' male
+\newpage 
 %-------------------------------------------------------------------------------
 %	SECTION 2
 %-------------------------------------------------------------------------------
@@ -124,9 +127,16 @@ che siano presenti in numero maggiore intorno alle due direzioni più frequenti;
  il numero totale di angoli e la loro disposizione è il risultato della ricerca 
 di un buon \emph{trade-off} tra qualità e complessità computazionale 
 dell'encoder.
-\\
-// Immagine qui
-\\
+
+\begin{figure}[H]
+  \centering
+  \captionsetup{justification=raggedright}
+  \includegraphics[scale=0.6]{Figures/Angular_prediction}
+  \caption[Definizione degli angoli nella \emph{angular prediction}]
+	  {Definizione degli angoli nella \emph{angular prediction} di HEVC,
+           numerati da 2 a 34 con i relativi parametri di spostamento.}
+\end{figure}
+
 Gli angoli prendono il nome di ``modi predittivi'' (\emph{prediction modes}) e 
 il loro raggruppamento è diviso tra orizzontali e verticali.
 Nell'immagine di cui sopra si può notare come gli angoli ``orizzontali'' siano 
@@ -634,7 +644,7 @@ risultano essere i seguenti:
   si desidera binarizzare, verrà effettuata una binarizzazione \emph{Unary} 
   per tutti i numeri eccezion fatta per $cMax$ che non verrà terminato con $0$.
 
-\item \emph{K-th Under Truncated Rice} (TRk): Sia N il numero che si vuole 
+\item \emph{K-th Order Truncated Rice} (TRk): Sia N il numero che si vuole 
   binarizzare $\Rightarrow V = \left\lfloor\frac{N}{2^k}\right\rfloor$. In 
   questo modo sono stati rimossi i $k$ bit meno significativi di $N$; il 
   risultato si ottiene affiancando alla rappresentazione \textbf{TrU} di $V$ 

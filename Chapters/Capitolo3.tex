@@ -11,11 +11,56 @@
 %-------------------------------------------------------------------------------
 
 \section{Compressione dati}
-
+La disponibilità di calcolatori sempre più potenti ad un costo sempre più
+contenuto ha portato alla conseguente possibilità di effettuare elaborazioni
+via via più complesse, incrementando di pari passo la mole di dati su cui
+queste elaborazioni vengono svolte. \\
+(Per fare un esempio) nel 1988 venne proposto, all'interno di H.261, lo standard
+\emph{Common Intermediate Format} (CIF) per uniformare la risoluzione verticale
+ed orizzontale delle sequenze video solitamente utilizzate nelle teleconferenze.
+Lo standard prevede una risoluzione pari a 352${\times}$288 pixel ed un
+\emph{frame rate} pari a 30000/1001 (circa 29.97) \emph{frames} al secondo;
+prendendo in considerazione una codifica senza compressione in uno spazio
+colore RGB con 8 bit per canale ed applicando la formula
+\begin{align*}
+  \text{MB}\!/\!\text{s} = 
+  W \times H \times bit\_depth \times frames\!/\!\text{s} \:/\: 1000
+\end{align*}
+si ottiene che un secondo di sequenza video pesa circa 9 \emph{megabyte}. \\
+Considerando la capacità tipica di un disco rigido dell'epoca (compresa
+tra i 20 e i 60MB$^{[citazione\: necessaria]}$) o la larghezza di banda 
+necessaria a trasmettere una tale sequenza, risulta evidente come la 
+compressione dei dati sia stata una grande necessità; se effettuiamo lo stesso 
+calcolo utilizzando una risoluzione standard moderna (e.g., 1920$\times$1080), 
+otteniamo un peso di circa 187MB per ogni secondo contenuto nella sequenza 
+video. \\
+Sebbene a tutt'oggi le capacità di memorizzazione siano incrementate di fattori
+che variano tra le 12'500 e le 200'000 volte\footnote{Sono state confrontate
+rispettivamente capacità di 500GB e 8TB con la capacità media di 40MB 
+dell'epoca.}, la velocità di trasmissione dei dati non è aumentata di pari 
+passo; la compressione dei dati rimane comunque anche un'ottima risorsa per
+poter immagazzinare grandi quantità di dati con la possibilità di preservare
+la qualità originale di questi ultimi.
 %-----------------------------------
 %	SUBSECTION 1
 %-----------------------------------
 \subsection{Compressione \emph{lossless}}
+
+Gli algoritmi di compressione senza perdita (\emph{lossless}) solitamente 
+sfruttano le ridondanze per rappresentare i dati nel modo più sintetico 
+possibile senza andare ad intaccare il messaggio originale: senza cioè alcuna 
+perdita d'informazione.\\
+
+Il limite di questa classe di algoritmi è definito dal primo teorema di 
+Shannon, che definisce il significato operativo di entropia e vincola la 
+massima compressione possibile.
+Eccetto alcuni casi particolari è estremamente dispendioso in termini 
+computazionali avvicinarsi esattamente al limite teorico della compressione.\\
+
+Queste tecniche sono necessarie laddove non è ammessa la corruzione del dato 
+originale: compressione di documenti e programmi ma anche di audio e video ad 
+alta qualità, per applicazioni professionali o di estrazione d'informazione da 
+parte di un calcolatore.
 
 %-----------------------------------
 %	SUBSECTION 2
@@ -23,26 +68,76 @@
 
 \subsection{Compressione \emph{lossy}}
 
+Se l'applicazione non richiede una ricostruzione esatta del messaggio originale 
+è possibile utilizzare più efficienti algoritmi di compressione con perdita 
+(\emph{lossy}).
+Questa classe di algoritmi ha solitamente come fruitore del risultato l'uomo. 
+In questo caso vengono sfruttate le conoscenze che si hanno dell'apparato 
+audio-visivo al fine di rendere impercettibile la perdita d'informazione, in 
+aggiunta a tutte le tecniche di compressione \emph{lossless}.
+La resa in termini di dimensioni del compresso è molto superiore rispetto alla 
+variante senza perdita. Nel caso di audio ed immagini la dimensione del dato di 
+uscita rispetto all'originale passa in media dal $50\%$ della variante 
+\emph{lossless} al $10\%$ se viene utilizzata una compressione \emph{lossy}.
+
 %-------------------------------------------------------------------------------
 %	SECTION 2
 %-------------------------------------------------------------------------------
 
 \section{Compressione di immagini}
 
+% \subsection{Il sistema visivo umano}
+
 %-----------------------------------
 %       SUBSECTION 1
 %-----------------------------------
 
-\subsection{Il sistema visivo umano}
+\subsection{Utilizzo delle trasformate}
+
+I metodi più diffusi per quanto riguarda la compressione di immagini prevedono 
+l'utilizzo di trasformate con lo scopo di rendere l'immagine più adatta ad 
+essere codificata.
+Essa viene prima divisa in blocchi di dimensioni ridotte, $N \cdot N$, 
+solitamente quadrate e non superiori a $64 \cdot 64$.\\
+
+Su ogni blocco viene effettuata separatamente una trasformata, il cui obiettivo 
+è quello di de-correlare il più possibile il segnale originale. La bontà di una 
+trasformata viene solitamente definita in base alle sue capacità di 
+de-correlazione e d'implementazione veloce.\\
+
+Tra le trasformate si ricordano:
+
+\begin{itemize}
+  
+  \item \textbf{\emph{Discrete Fourier transform} (DFT)}\\
+    Largamente utilizzata in analisi e filtraggio, ha la proprietà di avere un 
+    nucleo separabile (rendendo possibile quindi il calcolo della trasformata 
+    isolatamente su righe e colonne). Ha una sua implementazione veloce, 
+    \emph{Fast Fourier transform} (FFT), che rende il suo utilizzo molto 
+    appetibile.
+    
+  \item \textbf{\emph{Karhunen–Loève transform} (KLT)}\\
+    Fornisce il miglior compattamento d'energia rispetto alle altre 
+    trasformazioni possibili. Purtroppo la mancanza di un algoritmo veloce e la 
+    necessità di uno studio della covarianza dell'immagine da comprimere per 
+    generare le funzioni base la rendono scarsamente utilizzata.
+    
+  \item \textbf{\emph{Discrete Cosine transform} (DCT)}\\
+    Molto simile alla DFT, utilizza come funzioni base solo coseni.
+    Permette di ottenere una de-correlazione molto simile a quella ottenibile 
+    trasformando con KLT. La presenza di un algoritmo veloce la rende tutt'ora 
+    la trasformata più utilizzata per la compressione d'immagini.
+   
+  \item \textbf{\emph{Walsh-Hadamard transform (WHT)}}\\
+    La peggiore in termini di compattamento d'energia, ha la proprietà di poter 
+    essere eseguita con sole somme e sottrazioni ed ha una sua versione 
+    \emph{fast}. Il bassissimo costo computazionale l'ha resa largamente 
+    utilizzata.
+    
+\end{itemize}
 
 %-----------------------------------
 %       SUBSECTION 2
-%-----------------------------------
-
-\subsection{Utilizzo delle trasformate}
-
-%-----------------------------------
-%       SUBSECTION 3
 %-----------------------------------
 
 \subsection{Principali algoritmi}
