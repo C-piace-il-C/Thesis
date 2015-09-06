@@ -11,7 +11,36 @@
 %-------------------------------------------------------------------------------
 
 \section{Compressione dati}
-
+La disponibilità di calcolatori sempre più potenti ad un costo sempre più
+contenuto ha portato alla conseguente possibilità di effettuare elaborazioni
+via via più complesse, incrementando di pari passo la mole di dati su cui
+queste elaborazioni vengono svolte. \\
+(Per fare un esempio) nel 1988 venne proposto, all'interno di H.261, lo standard
+\emph{Common Intermediate Format} (CIF) per uniformare la risoluzione verticale
+ed orizzontale delle sequenze video solitamente utilizzate nelle teleconferenze.
+Lo standard prevede una risoluzione pari a 352${\times}$288 pixel ed un
+\emph{frame rate} pari a 30000/1001 (circa 29.97) \emph{frames} al secondo;
+prendendo in considerazione una codifica senza compressione in uno spazio
+colore RGB con 8 bit per canale ed applicando la formula
+\begin{align*}
+  \text{MB}\!/\!\text{s} = 
+  W \times H \times bit\_depth \times frames\!/\!\text{s} \:/\: 1000
+\end{align*}
+si ottiene che un secondo di sequenza video pesa circa 9 \emph{megabyte}. \\
+Considerando la capacità tipica di un disco rigido dell'epoca (compresa
+tra i 20 e i 60MB$^{[citazione\: necessaria]}$) o la larghezza di banda 
+necessaria a trasmettere una tale sequenza, risulta evidente come la 
+compressione dei dati sia stata una grande necessità; se effettuiamo lo stesso 
+calcolo utilizzando una risoluzione standard moderna (e.g., 1920$\times$1080), 
+otteniamo un peso di circa 187MB per ogni secondo contenuto nella sequenza 
+video. \\
+Sebbene a tutt'oggi le capacità di memorizzazione siano incrementate di fattori
+che variano tra le 12'500 e le 200'000 volte\footnote{Sono state confrontate
+rispettivamente capacità di 500GB e 8TB con la capacità media di 40MB 
+dell'epoca.}, la velocità di trasmissione dei dati non è aumentata di pari 
+passo; la compressione dei dati rimane comunque anche un'ottima risorsa per
+poter immagazzinare grandi quantità di dati con la possibilità di preservare
+la qualità originale di questi ultimi.
 %-----------------------------------
 %	SUBSECTION 1
 %-----------------------------------
