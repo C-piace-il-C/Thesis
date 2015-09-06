@@ -114,6 +114,40 @@ I rimanenti due sono stati oggetto di
 %-------------------------------------------------------------------------------
 
 \section{Strategie di ottimizzazione}
+Ottimizzazione del software è un termine generico che può avere diversi 
+significati. Fondamentalmente si tratta di apportare delle modifiche al codice 
+per ottenere dei benefici, e dunque la determinante è lo scopo. \`E pertanto di 
+primaria importanza chiarire subito che 
+questo lavoro è stato svolto con l'intenzione di velocizzare un programma su 
+di una piattaforma specifica. Effetti collaterali tipici e accettati possono 
+essere, di conseguenza, la comparsa di codice dipendente dall'architettura, 
+vale a dire non funzionante su sistemi incompatibili come potrebbe essere un 
+comune 
+personal computer x86, e l'utilizzo di più risorse - principalmente memoria, 
+sia volatile che di massa. \\
+Oltre all'obiettivo, è anche importante individuare la tipologia delle 
+ottimizzazioni 
+che abbiamo applicato. Le ottimizzazioni del software possono 
+rientrare, in prima istanza, in due 
+categorie: quelle che migliorano l'algoritmo e quelle che migliorano il codice. 
+\\La prima categoria contiene senz'altro quelle più intelligenti ed 
+interressanti, nonché quelle che andrebbero ponderate per prime. L'esempio già 
+fatto della trasformata veloce di Fourier rientra proprio in questa categoria. 
+Si tratta, in essenza, di migliorare l'algoritmo, non la sua implementazione.
+Questo tipo di ottimizzazione porta tipicamente maggiori benefici ed ha 
+l'enorme pregio di migliorare automaticamente qualuqune ragionevole 
+implementazione.
+\\Le ottimizzazioni della seconda categoria sono solitamente più semplici e 
+banali, tanto che la tendenza degli ultimi anni è quella di delegarle al 
+computer per favorire la semplicità di programmazione, come nei linguaggi di 
+più alto livello. Queste ottimizzazioni possono consistere in una gestione 
+migliore delle risorse disponibili, come nel caso della parallelizzazione 
+(sfruttare tutti i core) o nell'impiego di hardware dedicato.
+Non cambia quindi tanto ciò che si fa, o algoritmo, quanto il modo di 
+svolgerlo.\\
+Le ottimizzazioni affrontate in questo lavoro appartengono per ovvi motivi alla 
+seconda categoria
+%vooooleeevi eh, col taccuino
 
 %-----------------------------------
 %       SUBSECTION 1
