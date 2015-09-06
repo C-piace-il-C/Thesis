@@ -114,6 +114,40 @@ I rimanenti due sono stati oggetto di
 %-------------------------------------------------------------------------------
 
 \section{Strategie di ottimizzazione}
+Ottimizzazione del software è un termine generico che può avere diversi 
+significati. Fondamentalmente si tratta di apportare delle modifiche al codice 
+per ottenere dei benefici, e dunque la determinante è lo scopo. \`E pertanto di 
+primaria importanza chiarire subito che 
+questo lavoro è stato svolto con l'intenzione di velocizzare un programma su 
+di una piattaforma specifica. Effetti collaterali tipici e accettati possono 
+essere, di conseguenza, la comparsa di codice dipendente dall'architettura, 
+vale a dire non funzionante su sistemi incompatibili come potrebbe essere un 
+comune 
+personal computer x86, e l'utilizzo di più risorse - principalmente memoria, 
+sia volatile che di massa. \\
+Oltre all'obiettivo, è anche importante individuare la tipologia delle 
+ottimizzazioni 
+che abbiamo applicato. Le ottimizzazioni del software possono 
+rientrare, in prima istanza, in due 
+categorie: quelle che migliorano l'algoritmo e quelle che migliorano il codice. 
+\\La prima categoria contiene senz'altro quelle più intelligenti ed 
+interressanti, nonché quelle che andrebbero ponderate per prime. L'esempio già 
+fatto della trasformata veloce di Fourier rientra proprio in questa categoria. 
+Si tratta, in essenza, di migliorare l'algoritmo, non la sua implementazione.
+Questo tipo di ottimizzazione porta tipicamente maggiori benefici ed ha 
+l'enorme pregio di migliorare automaticamente qualuqune ragionevole 
+implementazione.
+\\Le ottimizzazioni della seconda categoria sono solitamente più semplici e 
+banali, tanto che la tendenza degli ultimi anni è quella di delegarle al 
+computer per favorire la semplicità di programmazione, come nei linguaggi di 
+più alto livello. Queste ottimizzazioni possono consistere in una gestione 
+migliore delle risorse disponibili, come nel caso della parallelizzazione 
+(sfruttare tutti i core) o nell'impiego di hardware dedicato.
+Non cambia quindi tanto ciò che si fa, o algoritmo, quanto il modo di 
+svolgerlo.\\
+Le ottimizzazioni affrontate in questo lavoro appartengono per ovvi motivi alla 
+seconda categoria
+%vooooleeevi eh, col taccuino
 
 %-----------------------------------
 %       SUBSECTION 1
@@ -372,22 +406,25 @@ dell'encoder è calata, come mostra la tabella.
   \begin{tabular}{l | l | l}
     & ASM & C \\ \hline
     $8\cdot10^9$ clamp & $7065.6$ (ms) & $8072.7$ (ms) \\
-    $50$ frame \verb|highway_cif.yuv| & $1493.6142$ (s) &  $1408.4262$ (s) \\
+    $72$ frame \verb|highway_cif.yuv| & $1493.6142$ (s) &  $1408.4262$ (s) \\
   \end{tabular}
 \end{center}
-Le righe della tabella mostrano rispettivamente una media delle prove
+Le righe della tabella mostrano rispettivamente una media di $10$ prove
 fatte con un 
 codice di test 
-compilato in \verb|-Ofast| /*INSERISCI IL CODICE IN APPENDICE*/ e implementando
-l'ottimizzazione nel software.\newline
+compilato in \verb|-Ofast| /*INSERISCI IL CODICE IN APPENDICE*/ e di $5$ prove 
+con il software HM eseguito sui primi $72$ 
+frame 
+della sequenza \verb|highway_cif.yuv|.\newline
 Il motivo di tale discrepanza può essere visto 
 nel fatto che, vicino alla funzione Assembly inline, GCC è costretto ad 
 inserire un prologo ed un epilogo in cui salva e carica lo stato del programma, 
-mentre in una serie di test ciò non è necessario.\newline
-Una possibile soluzione consiste nel riscrivere l'intera funzione \verb|filter| 
-in Assembly in maniera da predisporre correttamente i dati, eventualmente
+mentre nella serie di test ciò non è necessario.\newline
+Una possibile soluzione consiste nel riscrivere almeno parziamente la funzione 
+\verb|filter| 
+in Assembly per predisporre correttamente i dati, eventualmente
 ottimizzando anche altre parti del codice, ma è un'operazione che al momento 
-esula dalle nostre competenze. // PROVA A FARLO
+esula dalle nostre competenze.
 
 %-----------------------------------
 %       SUBSECTION 3
@@ -787,34 +824,35 @@ Gli attributi possono essere aggiunti con la keyword
 \verb|__attribute__((a1,a2,...))| inserita nella dichiarazione di una funzione 
 tra il tipo di ritorno ed il nome.\\
 Segue una lista con gli attributi presi in considerazione 
-per l'ottimizzazione, anche se in seguito non sono stati sfruttati tutti. 
+per l'ottimizzazione, anche se in seguito non sono stati sfruttati tutti.
+ 
 \begin{itemize}
 	\item\verb|hot|\\
 	L'attributo \verb|hot| serve per comunicare che la funzione è un ``punto 
-	caldo'' del programma, ovvero una funzione che si prevede impegnare il 
-	programma per una porzione di tempo considerevole. Queste funzioni vengono 
-	ottimizzate più 
-	``aggressivamente'', tipicamente a spese della memoria, e 
-	vengono collocate insieme in una sezione speciale per soddisfare 
-	maggiormente 
-	il principio della località, utile a diminuire i \emph{cache miss}.\\
+	caldo'', ovvero una funzione che si assume impegnare una 
+	porzione considerevole del tempo di esecuzione del programma.
+	Queste funzioni vengono ottimizzate più ``aggressivamente'', tipicamente a 
+	spese della memoria, e vengono collocate insieme in una sezione speciale 
+	per soddisfare maggiormente il principio della località, utile a diminuire 
+	i \emph{cache miss}.\\
 	\verb|hot| è stato applicato a \verb|filter|, alle funzioni 
 	\verb|xCalcHADs| e \verb|xGetSAD|.
+	
 	\item\verb|always_inline|\\
 	Ci sono casi in cui l'estensione \verb|__inline| viene ignorata dal 
 	compilatore. Alcuni esempi sono la compilazione senza ottimizzazioni, le 
 	funzioni che superano una certa soglia massima di lunghezza, misurata come 
-	numero di istruzioni, oppure la percentuale di espansione di funzioni 
-	complesse causata da inline oltre un'altra soglia.
-	soglia.
-	Questo attributo 
-	permette di rendere inline una funzione ignorando tali restrizioni. Nella 
-	pratica però è stato preferito \verb|__inline|, sia perché come già detto 
-	le 
-	compilazioni vengono fatte in \verb|-Ofast|, sia perché, durante le prove, 
-	\verb|always_inline| ha sempre generato errori di compilazione.
-	\verb|__inline| è stato applicato a \verb|filterCopy|, \verb|filter|, su 
-	tutte le \verb|xCalcHADs| e su tutte le \verb|xGetSAD|.
+	numero di istruzioni, oppure le funzioni la cui percentuale di espansione 
+	causata da inline 
+	$\nicefrac{\text{lunghezza}_\text{f}}{\text{lunghezza}_\text{i}}$ 
+	 oltre una determinata soglia.
+	Questo attributo permette di rendere inline una funzione ignorando tali 
+	restrizioni. Nella pratica però è stato preferito \verb|__inline|, sia 
+	perché come già detto le compilazioni vengono fatte in \verb|-Ofast|, sia 
+	perché, durante le prove, \verb|always_inline| ha sempre generato errori di 
+	compilazione. \verb|__inline| è stato applicato a \verb|filterCopy|, 
+	\verb|filter|, a 
+	tutte le \verb|xCalcHADs| e le \verb|xGetSAD|.
 
 	\item\verb|pure|\\
 	L'attributo \verb|pure| comunica al compilatore che la funzione non produce 
@@ -828,6 +866,7 @@ per l'ottimizzazione, anche se in seguito non sono stati sfruttati tutti.
 	codice, o, addiriturra, in posizioni diverse, a patto di non modificare i 
 	parametri in ingresso. \verb|pure| è stato applicato a tutte le 
 	funzioni \verb|xCalcHADs|
+	
 	\item\verb|const|\\
 	L'attributo \verb|const| è simile a \verb|pure| ma più restrittivo, visto 
 	che descrive una funzione che non accede nemmeno a variabili globali.
@@ -843,14 +882,154 @@ per l'ottimizzazione, anche se in seguito non sono stati sfruttati tutti.
 	programma. Per questo motivo, GCC può evitare le ottimizzazioni più dure 
 	risparmiando risorse che possono essere utilizzate per altre funzioni. 
 	Anche questo attributo non è stato utilizzato in quanto, nonostante tutte 
-	le ottimizzazioni implementate, il software non raggiunge mai i $300$ MB di 
+	le ottimizzazioni implementate, il software non raggiunge mai i $300$ B di 
 	memoria occupata (neanche $\nicefrac{1}{3}$ di quella disponibile) 
-	//AGGIUNGI CONFRONTO DIMENSIONE ESEGUIBILE MASTER-OPT / MASTER.
+	\\ //AGGIUNGI CONFRONTO DIMENSIONE ESEGUIBILE opt/non opt.
 \end{itemize}
 
+L'utilizzo degli attributi, però, non ha avuto alcun riscontro sulle 
+performance, che in media sono rimaste invariate. \\
+// MOSTRA ASM DEI CAMBIAMENTI \\
+// FAI IPOTESI
 %-----------------------------------
 %       SUBSECTION 6
 %-----------------------------------
 
 \subsection{Multithread}
+Nonostante l'evoluzione di software ed hardware sia ormai da anni concentrata 
+sulla parallelizzazione, HM non è stato pensato né scritto per tale 
+caratteristica. Ne segue che una delle ottimizzazioni più doverose è stata il 
+multithreading.
+\par Teoricamente, il limite massimo raggiungibile dallo \emph{speedup} $S$ 
+servendosi 
+di $N$ thread paralleli è proprio $N$, ottenuto secondo la legge di Amdahl
+$$S = \frac{1}{(1-P)+\frac{P}{N}}$$
+essendo $P$ la frazione di codice parallelizzabile, dove $1$ corrisponde al 
+$100\%$. Ponendo infatti $P = 1$ si ricava $S = N$. Ovviamente uno speedup 
+esattamente di $N$ non si può mai ottenere, sia perché risulta molto difficile 
+rendere 
+$P$ precisamente $1$, sia perché la legge non tiene conto dell'overhead di 
+controllo associato alla gestione della sincronizzazione dei thread, che 
+tipicamente passa anche per il sistema operativo, rallentando ulteriormente.
+\par Le strategie di parallelizzazione sono molteplici. Nell'ambito di questo 
+lavoro ne abbiamo considerate due relativamente complementari, che aprono
+una buona prospettiva per la discussione dei fattori che normalmente 
+caratterizzano il software parallelo. Le tecniche esaminate sono la Wavefront 
+Parallel Processing (WPP) e la Sequence Subdivision (SS) /*assolutamente da 
+cambiare, nome scherzoso di fantasia*/.
 
+\paragraph*{WPP} Questa tecnica consiste nella parallelizzazione della 
+predizione e 
+dell'entropy coding a livello di CTU. Come è noto, però, i CTU non sono 
+indipendenti tra loro, e dunque le operazioni che li riguardano non possono 
+essere parallelizzate senza i controlli adeguati. In particolare, la predizione 
+e l'entropy coding di un CTU necessita delle informazioni relative ai blocchi 
+vicini a sinistra, alto-sinitra, alto, alto-destra /*spiega perché*/. Questo 
+significa che i thread devono essere in grado di attendere finché le 
+informazioni necessarie al loro lavoro non diventano disponibili. \\
+Una possibile realizzazione di questa tecnica consiste nell'utilizzo di una 
+tavola condivisa tra i thread, per esempio attraverso un riferimento globale, 
+con le informazioni circa lo stato di completamento dei vari CTU. Il codice dei 
+singo thread si occupa quindi di consultare la tabella per decidere se operare 
+sui prossimi CTB oppure attendere /*meglio sleep o nop?*/.\\
+Un'altra complicazione sta nella gestione dell'ordine di esecuzione dei blocchi 
+per evitare che più thread lavorino sullo stesso CTU. La soluzione più semplice 
+è assegnare ad ogni thread una riga diversa servendosi di \verb|threadid|, un 
+parametro normalmente impostato durante la creazione di un thread che ne 
+rappresenta un identificativo unico e incrementale. Un generico thread lavora 
+sulla riga $\verb|threadid| + r \cdot N$, dove $r$, inizialmente a $0$, viene 
+incrementato di $1$ ogni volta che si terminata una riga, e $N$ è il numero di 
+thread in parallelo.  \\
+La percentuale di codice parallelizzabile non è il $100\%$ dato che, nonostante 
+la parte predittiva e l'entropy encoding rappresentino buona parte della 
+codifica H265, non ne costituiscono comunque la totalità.
+
+\paragraph*{SS} Questa tecnica di parallelizzazione consiste nella suddivisione 
+della sequenza di partenza in più parti indipendenti, intendendo per 
+``parti'' blocchi di frame contigui.\\
+Se $N$ è il numero di core a disposizione, 
+si vuole suddividere la sequenza in $N$ parti omogenee (grandi uguale). I frame 
+chiave sono quelli predetti interamente intra, visto che rompono ogni 
+legame di dipendenza con quelli precedenti, e possono servire da riferimento 
+per la suddivisione.\\
+Successivamente è possibile far partire $N$ thread di encoding 
+indipendenti, ciascuno su una parte diversa della sequenza. In seguito, data la 
+struttura 
+pacchettizzata dell'output di HEVC, è possibile ricomporre l'intera 
+sequenza semplicemente congiungendo nel corretto ordine le $N$ sequenze binarie 
+prodotte. \\
+Come evidente, questa tecnica annulla ogni tipo di \emph{overhead} di 
+sincronizzazione e gestione dei thread e permette di coprire il $100\%$ del 
+codice per la parallelizzazione. Il difetto in questo caso non sta nel codice 
+ma nei dati, perché per raggiungere lo speedup massimale è necessario che i 
+frame intra siano disposti secondo una certa logica. Tuttavia, per garantire 
+dei bunoi livelli di parallelismo, è sufficiente che il valore di 
+\verb|intraperiod| (numero di frame tra due intra) sia sufficientemente più 
+basso del numero complessivo di frame della sequenza da codificare. \\
+Naturalmente anche in condizioni perfette non si può raggiungere uno speedup di 
+$N$ per via delle procedure di avvio dei thread e di
+unione delle sequenze binarie, che penalizzano la codifica 
+rispetto alla versione \emph{singlethread}. La buona 
+notizia è che tali operazioni sono trascurabili già con sequenze corte, e lo 
+sono sempre più, in proporzione, con l'aumentare del numero di frame.\\
+Infine è bene osservare che questa tecnica non può essere applicata 
+nei casi di encoding in tempo reale, anche se ciò diventa secondario se si nota 
+che HM di per sé non ammette tale opzione.
+\par Segue uno schema che riassume le due tecniche.
+\\ // DIMINUISCI LA LUNGHEZZA DELLA PRIMA COLONNA
+\begin{center}
+	\begin{tabularx}{\textwidth}{>{}X|>{}X|>{}X}
+		
+		    & Pros & Cons \\ \hline
+		WPP & 
+		    \begin{itemize}
+		    	\item Più adatto ai casi reali
+			\end{itemize}
+			&
+			\begin{itemize}
+				\item Alto \emph{overhead}
+				\item Difficoltà implementativa
+				\item $P < 1$
+			\end{itemize} \\ \hline
+		SS &
+		   \begin{itemize}
+			   	\item Nessun \emph{overhead}
+			   	\item Semplicità implementativa
+			   	\item $P = 1$
+		   \end{itemize}
+		   &
+		   \begin{itemize}
+		   	    \item Preferibile \verb|intraperiod| basso
+		   \end{itemize}
+	\end{tabularx}
+\end{center}
+\paragraph*{} Come prima cosa abbiamo implementato la seconda tecnica, quella 
+più 
+semplice e verosimilmente la più efficiente, data la struttura fissata del GOP, 
+riuscendo ad ottenere un quasi ideale fattore di speedup $S \approx 2$. In 
+seguito abbiamo provato anche la prima, purtroppo senza successo dato l'elevato 
+numero di modifiche, anche strutturali, che presentava un codice non 
+predisposto all'esecuzione parallela.
+\\Per programmare in \emph{multithreading} in C abbiamo utilizzato la libreria 
+\verb|pthread| includendo \verb|pthread.h| e aggiungendo l'opzione di 
+compilazione \verb|-pthread|.\\
+Per avviare un thread è necessario costruirne la funzione principale seguendo 
+il prototipo \verb|void *(*start_routine)(void*)|. Il parametro di ingresso di 
+tipo \verb|void*| può essere utilizzato per fornire al thread dei dati 
+preliminari, come \verb|threadid|, ma anche degli indirizzi di 
+memoria dove il thread può registrare eventuali risultati o comunicazioni verso 
+il resto del programma, oppure leggere eventuali comandi o dati dinamici 
+provenienti da altri thread. \\
+Scritta la routine, è possibile richiamare \verb|pthread_create| per creare e 
+far partire il thread. \verb|pthread_join| può essere utilizzata per bloccare 
+l'esecuzione del thread chiamante finché non è terminata quella di un altro 
+thread specificato, utile per la sincronizzazione. Per terminare l'esecuzione 
+di un thread, si può richiamare \verb|pthread_exit|, che ha lo stesso effetto 
+di un semplice \verb|return(ptr)|.\\
+Segue il codice scritto per l'implementazione.\\[8pt]
+\begin{center}
+\lstinputlisting[language=C,caption=]{Codes/multithreading.c}
+\end{center}
+La parte di main rimossa per brevità è poco interessante e consiste nella 
+lettura dei parametri dai file di configurazione per la costruzione dei valori 
+di input per il secondo thread, \verb|argc| e \verb|argv|.
