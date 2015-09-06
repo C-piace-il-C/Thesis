@@ -119,7 +119,7 @@ I rimanenti due sono stati oggetto di
 %       SUBSECTION 1
 %-----------------------------------
 
-\subsection{Compilation flags}
+\subsection{Opzioni di Compilazione}
 Per prima cosa abbiamo dedicato del tempo allo studio delle opzioni di 
 compilazione fornite da GCC (\emph{GNU Compiler Collection}) al fine di partire 
 da una ``base stabile" da ottimizzare.\\
@@ -393,7 +393,7 @@ esula dalle nostre competenze. // PROVA A FARLO
 %       SUBSECTION 3
 %-----------------------------------
 
-\subsection{NEON intrinsics}
+\subsection{Intrinsic NEON}
 
 Tra le varie ottimizzazioni che implicavano la modifica del codice, è stato 
 dato largo spazio alle SIMD di ARM: le cosiddette NEON.\\
@@ -778,7 +778,75 @@ complessive del codice. E' stata implementata esclusivamente a scopo didattico.
 %       SUBSECTION 5
 %-----------------------------------
 
-\subsection{Attributes}
+\subsection{Attributi}
+Oltre alle opzioni di compilazione, GCC mette a disposizione un insieme di   
+attributi per descrivere esplicitamente il comportamento di funzioni (ma anche 
+variabili e tipi), spesso con il fine di migliorare la qualità 
+dell'ottimizzazione.\\
+Gli attributi possono essere aggiunti con la keyword 
+\verb|__attribute__((a1,a2,...))| inserita nella dichiarazione di una funzione 
+tra il tipo di ritorno ed il nome.\\
+Segue una lista con gli attributi presi in considerazione 
+per l'ottimizzazione, anche se in seguito non sono stati sfruttati tutti. 
+\begin{itemize}
+	\item\verb|hot|\\
+	L'attributo \verb|hot| serve per comunicare che la funzione è un ``punto 
+	caldo'' del programma, ovvero una funzione che si prevede impegnare il 
+	programma per una porzione di tempo considerevole. Queste funzioni vengono 
+	ottimizzate più 
+	``aggressivamente'', tipicamente a spese della memoria, e 
+	vengono collocate insieme in una sezione speciale per soddisfare 
+	maggiormente 
+	il principio della località, utile a diminuire i \emph{cache miss}.\\
+	\verb|hot| è stato applicato a \verb|filter|, alle funzioni 
+	\verb|xCalcHADs| e \verb|xGetSAD|.
+	\item\verb|always_inline|\\
+	Ci sono casi in cui l'estensione \verb|__inline| viene ignorata dal 
+	compilatore. Alcuni esempi sono la compilazione senza ottimizzazioni, le 
+	funzioni che superano una certa soglia massima di lunghezza, misurata come 
+	numero di istruzioni, oppure la percentuale di espansione di funzioni 
+	complesse causata da inline oltre un'altra soglia.
+	soglia.
+	Questo attributo 
+	permette di rendere inline una funzione ignorando tali restrizioni. Nella 
+	pratica però è stato preferito \verb|__inline|, sia perché come già detto 
+	le 
+	compilazioni vengono fatte in \verb|-Ofast|, sia perché, durante le prove, 
+	\verb|always_inline| ha sempre generato errori di compilazione.
+	\verb|__inline| è stato applicato a \verb|filterCopy|, \verb|filter|, su 
+	tutte le \verb|xCalcHADs| e su tutte le \verb|xGetSAD|.
+
+	\item\verb|pure|\\
+	L'attributo \verb|pure| comunica al compilatore che la funzione non produce 
+	effetti se non sul valore restituito, e che vengono considerati solo gli 
+	argomenti passati alla funzione e le variabili globali. Queste funzioni 
+	subiscono ottimizzazioni come la Common Subexpression Elimination (CSE) e 
+	di loop. Queste ottimizzazioni si basano sul fatto 
+	che, essendo \verb|pure|, la funzione non ha effetti collaterali sul 
+	programma e 
+	può quindi essere richiamata meno volte di quanto accade esplicitamente nel 
+	codice, o, addiriturra, in posizioni diverse, a patto di non modificare i 
+	parametri in ingresso. \verb|pure| è stato applicato a tutte le 
+	funzioni \verb|xCalcHADs|
+	\item\verb|const|\\
+	L'attributo \verb|const| è simile a \verb|pure| ma più restrittivo, visto 
+	che descrive una funzione che non accede nemmeno a variabili globali.
+	Dato che una funzione \verb|const| può avere effetto solo sul valore 
+	restituito e può accedere solo ai suoi argomenti, generalmente non ha senso 
+	che la funzione restituisca \verb|void| o che i parametri siano dei 
+	puntatori, a meno che non ci si aspetti che vengano modificati. 
+	\verb|const| è stato applicato alle funzioni \verb|xGetSAD|.
+	
+	\item\verb|cold|\\
+	L'attributo \verb|cold| viene utilizzato per dichiarare che una funzione 
+	non occupa parti temporalmente rilevanti nell'esecuzione complessiva del 
+	programma. Per questo motivo, GCC può evitare le ottimizzazioni più dure 
+	risparmiando risorse che possono essere utilizzate per altre funzioni. 
+	Anche questo attributo non è stato utilizzato in quanto, nonostante tutte 
+	le ottimizzazioni implementate, il software non raggiunge mai i $300$ MB di 
+	memoria occupata (neanche $\nicefrac{1}{3}$ di quella disponibile) 
+	//AGGIUNGI CONFRONTO DIMENSIONE ESEGUIBILE MASTER-OPT / MASTER.
+\end{itemize}
 
 %-----------------------------------
 %       SUBSECTION 6
