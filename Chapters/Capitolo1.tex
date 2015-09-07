@@ -10,3 +10,52 @@
 %	SECTION 1
 %-------------------------------------------------------------------------------
 
+La compressione di sequenze video è un annoso problema che riguarda diversi
+ambiti che spaziano dalla semplice memorizzazione alla trasmissione analogica
+o digitale delle suddette; negli ultimi anni il progressivo aumento
+della risoluzione media dei dispositivi di riproduzione (e dunque, seppur in
+misura minore, dei contenuti) ha portato alla necessità di sviluppare nuovi
+algoritmi che permettessero un migliore rapporto di compressione e sfruttassero
+al meglio l'architettura parallelizzata dei calcolatori moderni. \\
+Questo ha portato alla nascita del soggetto in esame di questa tesi, ovvero
+H.265 (meglio noto come \emph{High Efficiency Video Codec}, o HEVC), un 
+algoritmo che si pone come obiettivi un miglioramento dell'efficienza e
+della compressione rispetto al suo predecessore, H.264, e il supporto a
+risoluzioni fino a 8192$\times$4320\footnote{
+http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=\&arnumber=6316136}. 
+\\ \\
+L'ottimizzazione di tali algoritmi risulta utile di per sé a ridurre il tempo
+impiegato alla codifica e alla decodifica delle sequenze, portando spesso ad
+un risparmio di tipo economico, ma copre un ruolo fondamentale in caso di
+codifiche in tempo reale, nelle quali sono previsti specifici limiti inferiori
+delle prestazioni richieste (in questi casi tipicamente un filmato deve essere 
+codificato ad una velocità non minore di 24 fotogrammi al secondo). 
+\\ \\
+La scelta di ottimizzare un algoritmo ``giovane'' come H.265 è scaturita sia
+dalla volontà di lavorare su uno strumento che è destinato ad essere un punto
+di riferimento delle codifiche video del presente e del futuro imminente, sia
+dalla possibilità di lavorare su del \emph{software} che non possiede ancora
+ottimizzazioni specifiche per diverse architetture (come possiedono invece
+molte implementazioni di H.264, ratificato nel Marzo 2003), permettendoci
+dunque di effettuare diversi miglioramenti ``banali'' potendo comunque
+apprezzare i risultati, seppur minimi.
+\\ \\
+La struttura rimanente di questa Tesi è organizzata secondo il seguente schema:
+\begin{itemize}
+\item Il Capitolo 2 presenta una breve storia dei calcolatori, fino ad arrivare
+      a descrivere il contesto odierno nel quale è stato svolto questo progetto;
+\item Il Capitolo 3 offre una visione d'insieme più specifica di questa 
+      introduzione sulla necessità di comprimere dati, descrivendo le tecniche
+      più comuni con cui ciò viene realizzato;
+\item Il Capitolo 4 cerca di descrivere accuratamente la struttura e il
+      funzionamento dell'algoritmo H.265;
+\item Il Capitolo 5 descrive le caratteristiche della piattaforma su cui il
+      progetto è stato svolto;
+\item Il Capitolo 6 riporta dettagliatamente il percorso seguito nello 
+      svolgimento del progetto e i diversi approcci che sono stati tentati per
+      ottenere risultati soddisfacenti;
+\item Il Capitolo 7 contiene i risultati ottenuti applicando le strategie
+      descritte nel Capitolo 6;
+\item Il Capitolo 8, infine, presenta le conclusioni a cui si è arrivati e i
+      possibili sviluppi futuri dell'argomento preso in esame.
+\end{itemize}
