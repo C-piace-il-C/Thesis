@@ -940,9 +940,9 @@ tipicamente passa anche per il sistema operativo, rallentando ulteriormente.
 \par Le strategie di parallelizzazione sono molteplici. Nell'ambito di questo 
 lavoro ne abbiamo considerate due relativamente complementari, che aprono
 una buona prospettiva per la discussione dei fattori che normalmente 
-caratterizzano il software parallelo. Le tecniche esaminate sono la Wavefront 
-Parallel Processing (WPP) e la Sequence Subdivision (SS) /*assolutamente da 
-cambiare, nome scherzoso di fantasia*/.
+caratterizzano il software parallelo. Le tecniche esaminate sono basate sulla 
+parallelizzazione dei CTU (\emph{Wavefront Parallel Processing}, WPP) e dei 
+frame della sequenza.
 
 \paragraph*{WPP} Questa tecnica consiste nella parallelizzazione della 
 predizione e 
@@ -969,10 +969,10 @@ thread in parallelo.  \\
 La percentuale di codice parallelizzabile non è il $100\%$ dato che, nonostante 
 la parte predittiva e l'entropy encoding rappresentino buona parte della 
 codifica H265, non ne costituiscono comunque la totalità.
-
-\paragraph*{SS} Questa tecnica di parallelizzazione consiste nella suddivisione 
-della sequenza di partenza in più parti indipendenti, intendendo per 
-``parti'' blocchi di frame contigui.\\
+\\ \\
+La seconda tecnica di parallelizzazione consiste nella 
+suddivisione della sequenza di partenza in più parti indipendenti, intendendo 
+con ``parti'' blocchi di frame contigui.\\
 Se $N$ è il numero di core a disposizione, 
 si vuole suddividere la sequenza in $N$ parti omogenee (grandi uguale). I frame 
 chiave sono quelli predetti interamente intra, visto che rompono ogni 
@@ -982,14 +982,14 @@ Successivamente è possibile far partire $N$ thread di encoding
 indipendenti, ciascuno su una parte diversa della sequenza. In seguito, data la 
 struttura 
 pacchettizzata dell'output di HEVC, è possibile ricomporre l'intera 
-sequenza semplicemente congiungendo nel corretto ordine le $N$ sequenze binarie 
+sequenza semplicemente congiungendo nel corretto ordine le $N$ stringhe binarie 
 prodotte. \\
 Come evidente, questa tecnica annulla ogni tipo di \emph{overhead} di 
 sincronizzazione e gestione dei thread e permette di coprire il $100\%$ del 
 codice per la parallelizzazione. Il difetto in questo caso non sta nel codice 
 ma nei dati, perché per raggiungere lo speedup massimale è necessario che i 
 frame intra siano disposti secondo una certa logica. Tuttavia, per garantire 
-dei bunoi livelli di parallelismo, è sufficiente che il valore di 
+bunoi livelli di parallelismo, è sufficiente che il valore di 
 \verb|intraperiod| (numero di frame tra due intra) sia sufficientemente più 
 basso del numero complessivo di frame della sequenza da codificare. \\
 Naturalmente anche in condizioni perfette non si può raggiungere uno speedup di 
@@ -1002,7 +1002,7 @@ Infine è bene osservare che questa tecnica non può essere applicata
 nei casi di encoding in tempo reale, anche se ciò diventa secondario se si nota 
 che HM di per sé non ammette tale opzione.
 \\ \\
-Segue uno schema che riassume le due tecniche.
+Segue uno schema che riassume le due tecniche discusse.
 \\ // DIMINUISCI LA LUNGHEZZA DELLA PRIMA COLONNA
 \begin{center}
 	\begin{tabularx}{\textwidth}{>{}X|>{}X|>{}X}
