@@ -7,6 +7,90 @@
 \lhead{Capitolo 7. \emph{Risultati}} % Change X to a consecutive number; this 
 %is for the header on each page - perhaps a shortened title
 
-// HAD da 198,803,125,750 a 116,394,523,093 \\
+Completato il progetto è sono stati dedicati gli ultimi giorni ai vari 
+\emph{benchmark} sulle singole tecniche di ottimizzazione applicate. 
+I test sono stati fatti sullo stesso file, utilizzando ogni volta i seguenti 
+due file di configurazione creati appositamente.\\
+
+Il primo file specifica il percorso completo alla sequenza d'ingresso, inclusi 
+i dati su risoluzione, \emph{frame rate}, formato dei dati e numero di 
+\emph{frame} da codificare.
+\begin{lstlisting}
+  #======== File I/O ===============
+  InputFile          : /home/cpc/ssd/samples/yuv/highway_cif.yuv
+  InputBitDepth      : 8      # Input bitdepth
+  InputChromaFormat  : 420    # Ratio of luminance to chrominance samples
+  FrameRate          : 30     # Frame Rate per second
+  FrameSkip          : 0      # Number of frames to be skipped in input
+  SourceWidth        : 352    # Input frame width
+  SourceHeight       : 288    # Input frame height
+  FramesToBeEncoded  : 72     # Number of frames to be coded
+  
+  Level              : 3.1
+\end{lstlisting}
+
+Il secondo file invece specifica tutti i parametri dell'\emph{encoder}. A puro 
+scopo di test è stato definito un GOP in questo modo: il primo frame è sempre 
+un'Intra, seguito dalla seguente struttura ripetuta 3 volte (PBBB). 
+L'intervallo tra due Intra è dunque 12. \\
+
+Verranno ora discussi i vari risultati.
+
+\paragraph{Versione originale \\}
+  Scaricato il codice sorgente dal \emph{repository} ufficiale di HM, è stato 
+  subito compilato senza alcuna modifica al fine di valutarne le prestazioni 
+  \emph{as-is}. \\
+  // Risultati
+
+\paragraph{Opzioni di compilazione \\}
+  Dopo aver dedicato il tempo necessario al test delle opzioni di compilazione, 
+  i risultati ottenuti sono stati i seguenti.\\
+  // Risultati \\
+  La versione con le opzioni di compilazione è diventata poi la base per tutti 
+  gli altri test, ogni tempo è quindi da confrontarsi con quello descritto in 
+  questo paragrafo.
+  
+\paragraph{Assembly \\}
+  I risultati delle funzioni ottimizzate a mano in \emph{assembly}, sebbene sia 
+  stata un'ottima esperienza dal punto di vista professionale, purtroppo non 
+  sono stati soddisfacenti.
+  // Risultati \\
+  Come si può notare, il tempo di esecuzione medio si è allungato. Questa 
+  opzione è stata infatti scartata.
+  
+\paragraph{Intrinsic NEON \\}
+  Di tutte le strategie applicate, l'utilizzo delle SIMD di ARM ha prodotto i 
+  migliori risultati sulle singole funzioni. Avendo inoltre avuto cura di 
+  scegliere come obiettivo le più pesanti, il tempo complessivo ha subito un 
+  discreto abbassamento.
+  // Risultati \\
+  // Speed-up 5x sulle SAD\\
+  // 20\% sulle HAD\\
+  
+\paragraph{Switch \\}
+  La sostituzione degli \verb|if| ha portato a vantaggi relativamente bassi in 
+  positivo, di seguito i risultati relativi ad essa.
+  // Risultati \\
+  
+\paragraph{Attributi \\}
+  L'aggiunta di attributi al codice in alcuni casi peggiorava drasticamente il 
+  tempo di esecuzione, in altri invece non lo cambiava affatto. La modifica è 
+  stata infine accantonata, non avendo ottenuto risultati migliori della 
+  versione con le sole opzioni di compilazione, presa come riferimento.
+  // Risultati \\
+  
+\paragraph{Multithread \\}
+  Il passaggio da un singolo \emph{tread} a due, secondo le modalità 
+  specificate nel capitolo 6.3.6, ha portato ai risultati previsti: uno 
+  \emph{speed-up} di circa 2 sull'intero programma.
+  // Risultati \\
+  // 2x su tutto il programma\\
+  
+// HAD    da 198,803,125,750 a 116,394,523,093 \\
 // filter da 298,318,350,900 a 282,227,659,240 \\
-// SAD da 122,866,807,420 a 23,543,068,820 \\
+// SAD    da 122,866,807,420 a 23,543,068,820 \\
+// Total  da 935,922,071,690 a 798,103,381,516 \\
+
+\paragraph{opt-master \\}
+
+// Grafico? \\
