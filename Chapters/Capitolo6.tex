@@ -88,16 +88,30 @@ programma fornito come codice sorgente, sia agli sviluppatori, cui
 si evita di scrivere ogni volta 
 comandi molto lunghi dove è facile commettere errori.
 \\ \\
-Per la valutazione delle prestazioni degli encoder da ottimizzare, è stato 
-fatto uso di due strumenti software:
-\begin{itemize}
-	\item Valgrind
-	\item gperftools
-\end{itemize}
+Per la valutazione delle prestazioni degli encoder da ottimizzare abbiamo 
+utilizzato un \emph{software profiler}.
+Il \emph{profiling} è l'operazione di eseguire un programma compiendo su di 
+esso, in tempo reale, la misurazione di numerosi parametri utili 
+all'ottimizzazione quali la frequenza e la durata delle  
+funzioni, la ricorrenza di particolari istruzioni o la memoria utilizzata.
+Si tratta di un'analisi dinamica, basata cioè sul funzionamento del programma, 
+non solo sul suo codice. I risultati che si ottengono sono di conseguenza 
+decisamente più 
+attendibili di quelli che si potrebbero ricavare tramite 
+un'analisi statica, come quella che svolge il compilatore all'atto di 
+ottimizzare.\\
+Inizialmente abbiamo valutato due software comunemente utilizzati per 
+il \emph{profiling}: Valgrind e gperftools.
 Entrambi \emph{open source}, offrono diversi strumenti per l'analisi dinamica 
-di un software; quelli utilizzati in questo progetto sono stati
-\emph{Cachegrind} e \emph{Callgrind} per quanto riguarda il primo e il 
-\emph{CPU profiler} del secondo.
+di un programma; quelli considerati in questo progetto sono stati Cachegrind e 
+Callgrind per quanto riguarda il primo e il \emph{CPU profiler} del secondo. 
+Lo scopo principale di Cachegrind è quello di simulare una cache a due livelli 
+per fornire, oltre ai parametri comuni di \emph{profiling}, informazioni circa 
+i \emph{cache miss}. Callgrind unisce a queste funzionalità quella, per noi 
+fondamentale, di registrare uno storico di tutte le chiamate tra le funzioni. 
+In questo modo è più facile avere un'idea della logica del programma, o almeno 
+del ruolo di una funzione, valutando da chi è maggiormente chiamata, di quali 
+altri funzioni si serve e in che misura.
 %-------------------------------------------------------------------------------
 %	SECTION 6.1.3
 %-------------------------------------------------------------------------------
