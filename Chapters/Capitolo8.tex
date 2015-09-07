@@ -1,7 +1,47 @@
 % Chapter Template
 
 \chapter{Conclusioni e sviluppi futuri} % Main chapter title
-
+In questa Tesi sono state affrontate più tematiche di grande attualità  
+nell'ottica dell'ottimizzazione del software, quali la compressione 
+dell'informazione e, soprattutto, l'encoding video, facendo riferimento allo 
+standard di 
+video 
+compressione più recente: il 
+\emph{High Efficiency Video Coding} (HEVC) o H.265, sviluppato dalla 
+collaborazione tra il \emph{Moving Picture Experts Group} (MPEG) ed il 
+\emph{Video Coding Experts Group} (VCEG). Lo standard HEVC promette di 
+raddoppiare il 
+rapporto di compressione delle sequenze rispetto al predecessore H.264, 
+migliorandone al contempo la qualità.\\ \\
+L'encoder scelto come riferimento, nello specifico HEVC Test 
+Model (HM) sviluppato da Fraunhofer, è stato ottimizzato per il 
+funzionamento sulla piattaforma embedded ARM Banana Pi, aprendo la strada verso 
+modifiche \emph{system dependent}.\\ \\
+I candidati hanno sperimentanto diverse ottimizzazioni cercando di coinvolgere 
+maggiormente le risorse disponibili nella piattaforma scelta, avvicinandosi 
+anche alla programmazione a basso livello. Tra le ottimizzazioni proposte 
+spiccano 
+parallelizzazioni 
+quali calcoli attraverso le intrinsic NEON ed il multithreading. \\
+Il lavoro è stato svolto collaborando in remoto su un \emph{repository} 
+git pubblicamente accessibile\footnote{https://github.com/C-piace-il-C/} 
+ospitato su GitHub, i candidati 
+hanno pertanto avuto modo di acquisire esperienza sugli strumenti relativi al 
+lavoro collaborativo oltre che sull'ambiente Linux, sull'architettura ARM e 
+sulla programmazione in generale.\\ \\
+L'opinione predominante degli autori alla luce del lavoro svolto è che le 
+ottimizzazioni implementate, che si rifanno principalmente al tentativo di 
+sfruttare al meglio la potenza bruta del Banana Pi, evidenziano che la carenza 
+nel software di HM si trova altrove: il confronto con il progetto di x265 
+consolida l'ipotesi che il problema sia nell'organizzazione strutturale del 
+codice.\\ \\
+Come conseguenza, possibili sviluppi futuri consistono in un'analisi più 
+accurata ed approfondita della logica nel funzionamento complessivo del 
+codice di HM alla ricerca di ridondanze e organizzazioni inefficienti o  
+disfunzionali (?) nell'architettura del codice, anche se è impossibile 
+prevedere la mole delle modifiche che tale analisi rivelerebbe.
 \label{Chapter8} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ChapterX}
 
-\lhead{Capitolo 8. \emph{Conclusioni e sviluppi futuri}} % Change X to a consecutive number; this is for the header on each page - perhaps a shortened title
+\lhead{Capitolo 8. \emph{Conclusioni e sviluppi futuri}} % Change X to a 
+%consecutive number; this is for the header on each page - perhaps a shortened 
+%title 
