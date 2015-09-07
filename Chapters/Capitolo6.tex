@@ -432,7 +432,7 @@ dell'encoder è calata, come mostra la tabella.
   \begin{tabular}{l | l | l}
     & ASM & C \\ \hline
     $8\cdot10^9$ clamp & $7065.6$ (ms) & $8072.7$ (ms) \\
-    $72$ frame \verb|highway_cif.yuv| & $1493.6142$ (s) &  $1408.4262$ (s) \\
+    $72$ frame \verb|highway_cif.yuv| & $1493.614$ (s) &  $1408.4262$ (s) \\
   \end{tabular}
 \end{center}
 Le righe della tabella mostrano rispettivamente una media di $10$ prove
@@ -940,9 +940,9 @@ tipicamente passa anche per il sistema operativo, rallentando ulteriormente.
 \par Le strategie di parallelizzazione sono molteplici. Nell'ambito di questo 
 lavoro ne abbiamo considerate due relativamente complementari, che aprono
 una buona prospettiva per la discussione dei fattori che normalmente 
-caratterizzano il software parallelo. Le tecniche esaminate sono la Wavefront 
-Parallel Processing (WPP) e la Sequence Subdivision (SS) /*assolutamente da 
-cambiare, nome scherzoso di fantasia*/.
+caratterizzano il software parallelo. Le tecniche esaminate sono basate sulla 
+parallelizzazione dei CTU (\emph{Wavefront Parallel Processing}, WPP) e dei 
+frame della sequenza.
 
 \paragraph*{WPP} Questa tecnica consiste nella parallelizzazione della 
 predizione e 
@@ -969,10 +969,10 @@ thread in parallelo.  \\
 La percentuale di codice parallelizzabile non è il $100\%$ dato che, nonostante 
 la parte predittiva e l'entropy encoding rappresentino buona parte della 
 codifica H265, non ne costituiscono comunque la totalità.
-
-\paragraph*{SS} Questa tecnica di parallelizzazione consiste nella suddivisione 
-della sequenza di partenza in più parti indipendenti, intendendo per 
-``parti'' blocchi di frame contigui.\\
+\\ \\
+La seconda tecnica di parallelizzazione consiste nella 
+suddivisione della sequenza di partenza in più parti indipendenti, intendendo 
+con ``parti'' blocchi di frame contigui.\\
 Se $N$ è il numero di core a disposizione, 
 si vuole suddividere la sequenza in $N$ parti omogenee (grandi uguale). I frame 
 chiave sono quelli predetti interamente intra, visto che rompono ogni 
@@ -982,14 +982,14 @@ Successivamente è possibile far partire $N$ thread di encoding
 indipendenti, ciascuno su una parte diversa della sequenza. In seguito, data la 
 struttura 
 pacchettizzata dell'output di HEVC, è possibile ricomporre l'intera 
-sequenza semplicemente congiungendo nel corretto ordine le $N$ sequenze binarie 
+sequenza semplicemente congiungendo nel corretto ordine le $N$ stringhe binarie 
 prodotte. \\
 Come evidente, questa tecnica annulla ogni tipo di \emph{overhead} di 
 sincronizzazione e gestione dei thread e permette di coprire il $100\%$ del 
 codice per la parallelizzazione. Il difetto in questo caso non sta nel codice 
 ma nei dati, perché per raggiungere lo speedup massimale è necessario che i 
 frame intra siano disposti secondo una certa logica. Tuttavia, per garantire 
-dei bunoi livelli di parallelismo, è sufficiente che il valore di 
+bunoi livelli di parallelismo, è sufficiente che il valore di 
 \verb|intraperiod| (numero di frame tra due intra) sia sufficientemente più 
 basso del numero complessivo di frame della sequenza da codificare. \\
 Naturalmente anche in condizioni perfette non si può raggiungere uno speedup di 
@@ -1002,7 +1002,7 @@ Infine è bene osservare che questa tecnica non può essere applicata
 nei casi di encoding in tempo reale, anche se ciò diventa secondario se si nota 
 che HM di per sé non ammette tale opzione.
 \\ \\
-Segue uno schema che riassume le due tecniche.
+Segue uno schema che riassume le due tecniche discusse.
 \\ // DIMINUISCI LA LUNGHEZZA DELLA PRIMA COLONNA
 \begin{center}
 	\begin{tabularx}{\textwidth}{>{}X|>{}X|>{}X}
@@ -1059,3 +1059,19 @@ Segue il codice scritto per l'implementazione.\\[8pt]
 La parte di main rimossa per brevità è poco interessante e consiste nella 
 lettura dei parametri dai file di configurazione per la costruzione dei valori 
 di input per il secondo thread, \verb|argc| e \verb|argv|.
+\begin{center}
+	\begin{tabular}{l | l | l}
+		& Multithread & Singlethread \\
+		\hline
+		$72$ frame \verb|highway_cif.yuv| & $741.560$ (s) & $1493.614$ (s)
+	\end{tabular}
+\end{center}
+La tabella mostra la media dei risultati ottenuti eseguendo $5$ volte 
+l'encoding dei primi $72$ frame del file di prova \verb|highway_cif.yuv| con il 
+software HM compilato in \verb|-Ofast| nella sua versione \emph{singlethread} e 
+\emph{multithread}. Il fattore di speedup sembra superare il $2$, ma come è 
+stato detto, ciò è impossibile. Si noti che, nonostante i valori siano una 
+media, il numero di prove è basso e la variabilità è elevata (abbiamo 
+registrato un massimo di $20$ secondi di differenza tra due cicli di encoding 
+della stessa sequenza con le medesime configurazioni). \`E quindi ragionevole 
+pensare che il fattore di speedup sia molto prossimo a $2$, sebbene inferiore.
