@@ -24,7 +24,7 @@ prendendo in considerazione una codifica senza compressione in uno spazio
 colore RGB con 8 bit per canale ed applicando la formula
 \begin{align*}
   \text{MB}\!/\!\text{s} = 
-  W \times H \times bit\_depth \times frames\!/\!\text{s} \:/\: 1000
+  W \times H \times bit\_depth \times frames\!/\!\text{s} \:/\: 1000000
 \end{align*}
 si ottiene che un secondo di sequenza video pesa circa 9 \emph{megabyte}. \\
 Considerando la capacità tipica di un disco rigido dell'epoca (compresa
@@ -128,7 +128,7 @@ Tra le trasformate si ricordano:
     trasformando con KLT. La presenza di un algoritmo veloce la rende tutt'ora 
     la trasformata più utilizzata per la compressione d'immagini.
    
-  \item \textbf{\emph{Walsh-Hadamard transform (WHT)}}\\
+  \item \textbf{\emph{Walsh-Hadamard transform} (WHT)}\\
     La peggiore in termini di compattamento d'energia, ha la proprietà di poter 
     essere eseguita con sole somme e sottrazioni ed ha una sua versione 
     \emph{fast}. Il bassissimo costo computazionale l'ha resa largamente 
@@ -142,11 +142,47 @@ Tra le trasformate si ricordano:
 
 \subsection{Principali algoritmi}
 
+\paragraph{\textit{Run-length encoding} \\}
+  La compressione RLE è una forma molto semplice di codifica d'immagine 
+  \emph{lossless}. Applicata solitamente a immagini in bianco e nero, sfrutta 
+  il fatto che pixel bianchi e neri si presentano in sequenza. Invece di 
+  trasmettere singolarmente i bit dell'immagine vengono trasmessi le lunghezze 
+  (\emph{length}) dei tratti (\emph{run}) aventi lo stesso colore.
+
+\paragraph{\textit{Differential Pulse-Code Modulation lossless} \\}
+  La codifica DPCM sfrutta la correlazione tra i \emph{pixel} adiacenti di 
+  un'immagine: si prova a predire il valore di un pixel a partire da quelli 
+  vicini già conosciuti. Questo tipo di codifica permette di avvicinarsi molto 
+  al limite massimo di compressione \emph{lossless}.\\
+  Il principio di funzionamento è molto semplice: si genera l'immagine predetta 
+  e se ne fa la differenza con l'originale, ricavando quindi la funzione 
+  ``errore''. Essa sarà poi codificata: il vantaggio rispetto alla semplice 
+  codifica dei pixel sta nel fatto che suddetta funzione è molto meno correlata 
+  dell'immagine dell'originale.
+
+\paragraph{\textit{Joint Photographic Experts Group} \\}
+  JPEG è un metodo molto utilizzato per la compressione \emph{lossy} di 
+  immagini digitali, in particolar modo per quelle fotografiche. La codifica 
+  JPEG sfrutta alcune peculiarità del sistema visivo umano per poter comprimere 
+  il più possibile un'immagine senza che il fruitore (l'uomo) possa accorgersi 
+  della differenza dall'orginale. Non esiste una sola versione dell'algoritmo: 
+  JPEG/Exif è il più comune nelle immagini generate da fotocamere digitali 
+  mentre JPEG/JFIF è utilizzato maggiormente per salvare e trasmettere immagini 
+  su Internet, questo per citare solo le due versioni più utilizzate.
+
+%TODO chroma subsampling
+
 %-------------------------------------------------------------------------------
 %       SECTION 3
 %-------------------------------------------------------------------------------
 
 \section{Compressione video}
+
+La compressione di dati assume un ruolo fondamentale nella trasmissione o 
+memorizzazione di sequenze video. Citando l'introduzione: è assolutamente 
+impensabile non comprimere uno \emph{stream} a 1080p, che occupa circa 187 MB 
+per secondo di video. Vediamo ora i principi base che governano tutti gli 
+algoritmi di compressione d'immagini in sequenza.
 
 %-----------------------------------
 %       SUBSECTION 1
@@ -154,11 +190,33 @@ Tra le trasformate si ricordano:
 
 \subsection{Ridondanza spaziale}
 
+Sfrutta il fatto che ogni immagine (\emph{frame}) del video, presa 
+singolarmente, può essere compressa. Valgono infatti tutte le teorie della 
+compressione di immagini trattate nel capitolo precedente.
+La sola ridondanza spaziale non è però sufficiente per garantire una buona 
+dimensione del video compresso, a meno ovviamente di non rinunciare a parecchia 
+qualità.
+
 %-----------------------------------
 %       SUBSECTION 2
 %-----------------------------------
 
 \subsection{Ridondanza temporale}
+
+La vera differenza tra un algoritmo di compressione d'immagine ed uno video sta 
+nello sfruttare la ridondanza temporale dei \emph{frame}. Essendo il video 
+infatti nient'altro che una serie di fotografie prese ad intervalli costanti e 
+molto fitti (il minimo numero possibile affinché l'occhio abbia la percezione 
+di movimento è $24$ immagini al secondo), si sfrutta il fatto che tra due 
+immagini ``vicine'' temporalmente vi sia una forte correlazione. Solitamente 
+infatti, a meno di situazioni particolari, in due \emph{frame} adiacenti vi 
+sono gli stessi oggetti spostati di poco dalla loro posizione originale.\\
+
+Questa intuizione permette di andare molto oltre il classico $10\%$ della mera 
+compressione basata su ridondanza spaziale arrivando ad addirittura allo 
+$0.39\%$\footnote{Utilizzando un video di risoluzione 4k ($3996 \cdot 2160$ 
+pixel), H.265 genera un \emph{bit-rate} di circa $3$ MB/s contro i circa $777$ 
+della versione non compressa} del file video originale. 
 
 %-----------------------------------
 %       SUBSECTION 3
@@ -166,3 +224,5 @@ Tra le trasformate si ricordano:
 
 \subsection{Principali algoritmi}
 
+// MPEG-1
+// MPEG-2
