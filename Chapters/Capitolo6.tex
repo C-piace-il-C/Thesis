@@ -2,15 +2,24 @@
 
 \chapter{Il progetto} % Main chapter title
 
-\label{Chapter6} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ChapterX}
+\label{Chapter6} % Change X to a consecutive number; for referencing this 
+%chapter elsewhere, use \ref{ChapterX}
 
-\lhead{Capitolo 6. \emph{Il progetto}} % Change X to a consecutive number; this is for the header on each page - perhaps a shortened title
+\lhead{Capitolo 6. \emph{Il progetto}} % Change X to a consecutive number; this 
+%is for the header on each page - perhaps a shortened title
 
 %-------------------------------------------------------------------------------
-%	SECTION 1
+%	SECTION 6.1
 %-------------------------------------------------------------------------------
-
-\section{Il setup della piattaforma}
+\section{Il Setup della Piattaforma}
+Nella prima fase del progetto ci siamo occupati della sistemazione della 
+piattaforma e dell'ambiente di lavoro scegliendo ed installando il sistema 
+operativo e tutti gli strumenti necessari, e abbiamo selezionato il software di 
+riferimento per l'encoder di HEVC.
+%-------------------------------------------------------------------------------
+%	SECTION 6.1.1
+%-------------------------------------------------------------------------------
+\subsection{Il Sistema Operativo}
 La prima decisione che ha riguardato la piattaforma è stato il sistema 
 operativo da installare. Vi sono a disposizione diversi sistemi 
 Unix-like\footnote{http://www.lemaker.org/portal.php?mod=list\&catid=4}, 
@@ -21,91 +30,108 @@ Banana Pi, che abbiamo ritenuto essere il giusto compromesso tra usabilità
 e assenza di software preinstallato a noi non necessario. \\
 Nonostante la possibilità di lavorare senza ambiente grafico, da terminale, 
 risparmiando qualche decina di \emph{megabyte} di RAM, inizialmente abbiamo 
-deciso di avvalerci di LXDE, un ambiente desktop estremamente leggero, in modo da 
-velocizzare la maggior parte delle nostre interazioni con il sistema. \\
+deciso di avvalerci di LXDE, un ambiente desktop estremamente leggero, in modo 
+da 
+velocizzare la maggior parte delle nostre interazioni con il sistema.
 \\ \\
-Essendo tre persone a lavorare su una sola piattaforma, abbiamo optato 
+Essendo in tre persone a lavorare su una sola piattaforma, abbiamo optato 
 per collocare la \emph{board} in un laboratorio dell'università, dotandola
-di un sistema di controllo remoto basato su \emph{virtual network computing} 
-(VNC), un sistema che utilizza un protocollo \emph{remote framebuffer} (RBF) 
+di un sistema di controllo remoto basato su \emph{Virtual Network Computing} 
+(VNC), un sistema che utilizza un protocollo \emph{remote framebuffer} (RFB) 
 per l'accesso remoto alle interfacce grafiche utente (meglio conosciute come 
-\textbf{GUI}s, \textbf{G}raphical \textbf{U}ser \textbf{I}nterfaces). Inoltre, 
+GUIs, \emph{Graphical User Interfaces}). Inoltre, 
 per facilitare l'accesso ai dati presenti sulle periferiche di memorizzazione, 
 abbiamo dotato il Banana Pi di un server \emph{file transfer protocol} (FTP).
-\\ \\ 
+\\ \\
 Tuttavia, nella fase finale del progetto, l'intefaccia grafica è stata 
 abbandonata in modo da permettere una risposta del sistema più immediata e una 
 minore allocazione di risorse; è stato dunque possibile disattivare 
 l'accelerazione hardware, necessaria in un ambiente grafico, permettendo il 
-risparmio di circa 30MB di RAM. Insieme alla GUI è stata accantonato il 
+risparmio di circa 30MB di RAM. Insieme alla GUI è stato accantonato il 
 controllo remoto tramite VNC (fortemente dispendioso a causa del suo approccio 
 \emph{pixel-based}) a favore di un accesso tramite SSH (\emph{secure shell}), 
 più essenziale e meno dispersivo.
-
 %-------------------------------------------------------------------------------
-%	SECTION 2
+%	SECTION 6.1.2
 %-------------------------------------------------------------------------------
-
-\section{I tool per la compilazione}
-
-%-----------------------------------
-%       SUBSECTION 1
-%-----------------------------------
-
-\subsection{Il compilatore GCC}
-
-%-----------------------------------
-%       SUBSECTION 2
-%-----------------------------------
-
-\subsection{Il tool make}
-
-%-------------------------------------------------------------------------------
-%	SECTION 3
-%-------------------------------------------------------------------------------
-
-\section{I tool per valutare le prestazioni}
+\subsection{L'Ambiente di Lavoro}
+La scelta del compilatore è stata molto diretta: abbiamo 
+optato subito per 
+\emph{GNU Compiler Collection} (GCC), sapendo che si tratta del compilatore più 
+popolare e affidabile in ambiente Linux, e che è molto raro che sorgano dei 
+problemi di compatibilità nel codice. Come suggerisce il nome, GCC è una 
+collezione di compilatori per diversi linguaggi, tra cui i noti C, C++, Fortran 
+e Java, nonché un progetto \emph{open source}, costantemente testato ed 
+aggiornato: 
+l'ultima versione stabile ufficiale, GCC 5.2, è stata rilasciata poco prima 
+del momento della scrittura. La versione più recente disponibile nel 
+\emph{repository} era però la 4.6.3. Abbiamo provato, senza successo, a 
+scaricare e compilare le versioni più nuove dal sito di 
+GCC\footnote{https://gcc.gnu.org/releases.html}. Cambiando il repository siamo 
+poi riusciti ad ottenere la versione 4.9.2.
+\\ \\
+Le compilazioni sono state fatte con l'ausilio di \emph{Make}, 
+uno strumento 
+che permette di automatizzarne il processo attraverso un file 
+testuale - il makefile - che memorizza tutte le impostazioni e i nomi dei file 
+necessari per diversi tipi di compilazione, come \emph{debug} e \emph{release}. 
+La maggior 
+parte dei progetti \emph{open source} contiene un makefile, così come quello 
+che 
+abbiamo scelto come riferimento. Qualora si abbia l'esigenza di cambiare le 
+opzioni di 
+compilazione è sufficiente modificare il makefile, altrimenti tutto si traduce 
+nel semplice comando da console \verb|make|. Questo tool risulta quindi molto 
+utile sia ai normali utenti, che non hanno bisogno di imparare a compilare per 
+installare un 
+programma fornito come codice sorgente, sia agli sviluppatori, cui 
+si evita di scrivere ogni volta 
+comandi molto lunghi dove è facile commettere errori.
+\\ \\
 Per la valutazione delle prestazioni degli encoder da ottimizzare, è stato 
 fatto uso di due strumenti software:
 \begin{itemize}
-\item Valgrind
-\item gperftools
+	\item Valgrind
+	\item gperftools
 \end{itemize}
-Entrambi \emph{opensource}, offrono diversi strumenti per l'analisi dinamica 
+Entrambi \emph{open source}, offrono diversi strumenti per l'analisi dinamica 
 di un software; quelli utilizzati in questo progetto sono stati
 \emph{Cachegrind} e \emph{Callgrind} per quanto riguarda il primo e il 
 \emph{CPU profiler} del secondo.
 %-------------------------------------------------------------------------------
-%	SECTION 3
+%	SECTION 6.1.3
 %-------------------------------------------------------------------------------
-
-\section{I software di encoding presi in considerazione}
+\subsection{Il Software di Riferimento}
 Inizialmente, tre software di encoding sono stati individuati come possibili
 candidati per il progetto:
 \begin{itemize}
-\item f265
-\item HM (\textbf{H}EVC Test \textbf{M}odel)
-\item x265
+	\item f265
+	\item HM (HEVC Test Model)
+	\item x265
 \end{itemize}
 Il primo è stato subito scartato non appena è stato chiaro che il sorgente non 
 è compatibile con la piattaforma in nostro possesso (il codice è stato scritto 
-unicamente per architettura x86).
-I rimanenti due sono stati oggetto di 
+unicamente per architettura x86).\\
+x265 ha mostrato già in partenza ottime performance riuscendo a 
+codificare una sequenza in formato CIF a 1.52 fps, nonostante la versione per 
+ARM fosse completamente priva delle funzioni in Assembly presenti per le altre 
+architetture.\\
+HM, infine, nuovamente privo di codice Assembly e scritto in C++ generico, si è 
+rivelato notevolmente più lento di x265 (0.05 fps). Analizzando velocemente i 
+sorgenti 
+ci siamo resi conto che, coerentemente con le prestazioni osservate, il codice 
+di HM è decisamente più chiaro e comprensibile di quello di x265, che 
+evidentemente è già carico di parecchie ottimizzazioni. Abbiamo quindi pensato 
+che 
+lavorare con HM potesse essere, didatticamente parlando, la scelta migliore.
 %-------------------------------------------------------------------------------
-%	SECTION 4
+%	SECTION 6.2
 %-------------------------------------------------------------------------------
-
 \section{Test preliminari}
-
 %-------------------------------------------------------------------------------
-%	SECTION 5
+%	SECTION 6.3
 %-------------------------------------------------------------------------------
-
 \section{Individuazione dei moduli H.265}
-
-%-----------------------------------
-%       SUBSECTION 1
-%-----------------------------------
 
 \subsection{Il tool KCacheGrind / QCacheGrind}
 
@@ -975,7 +1001,8 @@ sono sempre più, in proporzione, con l'aumentare del numero di frame.\\
 Infine è bene osservare che questa tecnica non può essere applicata 
 nei casi di encoding in tempo reale, anche se ciò diventa secondario se si nota 
 che HM di per sé non ammette tale opzione.
-\par Segue uno schema che riassume le due tecniche.
+\\ \\
+Segue uno schema che riassume le due tecniche.
 \\ // DIMINUISCI LA LUNGHEZZA DELLA PRIMA COLONNA
 \begin{center}
 	\begin{tabularx}{\textwidth}{>{}X|>{}X|>{}X}
@@ -1003,8 +1030,7 @@ che HM di per sé non ammette tale opzione.
 		   \end{itemize}
 	\end{tabularx}
 \end{center}
-\paragraph*{} Come prima cosa abbiamo implementato la seconda tecnica, quella 
-più 
+Come prima cosa abbiamo implementato la seconda tecnica, quella più 
 semplice e verosimilmente la più efficiente, data la struttura fissata del GOP, 
 riuscendo ad ottenere un quasi ideale fattore di speedup $S \approx 2$. In 
 seguito abbiamo provato anche la prima, purtroppo senza successo dato l'elevato 
