@@ -25,8 +25,7 @@
 %	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
 %-------------------------------------------------------------------------------
 
-% The default font size and one-sided printing (no margin offsets)
-\documentclass[11pt, oneside]{Thesis} 
+\documentclass[12pt, twosides]{Thesis} % The default font size and one-sided printing (no margin offsets)
 
 \graphicspath{{Pictures/}} % Specifies the directory where pictures are stored
 \usepackage[square, numbers, comma, sort&compress]{natbib} % Use the natbib reference package - read up on this to edit the reference style; if you want text (e.g. Smith et al., 2012) for the in-text references (instead of numbers), remove 'numbers' 
@@ -43,6 +42,7 @@
 \usepackage{color}
 \usepackage{tabularx}
 \usepackage{nicefrac}
+\usepackage{moresize}
 \captionsetup[figure]{name=Figura}
 \hypersetup{urlcolor=black, colorlinks=true} % Colors hyperlinks in blue - change to black if annoying
 \title{\ttitle} % Defines the thesis title - don't touch this
@@ -83,7 +83,7 @@
 {\huge \bfseries \ttitle}\\[0.4cm] % Thesis title
 \HRule \\[1.5cm] % Horizontal line
  
-\begin{minipage}{0.4\textwidth}
+\begin{minipage}{0.45\textwidth}
 \begin{flushleft} \large
 \emph{Relatore:} \\
 \href{http://www.esempio.it}{\supname} \\ % Supervisor name - remove the \href bracket to remove the link  
@@ -91,7 +91,7 @@
 \href{http://www.esempio.it}{\crelator}
 \end{flushleft}
 \end{minipage}
-\begin{minipage}{0.4\textwidth}
+\begin{minipage}{0.45\textwidth}
 \begin{flushright} \large\emph{Candidati:}\\
 {\nauthors} % Author name - remove the \href bracket to remove the link
 \end{flushright}
