@@ -139,19 +139,48 @@ evidentemente è già carico di parecchie ottimizzazioni. Abbiamo quindi pensato
 che 
 lavorare con HM potesse essere, didatticamente parlando, la scelta migliore.
 %-------------------------------------------------------------------------------
-%	SECTION 6.2
-%-------------------------------------------------------------------------------
-\section{Test preliminari}
-%-------------------------------------------------------------------------------
 %	SECTION 6.3
 %-------------------------------------------------------------------------------
 \section{Individuazione dei moduli H.265}
-
-\subsection{Il tool KCacheGrind / QCacheGrind}
-
-%-------------------------------------------------------------------------------
-%	SECTION 6
-%-------------------------------------------------------------------------------
+La legge che l'informatico ed ingegnere statunitense Gene Myron Amdahl presentò 
+ad una conferenza nel 
+1967\footnote{https://en.wikipedia.org/wiki/Amdahl's\_law}, nota come legge di 
+Amdahl (discussa in maggiore dettaglio nella sezione 
+\ref{sect-multi}), afferma che il beneficio di un miglioramento operato su un 
+sistema non è quantificabile in termini assoluti e va pesato secondo la misura 
+con 
+cui la parte migliorata influisce sul rendimento finale del sistema. \\
+Con questa legge è stato esposto un principio fondamentale, espresso nel 
+contesto della progettazione di architetture hardware ma universalmente valido, 
+riassunto nella nota frase ``\emph{make the common case fast}''. Il significato 
+nel nostro caso è che, constatata la limitatezza delle risorse a disposizione, 
+conviene concentrasi sulle parti che influiscono maggiurmente 
+sulle performance del software, ovvero i \emph{common case}.
+\\ \\
+In quest'ottica abbiamo adoperato il \emph{profiler} Valgrind per trovare le 
+funzioni più pesanti dell'encoder HM. Nello specifico, abbiamo utilizzato lo 
+strumento Callgrind attraverso il comando seguente. \\
+\begin{lstlisting}[breaklines]
+valgrind --tool=callgrind TAppEncoderStatic -c 
+/home/cpc/ssd/hm_cfg/highway_72frames.cfg -c 
+/home/cpc/ssd/hm_cfg/PBBB_intra12.cfg
+\end{lstlisting}
+La prima parte del comando è ovviamente quella che esegue valgrind specificando 
+lo strumento di interesse; la seconda parte, quella che inizia con 
+\verb|TAppEncoderStatic|, è il comando con cui normalmente si apre l'encoder 
+HM, che è stato precedentemente compilato in \emph{debug} per il 
+\emph{profiling}. \\
+Al termine del suo lavoro Callgrind genera un file testuale, di default 
+denominato \verb|callgrind.out| /*$<$- controllalo*/, contenente tutti i 
+risultati 
+del \emph{profiling}, anche se in un formato poco \emph{human-friendly}. 
+Per analizzare i risultati abbiamo quindi utilizzato il software 
+KCacheGrind\footnote{http://kcachegrind.sourceforge.net/html/Home.html}, una 
+GUI per la visualizzazione grafica di questo tipo di dati. \\
+La tabella che segue mostra le funzioni più influenti nel ciclo di codifica 
+della sequenza di test \verb|highway_cif.yuv|.
+\\ //INSERISCI TABELLA DI EXCEL
+\\ //INSERISCI GRAFICO A TORTA DEI MODULI
 
 \section{Strategie di ottimizzazione}
 Ottimizzazione del software è un termine generico che può avere diversi 
@@ -935,7 +964,7 @@ performance, che in media sono rimaste invariate. \\
 %       SUBSECTION 6
 %-----------------------------------
 
-\subsection{Multithread}
+\label{sect-multi}\subsection{Multithread}
 Nonostante l'evoluzione di software ed hardware sia ormai da anni concentrata 
 sulla parallelizzazione, HM non è stato pensato né scritto per tale 
 caratteristica. Ne segue che una delle ottimizzazioni più doverose è stata il 
