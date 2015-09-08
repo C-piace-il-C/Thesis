@@ -168,11 +168,13 @@ sulle performance del software, i \emph{common case}.
 In quest'ottica abbiamo adoperato il \emph{profiler} Valgrind per trovare le 
 funzioni più pesanti dell'encoder HM. Nello specifico, abbiamo utilizzato lo 
 strumento Callgrind attraverso il comando seguente. \\
+
 \begin{lstlisting}[breaklines]
-valgrind --tool=callgrind TAppEncoderStatic -c 
-/home/cpc/ssd/hm_cfg/highway.cfg -c 
-/home/cpc/ssd/hm_cfg/PBBB_intra12.cfg
+valgrind --tool=callgrind TAppEncoderStatic 
+-c /home/cpc/ssd/hm_cfg/highway_72frames.cfg 
+-c /home/cpc/ssd/hm_cfg/PBBB_intra12.cfg
 \end{lstlisting}
+
 La prima parte del comando è ovviamente quella che esegue Valgrind specificando 
 lo strumento di interesse, Callgrind; la seconda parte, quella che inizia con 
 \verb|TAppEncoderStatic|, è il comando con cui normalmente si apre l'encoder 
