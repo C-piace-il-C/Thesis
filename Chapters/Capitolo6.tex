@@ -140,7 +140,7 @@ evidentemente è già carico di parecchie ottimizzazioni. Abbiamo quindi pensato
 che 
 lavorare con HM potesse essere, didatticamente parlando, la scelta migliore.
 %-------------------------------------------------------------------------------
-%	SECTION 6.3
+%	SECTION 6.2
 %-------------------------------------------------------------------------------
 \section{Individuazione dei moduli H.265}
 La legge che l'informatico ed ingegnere statunitense Gene Myron Amdahl presentò 
@@ -183,6 +183,9 @@ La tabella che segue mostra le funzioni più influenti nel ciclo di codifica
 della sequenza di test \verb|highway_cif.yuv|.
 \\ //INSERISCI TABELLA DI EXCEL
 \\ //INSERISCI GRAFICO A TORTA DEI MODULI
+%-------------------------------------------------------------------------------
+%	SECTION 6.3
+%-------------------------------------------------------------------------------
 \section{Le Sequenze Video}
 Le sequenze campione di tipo \emph{raw} (letteralmente \emph{grezzo}, ovvero 
 non compresso) 
@@ -228,8 +231,22 @@ dal byte 0x0A ($10$).\\
 Non riuscendo a trovare convertitori per Windows o per Linux ad eccezione di 
 ffmpeg, che però ci dava alcuni problemi, e data l'estrema semplicità del 
 formato y4m, abbiamo deciso di scrivere un programmino in C per eseguire la 
-conversione. \\
+conversione.\\
+Molto semplicemente, il programma cerca le prime due occorrenze della stringa   
+``FRAME0x0A'' e calcola il numero di byte che le divide, coincidente con la 
+dimensione dei frame. Conoscendo la posizione del primo frame all'interno del 
+file y4m e la sua lunghezza in byte, è possibile trovare con un semplice 
+calcolo la posizione di tutti gli altri frame per copiarli, uno ad uno, nel 
+file di destinazione.
+Il programma intero è disponibile 
+online\footnote{https://github.com/C-piace-il-C/Y4M2YUV}, mentre qui di seguito 
+è presente un estratto che mostra la funzione principale.
+\begin{center}
 \lstinputlisting[language=C,caption=]{Codes/Y4M2YUV.c}
+\end{center}
+%-------------------------------------------------------------------------------
+%	SECTION 6.4
+%-------------------------------------------------------------------------------
 \section{Strategie di ottimizzazione}
 Ottimizzazione del software è un termine generico che può avere diversi 
 significati, ma fondamentalmente si tratta di apportare delle modifiche al 
@@ -254,8 +271,8 @@ fatto della trasformata veloce di Fourier rientra proprio in questa categoria.
 Si tratta, in essenza, di migliorare l'algoritmo, non la sua implementazione.
 Questo tipo di ottimizzazione porta tipicamente maggiori benefici ed ha 
 l'enorme pregio di migliorare automaticamente qualuqune ragionevole 
-implementazione.
-\\Le ottimizzazioni della seconda categoria sono solitamente più semplici e 
+implementazione.\\
+Le ottimizzazioni della seconda categoria sono solitamente più semplici e 
 banali, tanto che la tendenza degli ultimi anni è quella di delegarle al 
 computer per favorire la semplicità di programmazione, come nei linguaggi di 
 più alto livello. Queste ottimizzazioni possono consistere in una gestione 
@@ -265,13 +282,6 @@ Non cambia quindi tanto ciò che si fa, o algoritmo, quanto il modo di
 svolgerlo.\\
 Le ottimizzazioni affrontate in questo lavoro appartengono per ovvi motivi alla 
 seconda categoria.
-Molto semplicemente, il programma cerca le prime due occorrenze della stringa   
-``FRAME0x0A'', calcola il numero di byte che le divide, coincidente con la 
-dimensione dei frame, che poi copia uno ad uno nel file di destinazione.
-Il programma intero è disponibile 
-online\footnote{https://github.com/C-piace-il-C/Y4M2YUV}, mentre qui di seguito 
-è presente un estratto che mostra la funzione principale.
-
 %-----------------------------------
 %       SUBSECTION 6.4.1
 %-----------------------------------
@@ -362,9 +372,7 @@ Abilita l'\emph{unrolling} dei \emph{loop} per i quali è possibile determinare
 il numero di iterazioni a \emph{compile time}.
 // Aggiungere -fwhole-program?
 \end{itemize}
-
 Opzioni di ottimizzazione specifiche per l'hardware ARM:
-
 \begin{itemize}
 \item \verb|-march=|\emph{name}\\
 Specifica il nome dell'architettura ARM di destinazione.\\
@@ -460,7 +468,7 @@ RELEASE_CPPFLAGS  = -Ofast -Wuninitialized -ftree-vectorize
 // gcc-4.7 non vettorizzava ARM, gcc-4.9 sì.\\
 // Risultati\\
 %-----------------------------------
-%       SUBSECTION 6.3.2
+%       SUBSECTION 6.4.2
 %-----------------------------------
 \subsection{Assembly}
 // IMPOSTA FONT CONSOLAS PER I LISTATI \newline
@@ -549,7 +557,7 @@ ottimizzando anche altre parti del codice, ma è un'operazione che al momento
 esula dalle nostre competenze.
 
 %-----------------------------------
-%       SUBSECTION 6.3.3
+%       SUBSECTION 6.4.3
 %-----------------------------------
 \subsection{Intrinsic NEON}
 
@@ -817,9 +825,8 @@ Oltre alle precedenti \emph{intrinsic} vengono utilizzate le seguenti:
 \end{itemize}
 
 %-----------------------------------
-%       SUBSECTION 4
+%       SUBSECTION 6.4.4
 %-----------------------------------
-
 \subsection{Switch}
 
 %TODO rivedere questa frase
@@ -933,7 +940,7 @@ Questa modifica ha, ovviamente, un bassissimo impatto sulle prestazioni
 complessive del codice. E' stata implementata esclusivamente a scopo didattico.
 
 %-----------------------------------
-%       SUBSECTION 6.3.5
+%       SUBSECTION 6.4.5
 %-----------------------------------
 \subsection{Attributi}
 Oltre alle opzioni di compilazione, GCC mette a disposizione un insieme di   
@@ -1145,7 +1152,7 @@ l'esecuzione del thread chiamante finché non è terminata quella di un altro
 thread specificato, utile per la sincronizzazione. Per terminare l'esecuzione 
 di un thread, si può richiamare \verb|pthread_exit|, che ha lo stesso effetto 
 di un semplice \verb|return(ptr)|.\\
-Segue il codice scritto per l'implementazione.\\[8pt]
+Segue il codice scritto per l'implementazione.\\
 \begin{center}
 \lstinputlisting[language=C,caption=]{Codes/multithreading.c}
 \end{center}
