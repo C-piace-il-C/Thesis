@@ -33,8 +33,24 @@ Nel secondo caso i dati vengono spesso ottenuti grazie alla trasduzione
 di parametri fisici, acquisiti da sensori, in segnali elettrici, successivamente
 tradotti da un convertitore analogico-digitale in modo da ottenere valori che 
 possano essere compresi da un calcolatore binario.
-\\
-// Aggiungere
+\\ \\
+In entrambi i casi è raro che un'acquisizione sia fine a sé stessa e venga
+semplicemente memorizzata dentro ad un supporto digitale: che sia ricavata una
+banale statistica o vengano effettuati trasformazioni e calcoli più complessi,
+è necessario che i dati vengano elaborati. \\
+Un'elaborazione può preservare la struttura originaria di un dato (come avviene
+quando si utilizza quest'ultimo come risorsa per effettuare un calcolo) o
+modificarla in modo reversibile o irreversibile (rispettivamente in caso, ad
+esempio, di una compressione senza o con perdita). 
+\\ \\
+Qualunque sia il tipo di elaborazione che deve essere svolta è quasi sempre
+indispensabile poterla effetture entro certi limiti temporali, sia per
+volontà personale di ottenere dei risultati in tempo breve, sia per
+necessità imposta dal lavoro che si sta svolgendo (riportando l'esempio fornito
+nell'introduzione, in caso si debba effettuare una codifica video in tempo reale
+risulta inacettabile farlo a meno di 24 fotogrammi al secondo); un fattore di
+grande importanza nell'elaborazione dei dati risiede dunque anche nella potenza
+di calcolo di cui si dispone per svolgerla.
 %-----------------------------------
 %	SUBSECTION 1
 %-----------------------------------
