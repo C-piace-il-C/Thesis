@@ -183,7 +183,53 @@ La tabella che segue mostra le funzioni più influenti nel ciclo di codifica
 della sequenza di test \verb|highway_cif.yuv|.
 \\ //INSERISCI TABELLA DI EXCEL
 \\ //INSERISCI GRAFICO A TORTA DEI MODULI
+\section{Le Sequenze Video}
+Le sequenze campione di tipo \emph{raw} (letteralmente \emph{grezzo}, ovvero 
+non compresso) 
+trovate in rete per 
+eseguire le prove di encoding sono disponibili in diverse risoluzioni. La 
+tabella \ref{tabel-resolutions} mostra quelle relative agli standard più comuni.
 
+	\begin{table}[h!]
+		\centering
+	\begin{tabular}{|l|c|l|}
+		\hline
+		Standard & Risoluzione & Pixel \\ \hline \hline \hline
+		QCIF & $176\times144$ & $25344$ \\ \hline
+		CIF & $352\times288$ & $101376$ \\ \hline
+		4CIF & $704\times576$ & $405504$ \\ \hline
+		720p & $1280\times720$ & $921600$ \\ \hline
+		1080p & $1920\times1080$ & $2073600$ \\ \hline
+		2K & $2048\times1080$ & $2211840$ \\ \hline
+		4K & $4096\times2160$ & $8847360$ \\ \hline
+	\end{tabular}
+	\caption{Risoluzioni comuni.}
+	\label{tabel-resolutions}
+	\end{table}
+Per quanto riguarda il formato, tuttavia, 
+abbiamo riscontrato una situazione completamente diversa: tutte le sequenze che 
+abbiamo reperito sono nel formato y4m, mentre generalmente i software di 
+encoding, HM compreso, richiedono un ingresso yuv.\\
+Per far chiarezza, il termine yuv non fa riferimento ad un vero e proprio 
+formato di sequenze video, ma allo spazio dei colori in cui sono codificati i 
+frame che compongono la sequenza. In origine il termine indicava una codifica 
+analogica del colore per trasmissioni televisive, mentre YCrCb, come discusso 
+nella sezione -ref-, descrive la codifica digitale del colore. Oggi, yuv è 
+utilizzato per quelle sequenze video i cui colori sono rappresentati in YCrCb.
+In sostanza un file con estensione yuv contiene semplicemente il contenuto 
+binario dei frame, uno dopo l'altro, senza altre informazioni. \`E compito 
+dell'utilizzatore specificare il formato di subsampling e la risoluzione 
+corretti.\\
+Il formto y4m, acronimo per YUV4MPEG2, differisce leggermente dai file yuv in 
+quanto inizia con un header dalla dimensione variabile che contiene parametri 
+come larghezza ed altezza dei frame, subsampling e il numero di fps. Inoltre, 
+ogni frame inizia con i $5$ byte che compongono la scritta ``FRAME'' seguiti 
+dal byte 0x0A ($10$).\\
+Non riuscendo a trovare convertitori per Windows o per Linux ad eccezione di 
+ffmpeg, che però ci dava alcuni problemi, e data l'estrema semplicità del 
+formato y4m, abbiamo deciso di scrivere un programmino in C per eseguire la 
+conversione. \\
+\lstinputlisting[language=C,caption=]{Codes/Y4M2YUV.c}
 \section{Strategie di ottimizzazione}
 Ottimizzazione del software è un termine generico che può avere diversi 
 significati, ma fondamentalmente si tratta di apportare delle modifiche al 
@@ -219,12 +265,16 @@ Non cambia quindi tanto ciò che si fa, o algoritmo, quanto il modo di
 svolgerlo.\\
 Le ottimizzazioni affrontate in questo lavoro appartengono per ovvi motivi alla 
 seconda categoria.
-%vooooleeevi eh, col taccuino
+Molto semplicemente, il programma cerca le prime due occorrenze della stringa   
+``FRAME0x0A'', calcola il numero di byte che le divide, coincidente con la 
+dimensione dei frame, che poi copia uno ad uno nel file di destinazione.
+Il programma intero è disponibile 
+online\footnote{https://github.com/C-piace-il-C/Y4M2YUV}, mentre qui di seguito 
+è presente un estratto che mostra la funzione principale.
 
 %-----------------------------------
-%       SUBSECTION 1
+%       SUBSECTION 6.4.1
 %-----------------------------------
-
 \subsection{Opzioni di Compilazione}
 Per prima cosa abbiamo dedicato del tempo allo studio delle opzioni di 
 compilazione fornite da GCC (\emph{GNU Compiler Collection}) al fine di partire 
@@ -410,9 +460,8 @@ RELEASE_CPPFLAGS  = -Ofast -Wuninitialized -ftree-vectorize
 // gcc-4.7 non vettorizzava ARM, gcc-4.9 sì.\\
 // Risultati\\
 %-----------------------------------
-%       SUBSECTION 2
+%       SUBSECTION 6.3.2
 %-----------------------------------
-
 \subsection{Assembly}
 // IMPOSTA FONT CONSOLAS PER I LISTATI \newline
 // INGRANDISCI IL FONT DI TESTO E LISTATI \newline
@@ -474,13 +523,14 @@ nel caso in cui \verb|r3| $>$ \verb|maxVal|.
 \par Nonostante gli esiti positivi dell'ottimizzazione in fase di
 testing, dopo l'implementazione effettiva all'interno di HM la performance 
 dell'encoder è calata, come mostra la tabella.
-\begin{center}
+\begin{table}[h!]
+	\centering
   \begin{tabular}{l | l | l}
     & ASM & C \\ \hline
     $8\cdot10^9$ clamp & $7065.6$ (ms) & $8072.7$ (ms) \\
     $72$ frame \verb|highway_cif.yuv| & $1493.614$ (s) &  $1408.4262$ (s) \\
   \end{tabular}
-\end{center}
+\end{table}
 Le righe della tabella mostrano rispettivamente una media di $10$ prove
 fatte con un 
 codice di test 
@@ -499,9 +549,8 @@ ottimizzando anche altre parti del codice, ma è un'operazione che al momento
 esula dalle nostre competenze.
 
 %-----------------------------------
-%       SUBSECTION 3
+%       SUBSECTION 6.3.3
 %-----------------------------------
-
 \subsection{Intrinsic NEON}
 
 Tra le varie ottimizzazioni che implicavano la modifica del codice, è stato 
@@ -884,9 +933,8 @@ Questa modifica ha, ovviamente, un bassissimo impatto sulle prestazioni
 complessive del codice. E' stata implementata esclusivamente a scopo didattico.
 
 %-----------------------------------
-%       SUBSECTION 5
+%       SUBSECTION 6.3.5
 %-----------------------------------
-
 \subsection{Attributi}
 Oltre alle opzioni di compilazione, GCC mette a disposizione un insieme di   
 attributi per descrivere esplicitamente il comportamento di funzioni (ma anche 
@@ -964,9 +1012,8 @@ performance, che in media sono rimaste invariate. \\
 // MOSTRA ASM DEI CAMBIAMENTI \\
 // FAI IPOTESI
 %-----------------------------------
-%       SUBSECTION 6
+%       SUBSECTION 6.4.6
 %-----------------------------------
-
 \label{sect-multi}\subsection{Multithread}
 Nonostante l'evoluzione di software ed hardware sia ormai da anni concentrata 
 sulla parallelizzazione, HM non è stato pensato né scritto per tale 
