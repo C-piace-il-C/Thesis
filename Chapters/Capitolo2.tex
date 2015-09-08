@@ -127,7 +127,7 @@ esclusiva, il comportamento dei due \emph{thread} non è prevedibile a priori. \
 Ad esempio, se entrambi cercassero di accedere alla stessa variabile per 
 incrementarla, a seconda dell'ordine in cui verranno eseguite queste operazioni 
 cambierà il risultato ottenuto:
-\begin{table}[htbp]
+\begin{table}[H]
   \centering
   \subfloat[Comportamento corretto \label{tab:corretto}]
   {
@@ -173,6 +173,41 @@ che desideri sfruttare questa possibilità.
 
 \subsection{Ottimizzazione di algoritmi}
 
-// Potrebbe essere utile introdurre un esempio: perché è stato necessario \\
-// elaborare un algoritmo per il calcolo rapido della trasformata discreta di \\
-// Fourier?
+La pura potenza di per sé non è lo strumento ottimale con cui si riesce a
+ridurre il tempo impiegato ad effettuare un'elaborazione, ma è possibile agire
+su un altro aspetto del \emph{computing} che porta enormi benefici a prescindere
+dalla potenza disponibile, ovverosia l'ottimizzazione dell'algoritmo utilizzato
+per compiere l'elaborazione desiderata. \\
+Un algoritmo non ottimizzato, che non sfrutta quindi tutte le potenzialità
+offerte dalla piattaforma su cui viene implementato, risulterà sempre più lento 
+e meno efficiente di un algoritmo scritto in modo tale da usufruire di tutte le
+caratteristiche del sistema in cui viene implementato; ciò è valido quasi 
+sempre, eccezion fatta per quando la seconda piattaforma è estremamente meno
+performante della prima\footnote{In questo caso la seconda piattaforma risulta
+più lenta, ma rimane comunque più efficiente.}.
+\\ \\ 
+Introducendo un esempio che è caratteristico dell'ambito elettronico e
+telematico, si pensi all'algoritmo per il calcolo della trasformata discreta
+di Fourier; traducendo ``letteralmente'' la formula matematica in codice
+compilabile ed eseguibile da un calcolatore, si ottiene che il peso
+computazionale risulta $O(n^2)$ (ovvero, per una sequenza di $N$ elementi
+servono $N^2$ operazioni), quindi la debolezza di questa implementazione aumenta
+al crescere della sequenza: se quest'ultima fosse lunga 4'096 elementi
+sarebbero necessarie quasi diciassette milioni di somme e moltiplicazioni. \\
+Se invece si sfruttano le proprietà della DFT e si calcola quest'ultima
+come un calcolo successivo di DFT più piccole (suddividendo la sequenza $x(n)$
+in ingresso in sottosequenze sempre più piccole, effettuando dunque una
+\emph{decimazione nel tempo}) si ottiene un peso computazionale pari a 
+$Nlog_{2}(N)$, che scende a $\frac{N}{2}log_{2}N$ se la sequenza è reale
+(ovverosia nella grande maggioranza dei casi). \\
+Riutilizzando l'esempio precedente, si nota come in presenza di una sequenza di 
+4096 elementi sarebbero necessarie rispettivamente circa 50'000 e 25'000 tra
+somme e moltiplicazioni. 
+\\ \\
+Il fattore di \emph{speed-up} del precedente esempio risulta pari a 340$\times$
+nel primo caso e 680$\times$ nel secondo: pur volendo essere ottimisti ed 
+ipotizzando che la prima previsione di Moore fosse rimasta tale all'infinito, 
+sarebbero comunque serviti rispettivamente circa 8.5 e 9.5 anni di sviluppo 
+tecnologico per ottenere un miglioramento paragonabile affidandosi alla pura 
+potenza bruta di un processore, ma avendo in ogni caso un algoritmo che possiede
+grandi limitazioni con sequenze di dimensione crescente.
