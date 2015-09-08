@@ -44,7 +44,7 @@ GUIs, \emph{Graphical User Interfaces}). Inoltre,
 per facilitare l'accesso ai dati presenti sulle periferiche di memorizzazione, 
 abbiamo dotato il Banana Pi di un server \emph{file transfer protocol} (FTP).
 \\ \\
-Tuttavia, nella fase finale del progetto, l'intefaccia grafica è stata 
+Tuttavia, nella fase finale del progetto, l'interfaccia grafica è stata 
 abbandonata in modo da permettere una risposta del sistema più immediata e una 
 minore allocazione di risorse; è stato dunque possibile disattivare 
 l'accelerazione hardware, necessaria in un ambiente grafico, permettendo il 
@@ -156,7 +156,7 @@ contesto della progettazione di architetture hardware ma universalmente valido,
 e riassunto nella nota frase ``\emph{make the common case fast}''. Il 
 significato in questo caso è che, constatata la limitatezza delle risorse a 
 disposizione, 
-conviene concentrasi sulle parti che influiscono maggiurmente 
+conviene concentrasi sulle parti che influiscono maggiormente 
 sulle performance del software, i \emph{common case}.
 \\ \\
 In quest'ottica abbiamo adoperato il \emph{profiler} Valgrind per trovare le 
@@ -266,11 +266,11 @@ che abbiamo applicato. Le ottimizzazioni del software possono
 rientrare, in prima istanza, in due 
 categorie: quelle che migliorano l'algoritmo e quelle che migliorano il codice. 
 \\La prima categoria contiene senz'altro quelle più intelligenti ed 
-interressanti, nonché quelle che andrebbero ponderate per prime. L'esempio già 
+interessanti, nonché quelle che andrebbero ponderate per prime. L'esempio già 
 fatto della trasformata veloce di Fourier rientra proprio in questa categoria. 
 Si tratta, in essenza, di migliorare l'algoritmo, non la sua implementazione.
 Questo tipo di ottimizzazione porta tipicamente maggiori benefici ed ha 
-l'enorme pregio di migliorare automaticamente qualuqune ragionevole 
+l'enorme pregio di migliorare automaticamente qualunque ragionevole 
 implementazione.\\
 Le ottimizzazioni della seconda categoria sono solitamente più semplici e 
 banali, tanto che la tendenza degli ultimi anni è quella di delegarle al 
@@ -550,7 +550,7 @@ Il motivo di tale discrepanza può essere visto
 nel fatto che, vicino alla funzione Assembly inline, GCC è costretto ad 
 inserire un prologo ed un epilogo in cui salva e carica lo stato del programma, 
 mentre nella serie di test ciò non è necessario.\newline
-Una possibile soluzione consiste nel riscrivere almeno parziamente la funzione 
+Una possibile soluzione consiste nel riscrivere almeno parzialmente la funzione 
 \verb|filter| 
 in Assembly per predisporre correttamente i dati, eventualmente
 ottimizzando anche altre parti del codice, ma è un'operazione che al momento 

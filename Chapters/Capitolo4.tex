@@ -8,8 +8,7 @@
 
 %-------------------------------------------------------------------------------
 %	SECTION 1
-%-------
-------------------------------------------------------------------------
+%-------------------------------------------------------------------------------
 
 \section{Suddivisione in blocchi dell'immagine} 
 Un'immagine viene inizialmente suddivisa in \emph{coding tree unit} (CTU), di 
@@ -43,7 +42,7 @@ Supponendo di avere un CTB di dimensione 64x64 la suddivisione può essere
 effettuata con CB grandi 64x64, 32x32, 16x16 o 8x8, ottenendo una struttura
 detta \emph{quad-tree}, in cui il CTB è suddiviso ricorsivamente. 
 Il CB, così come il CTB, consiste ancora nei tre blocchi Y, Cb e 
-Cr, che definiscono un \emph{coding unit} (CU), ovverò l'unità in cui viene 
+Cr, che definiscono un \emph{coding unit} (CU), ovvero l'unità in cui viene 
 codificato il tipo di predizione. La scelta di quest'ultima è autonoma per ogni 
 CU.
 \begin{figure}[H]
@@ -101,7 +100,7 @@ seguenti:
 [1 2 1]/4 (a)
 \item Se la dimensione del TB è 32x32 e i campioni di riferimento sono 
 abbastanza ``morbidi'', questi vengono sostituiti con le corrispondenti 
-interpolazioni lineari dei cambioni agli estremi (b)
+interpolazioni lineari dei campioni agli estremi (b)
 \end{enumerate}
 
 \begin{figure}[H]
@@ -239,7 +238,7 @@ L'immagine seguente mostra un esempio di CTB Luma interamente predetto intra: \\
 \section{Inter Prediction}
 L'\emph{inter prediction} sfrutta la correlazione temporale dei frame per 
 ottenere una \emph{motion compensated prediction} (MCP), ovvero un PB predetto 
-a partire da PB ``predittori'' che appartegono a frame precedentemente 
+a partire da PB ``predittori'' che appartengono a frame precedentemente 
 decodificati, supponendo che nel PB predetto essi siano traslati: 
 \\
 // Inserire immagine
@@ -291,7 +290,7 @@ complessità di codifica troppo elevate.
 
 H.265 mette a disposizione un algoritmo per la costruzione di vettori 
 \emph{candidate MVP} chiamato \emph{advanced motion vector prediction} (AMVP), 
-ottenuto in seguito ad esperimenti esaustivi volti a trovare oredizioni che 
+ottenuto in seguito ad esperimenti esaustivi volti a trovare predizioni che 
 minimizzassero la complessità di codifica pur mantenendo buoni livelli di 
 predizione (i.e., bassa entropia del segnale di errore MVD).\\
 Una parte della sintassi di HEVC serve a comunicare al decoder quale MVP 
@@ -319,7 +318,7 @@ Gli \emph{spatial candidate} sono ottenuti prendendo in considerazione cinque
 blocchi spazialmente vicini suddivisi in due gruppi: il gruppo A contenente i 
 due blocchi in basso a sinistra rispetto a quello che si vuole predire, il 
 gruppo B con al suo interno tre blocchi in alto.
-Generalmente, se i vettori dei blocchi considerati sono ricondicibili allo 
+Generalmente, se i vettori dei blocchi considerati sono riconducibili allo 
 stesso \emph{reference id} (l'indice dell'immagine a cui fanno 
 riferimento) di quello del blocco che si vuole predire, tali vettori saranno 
 MVP.
@@ -344,7 +343,7 @@ Infine HEVC risolve un problema legato alla struttura di suddivisione delle
 immagini \emph{quadtree}: quest'ultime permettono una grande flessibilità 
 delle dimensioni dei blocchi con un basso costo di \emph{overhead} in termini 
 di \emph{bit rate}. Per l'\emph{inter prediction} la struttura a \emph{quadtree}
- permette di suddividere minuziosamente quelle parti di immagine dhe presentano 
+ permette di suddividere minuziosamente quelle parti di immagine che presentano 
 bruschi movimenti rispetto alle parti più statiche che non richiedono una 
 grande informazione di movimento. Questo tipo di raggruppamento, tuttavia, 
 origina facilmente bordi ineffettivi (\emph{over segmentation}); HEVC dispone 
@@ -396,7 +395,7 @@ coefficienti di trasformazione DCT-II; questo sistema riduce di molto la
 complessità di encoder e decoder, e risolve un problema che era presente in 
 H.261, ovvero la deriva dovuta a lievi disallineamenti nella rappresentazione 
 fixed point dei coefficienti tra la matrice di trasformazione, costruita 
-arbitrariamente dal'implementatore dell'encoder, e quella di antitrasformazione 
+arbitrariamente dall'implementatore dell'encoder, e quella di antitrasformazione 
 fornita dallo standard. \\
 Errori di questo tipo si ripercuotono amplificati in ogni immagine successiva, 
 costringendo a dover trovare un modo di ovviare al problema (il sopracitato 
@@ -441,7 +440,7 @@ per il sistema visivo umano è concentrato alle basse frequenze.
 \section{In-Loop Filters}
 Lo standard ibrido di codifica HEVC scompone i frame attraverso una struttura a 
 blocchi per effettuare la compressione; questa suddivisione porta spesso alla 
-comparsa di artefatti che danno alle sequenze video un'aspetto quadrettato, 
+comparsa di artefatti che danno alle sequenze video un aspetto quadrettato, 
 peggiorandone la qualità visiva. Un esempio tipico di causa della discontinuità 
 tra i blocchi è la predizione inter di due blocchi contigui che nel frame
  di riferimento erano distanti, oppure anche la codifica di due blocchi contigui
@@ -453,7 +452,7 @@ Questi filtraggi sono chiamati \emph{in-loop filters} perché vengono eseguiti
 all'interno dei cicli di encoding/decoding, e i risultati vengono utilizzati 
 nei cicli successivi oltre che durante la visualizzazione delle sequenze 
 decodificate; in questo modo si trae vantaggio da questa procedura anche durante
- il decoding dei frame successivi, preché le predizioni inter vengono effettuate
+ il decoding dei frame successivi, perché le predizioni inter vengono effettuate
  a valle di frame reference di maggiore qualità.
 \\ \\
 Il \emph{deblocking filter} si occupa di smussare i confini tra due blocchi in 
@@ -576,10 +575,10 @@ costante al variare dei campioni e può essere corretto, almeno in media, con un
 
 Eventualmente, HEVC permette ulteriori miglioramenti specificando quattro 
 \emph{offset}. \\
-Il range dei vaori dei campioni viene suddiviso in 32 bande omogenee; se i 
+Il range dei valori dei campioni viene suddiviso in 32 bande omogenee; se i 
 campioni fossero ad 8 bit, con valori da 0 a 255, le bande avrebbero ampiezza 
 pari a 8. A questo punto l'encoder sceglie le quattro bande contigue che 
-raccologono la maggior percentuale di errore rispetto al segnale originale e 
+raccolgono la maggior percentuale di errore rispetto al segnale originale e 
 determina quattro valori di offset, ovverosia uno per ogni banda. 
 Successivamente viene applicato l'\emph{offset} corrispettivo a tutti i campioni
 il cui valore rientra all'interno di una delle suddette quattro bande; per ogni 
@@ -594,7 +593,7 @@ bande e i valori di offset.
 Il \emph{Context-Based Adaptive Binary Arithmetic Coding} (CABAC) è il blocco 
 finale all'interno del ciclo di codifica che esegue una compressione 
 \emph{lossless} sui dati binari che vengono posti subito dopo in uscita 
-all'encoder. La conpressione si basa sulle proprietà statistiche dei dati 
+all'encoder. La compressione si basa sulle proprietà statistiche dei dati 
 relative al loro contesto di codifica (da qui il \emph{context-based}), cercando
 di rendere la dimensione in bit di una parola di codice proporzionale in modo 
 logaritmico alla probabilità del dato che essa codifica (dal teorema di Shannon:
@@ -615,7 +614,7 @@ video ibrido. \\
 \end{figure}
 
 Il primo passaggio consiste nella binarizzazione del \emph{syntax element} 
-sostituendolo con una stringa di simboli binari; succesivamente si verifica 
+sostituendolo con una stringa di simboli binari; successivamente si verifica 
 la parte \emph{context-based}, ovvero l'assegnazione di una probabilità ad ogni 
 simbolo. Infine la stringa di simboli relativi al \emph{syntax element} viene 
 codificata (i.e., associata alla parola di codice) tramite codifica aritmetica e
@@ -661,7 +660,7 @@ cui la prima è la scelta della modalità di codifica che può essere \emph{
 regular} o \emph{bypass}. Nel secondo caso si suppone una densità di probabilità
 uniforme e si associa $0.5$ di default ad ogni bit. La codifica \emph{regular}
 può invece dare una probabilità basata sul tipo di \emph{syntax element} e sulla
-posizione del bin, oppure selezionare un modello probabillistico per il bin 
+posizione del bin, oppure selezionare un modello probabilistico per il bin 
 basandosi su informazioni correlate (come valori vicini spazialmente). \\
 Questi modelli, detti \emph{context models}, contengono la probabilità di '1' e
 '0' di ogni bin; ognuno di questi modelli possiede due parametri  da 7 bit, con
@@ -680,7 +679,8 @@ variano al variare del bin secondo la formula:
 \]
 
 che deve essere letta come una riassegnazione di valore del parametro all'arrivo
-di un bin; quando i parametri raggiungono il valore massimo vengono riscalati.
+di un bin; quando i parametri raggiungono il valore massimo vengono scalati
+nuovamente.
 %-----------------------------------
 %       SUBSECTION 3
 %-----------------------------------
@@ -700,7 +700,7 @@ Supponendo che il secondo simbolo sia un $LPS$ verrà scelto l'intervallo lungo
 ottenere l'intervallo finale $F={[a,b[}$ che rappresenta l'intera stringa di
 $N$ bin. \\
 La codifica aritmetica di $F$ è la sequenza di bit minima che si riferisce ad un
-intervallo completamente contenuto in $F$: l'intervallo cui si riferisc una
+intervallo completamente contenuto in $F$: l'intervallo cui si riferisce una
 sequenza di bit (e non di bin) si può pensare come l'intervallo che si
 otterrebbe mediante l'algoritmo precedentemente descritto se la suddivisione
 fosse sempre binaria , ovvero quando $p_{LPS} = p_{MPS} = 0.5$.
