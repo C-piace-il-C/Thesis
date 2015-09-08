@@ -741,60 +741,60 @@ come esempio:
 
 %TODO sostituire [language=C] con lo stile personalizzato.
 \begin{lstlisting}[language=C]
-  Int k;
-  Distortion satd = 0;
-  
-  TCoeff diff[16], m[16], d[16];
-  
-  for (k = 0; k < 16; k += 4)
-  {
-    diff[k+0] = piOrg[0] - piCur[0];
-    diff[k+1] = piOrg[1] - piCur[1];
-    diff[k+2] = piOrg[2] - piCur[2];
-    diff[k+3] = piOrg[3] - piCur[3];
-  
-    piCur += iStrideCur;
-    piOrg += iStrideOrg;
-  }
-  
-  m[ 0] = diff[ 0] + diff[12];
-  m[ 1] = diff[ 1] + diff[13];
-  m[ 2] = diff[ 2] + diff[14];
-  m[ 3] = diff[ 3] + diff[15];
-  
-  m[ 4] = diff[ 4] + diff[ 8];
-  m[ 5] = diff[ 5] + diff[ 9];
-  m[ 6] = diff[ 6] + diff[10];
-  m[ 7] = diff[ 7] + diff[11];
-  
-  m[ 8] = diff[ 4] - diff[ 8];
-  m[ 9] = diff[ 5] - diff[ 9];
-  m[10] = diff[ 6] - diff[10];
-  m[11] = diff[ 7] - diff[11];
-  
-  m[12] = diff[ 0] - diff[12];
-  m[13] = diff[ 1] - diff[13];
-  m[14] = diff[ 2] - diff[14];
-  m[15] = diff[ 3] - diff[15];
-  
-  d[ 0] = m[ 0] + m[ 4];
-  d[ 1] = m[ 1] + m[ 5];
-  d[ 2] = m[ 2] + m[ 6];
-  d[ 3] = m[ 3] + m[ 7];
-  d[ 4] = m[ 8] + m[12];
-  d[ 5] = m[ 9] + m[13];
-  d[ 6] = m[10] + m[14];
-  d[ 7] = m[11] + m[15];
-  d[ 8] = m[ 0] - m[ 4];
-  d[ 9] = m[ 1] - m[ 5];
-  d[10] = m[ 2] - m[ 6];
-  d[11] = m[ 3] - m[ 7];
-  d[12] = m[12] - m[ 8];
-  d[13] = m[13] - m[ 9];
-  d[14] = m[14] - m[10];
-  d[15] = m[15] - m[11];
-  
-  /* ... */
+Int k;
+Distortion satd = 0;
+
+TCoeff diff[16], m[16], d[16];
+
+for (k = 0; k < 16; k += 4)
+{
+  diff[k+0] = piOrg[0] - piCur[0];
+  diff[k+1] = piOrg[1] - piCur[1];
+  diff[k+2] = piOrg[2] - piCur[2];
+  diff[k+3] = piOrg[3] - piCur[3];
+
+  piCur += iStrideCur;
+  piOrg += iStrideOrg;
+}
+
+m[ 0] = diff[ 0] + diff[12];
+m[ 1] = diff[ 1] + diff[13];
+m[ 2] = diff[ 2] + diff[14];
+m[ 3] = diff[ 3] + diff[15];
+
+m[ 4] = diff[ 4] + diff[ 8];
+m[ 5] = diff[ 5] + diff[ 9];
+m[ 6] = diff[ 6] + diff[10];
+m[ 7] = diff[ 7] + diff[11];
+
+m[ 8] = diff[ 4] - diff[ 8];
+m[ 9] = diff[ 5] - diff[ 9];
+m[10] = diff[ 6] - diff[10];
+m[11] = diff[ 7] - diff[11];
+
+m[12] = diff[ 0] - diff[12];
+m[13] = diff[ 1] - diff[13];
+m[14] = diff[ 2] - diff[14];
+m[15] = diff[ 3] - diff[15];
+
+d[ 0] = m[ 0] + m[ 4];
+d[ 1] = m[ 1] + m[ 5];
+d[ 2] = m[ 2] + m[ 6];
+d[ 3] = m[ 3] + m[ 7];
+d[ 4] = m[ 8] + m[12];
+d[ 5] = m[ 9] + m[13];
+d[ 6] = m[10] + m[14];
+d[ 7] = m[11] + m[15];
+d[ 8] = m[ 0] - m[ 4];
+d[ 9] = m[ 1] - m[ 5];
+d[10] = m[ 2] - m[ 6];
+d[11] = m[ 3] - m[ 7];
+d[12] = m[12] - m[ 8];
+d[13] = m[13] - m[ 9];
+d[14] = m[14] - m[10];
+d[15] = m[15] - m[11];
+
+/* ... */
 \end{lstlisting}
 
 Dove \verb|Int| e \verb|TCoeff| sono entrambi del tipo \verb|int32_t| 
@@ -807,46 +807,46 @@ Viene ora presentata la versione vettorizzata.
 
 %TODO usare style
 \begin{lstlisting}[language=C]
-  Int k;
-  Distortion satd = 0;
+Int k;
+Distortion satd = 0;
+
+TCoeff m[16], d[16];
+int32x4_t v_diff[4], v_m[4], v_d[4];
+
+for (k = 0; k < 4; k++)
+{
+  int16x4_t v_piOrg = vld1_s16(piOrg);
+  int16x4_t v_piCur = vld1_s16(piCur);
   
-  TCoeff m[16], d[16];
-  int32x4_t v_diff[4], v_m[4], v_d[4];
-  
-  for (k = 0; k < 4; k++)
-  {
-    int16x4_t v_piOrg = vld1_s16(piOrg);
-    int16x4_t v_piCur = vld1_s16(piCur);
-    
-    v_diff[k] = vsubl_s16(v_piOrg, v_piCur);
-  
-    piCur += iStrideCur;
-    piOrg += iStrideOrg;
-  }
-  
-  v_m[0] = vaddq_s32(v_diff[0], v_diff[3]);
-  v_m[1] = vaddq_s32(v_diff[1], v_diff[2]);
-  v_m[2] = vsubq_s32(v_diff[1], v_diff[2]);
-  v_m[3] = vsubq_s32(v_diff[0], v_diff[3]);
-  
-  // Store 'v_m' in 'm'
-  vst1q_s32(m     , v_m[0]);
-  vst1q_s32(m + 4 , v_m[1]);
-  vst1q_s32(m + 8 , v_m[2]);
-  vst1q_s32(m + 12, v_m[3]);
-  
-  v_d[0] = vaddq_s32(v_m[0], v_m[1]);
-  v_d[1] = vaddq_s32(v_m[2], v_m[3]);
-  v_d[2] = vsubq_s32(v_m[0], v_m[1]);
-  v_d[3] = vsubq_s32(v_m[3], v_m[2]);
-  
-  // Store 'v_d' in 'd'
-  vst1q_s32(d     , v_d[0]);
-  vst1q_s32(d + 4 , v_d[1]);
-  vst1q_s32(d + 8 , v_d[2]);
-  vst1q_s32(d + 12, v_d[3]);
-  
-  /* ... */
+  v_diff[k] = vsubl_s16(v_piOrg, v_piCur);
+
+  piCur += iStrideCur;
+  piOrg += iStrideOrg;
+}
+
+v_m[0] = vaddq_s32(v_diff[0], v_diff[3]);
+v_m[1] = vaddq_s32(v_diff[1], v_diff[2]);
+v_m[2] = vsubq_s32(v_diff[1], v_diff[2]);
+v_m[3] = vsubq_s32(v_diff[0], v_diff[3]);
+
+// Store 'v_m' in 'm'
+vst1q_s32(m     , v_m[0]);
+vst1q_s32(m + 4 , v_m[1]);
+vst1q_s32(m + 8 , v_m[2]);
+vst1q_s32(m + 12, v_m[3]);
+
+v_d[0] = vaddq_s32(v_m[0], v_m[1]);
+v_d[1] = vaddq_s32(v_m[2], v_m[3]);
+v_d[2] = vsubq_s32(v_m[0], v_m[1]);
+v_d[3] = vsubq_s32(v_m[3], v_m[2]);
+
+// Store 'v_d' in 'd'
+vst1q_s32(d     , v_d[0]);
+vst1q_s32(d + 4 , v_d[1]);
+vst1q_s32(d + 8 , v_d[2]);
+vst1q_s32(d + 12, v_d[3]);
+
+/* ... */
 \end{lstlisting}
 
 Oltre alle precedenti \emph{intrinsic} vengono utilizzate le seguenti:
@@ -883,45 +883,45 @@ citati due spezzoni di codice da essa:
 
 %TODO aggiungere style
 \begin{lstlisting}
-  c[0] = coeff[0];
-  c[1] = coeff[1];
-  
-  if (N >= 4)
-  {
-    c[2] = coeff[2];
-    c[3] = coeff[3];
-  }
-  if (N >= 6)
-  {
-    c[4] = coeff[4];
-    c[5] = coeff[5];
-  }
-  if (N == 8)
-  {
-    c[6] = coeff[6];
-    c[7] = coeff[7];
-  }
-  
-  /* ... */
-  
-  sum    = src[col + 0 * cStride] * c[0];
-  sum   += src[col + 1 * cStride] * c[1];
-  
-  if (N >= 4)
-  {
-    sum += src[col + 2 * cStride] * c[2];
-    sum += src[col + 3 * cStride] * c[3];
-  }
-  if (N >= 6)
-  {
-    sum += src[col + 4 * cStride] * c[4];
-    sum += src[col + 5 * cStride] * c[5];
-  }
-  if (N == 8)
-  {
-    sum += src[col + 6 * cStride] * c[6];
-    sum += src[col + 7 * cStride] * c[7];
-  }
+c[0] = coeff[0];
+c[1] = coeff[1];
+
+if (N >= 4)
+{
+  c[2] = coeff[2];
+  c[3] = coeff[3];
+}
+if (N >= 6)
+{
+  c[4] = coeff[4];
+  c[5] = coeff[5];
+}
+if (N == 8)
+{
+  c[6] = coeff[6];
+  c[7] = coeff[7];
+}
+
+/* ... */
+
+sum    = src[col + 0 * cStride] * c[0];
+sum   += src[col + 1 * cStride] * c[1];
+
+if (N >= 4)
+{
+  sum += src[col + 2 * cStride] * c[2];
+  sum += src[col + 3 * cStride] * c[3];
+}
+if (N >= 6)
+{
+  sum += src[col + 4 * cStride] * c[4];
+  sum += src[col + 5 * cStride] * c[5];
+}
+if (N == 8)
+{
+  sum += src[col + 6 * cStride] * c[6];
+  sum += src[col + 7 * cStride] * c[7];
+}
 \end{lstlisting}
 
 Analizzando il codice è stato appurato che la variabile \verb|N| può assumere 
