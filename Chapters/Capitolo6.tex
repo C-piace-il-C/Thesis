@@ -197,62 +197,64 @@ della sequenza di test \verb|highway_cif.yuv|. \\
 %-------------------------------------------------------------------------------
 \section{Le Sequenze Video}
 Le sequenze campione di tipo \emph{raw} (letteralmente \emph{grezzo}, ovvero 
-non compresso) 
-trovate in rete per 
-eseguire le prove di encoding sono disponibili in diverse risoluzioni. La 
-tabella \ref{tabel-resolutions} mostra quelle relative agli standard più comuni.
+non compresso) trovate in rete per eseguire le prove di encoding sono 
+disponibili in diverse risoluzioni. La tabella \ref{tabel-resolutions} mostra 
+quelle relative agli standard più comuni.
 
-	\begin{table}[h!]
-		\centering
-	\begin{tabular}{|l|c|l|}
-		\hline
-		Standard & Risoluzione & Pixel \\ \hline \hline \hline
-		QCIF & $176\times144$ & $25344$ \\ \hline
-		CIF & $352\times288$ & $101376$ \\ \hline
-		4CIF & $704\times576$ & $405504$ \\ \hline
-		720p & $1280\times720$ & $921600$ \\ \hline
-		1080p & $1920\times1080$ & $2073600$ \\ \hline
-		2K & $2048\times1080$ & $2211840$ \\ \hline
-		4K & $4096\times2160$ & $8847360$ \\ \hline
-	\end{tabular}
-	\caption{Risoluzioni comuni.}
-	\label{tabel-resolutions}
-	\end{table}
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{|l|c|l|}
+    \hline
+    Standard & Risoluzione & Pixel \\ \hline \hline \hline
+    QCIF & $176\times144$ & $25344$ \\ \hline
+    CIF & $352\times288$ & $101376$ \\ \hline
+    4CIF & $704\times576$ & $405504$ \\ \hline
+    720p & $1280\times720$ & $921600$ \\ \hline
+    1080p & $1920\times1080$ & $2073600$ \\ \hline
+    2K & $2048\times1080$ & $2211840$ \\ \hline
+    4K & $4096\times2160$ & $8847360$ \\ \hline
+  \end{tabular}
+  \caption{Risoluzioni comuni.}
+  \label{tabel-resolutions}
+\end{table}
+
 Per quanto riguarda il formato, tuttavia, 
 abbiamo riscontrato una situazione completamente diversa: tutte le sequenze che 
-abbiamo reperito sono nel formato y4m, mentre generalmente i software di 
-encoding, HM compreso, richiedono un ingresso yuv.\\
-Per far chiarezza, il termine yuv non fa riferimento ad un vero e proprio 
-formato di sequenze video, ma allo spazio dei colori in cui sono codificati i 
-frame che compongono la sequenza. In origine il termine indicava una codifica 
-analogica del colore per trasmissioni televisive, mentre YCrCb, come discusso 
-nella sezione -ref-, descrive la codifica digitale del colore. Oggi, yuv è 
-utilizzato per quelle sequenze video i cui colori sono rappresentati in YCrCb.
+abbiamo reperito sono nel formato \verb|y4m|, mentre generalmente i software di 
+encoding, HM compreso, richiedono un ingresso \verb|yuv|.\\
+Per far chiarezza, il termine \verb|yuv| non fa riferimento ad un vero e 
+proprio formato di sequenze video, ma allo spazio dei colori in cui sono 
+codificati i frame che compongono la sequenza. In origine il termine indicava 
+una codifica analogica del colore per trasmissioni televisive, mentre YCrCb, 
+come discusso nella sezione -ref-, descrive la codifica digitale del colore. 
+Oggi, yuv è utilizzato per quelle sequenze video i cui colori sono 
+rappresentati in YCrCb.
 In sostanza un file con estensione yuv contiene semplicemente il contenuto 
 binario dei frame, uno dopo l'altro, senza altre informazioni. \`E compito 
 dell'utilizzatore specificare il formato di subsampling e la risoluzione 
-corretti.\\
-Il formto y4m, acronimo per YUV4MPEG2, differisce leggermente dai file yuv in 
-quanto inizia con un header dalla dimensione variabile che contiene parametri 
-come larghezza ed altezza dei frame, subsampling e il numero di fps. Inoltre, 
-ogni frame inizia con i $5$ byte che compongono la scritta ``FRAME'' seguiti 
-dal byte 0x0A ($10$).\\
-Non riuscendo a trovare convertitori per Windows o per Linux ad eccezione di 
-ffmpeg, che però ci dava alcuni problemi, e data l'estrema semplicità del 
-formato y4m, abbiamo deciso di scrivere un programmino in C per eseguire la 
-conversione.\\
+corretti. \\
+Il formato \verb|y4m|, acronimo per \verb|YUV4MPEG2|, differisce leggermente 
+dai file \verb|yuv| in quanto inizia con un \textit{header} dalla dimensione 
+variabile che contiene parametri come larghezza ed altezza dei \textit{frame}, 
+\textit{subsampling} e il numero di \textit{frame per second} (FPS). Inoltre, 
+ogni frame inizia con i $5$ byte che compongono la scritta \verb|FRAME| seguiti 
+dal byte \verb|0x0A| ($10$). \\
+Non riuscendo a trovare convertitori per Windows o Linux ad eccezione di 
+\verb|ffmpeg|, che però ci dava alcuni problemi, e data l'estrema semplicità 
+del formato \verb|y4m|, abbiamo deciso di scrivere un programmino in C per 
+eseguire la conversione. \\
 Molto semplicemente, il programma cerca le prime due occorrenze della stringa   
-``FRAME0x0A'' e calcola il numero di byte che le divide, coincidente con la 
+\verb|FRAME0x0A| e calcola il numero di byte che le divide, coincidente con la 
 dimensione dei frame. Conoscendo la posizione del primo frame all'interno del 
-file y4m e la sua lunghezza in byte, è possibile trovare con un semplice 
+file \verb|y4m| e la sua lunghezza in byte, è possibile trovare con un semplice 
 calcolo la posizione di tutti gli altri frame per copiarli, uno ad uno, nel 
 file di destinazione.
 Il programma intero è disponibile 
 online\footnote{https://github.com/C-piace-il-C/Y4M2YUV}, mentre qui di seguito 
-è presente un estratto che mostra la funzione principale.
-\begin{center}
+è presente un estratto che mostra la funzione principale. \\
+
 \lstinputlisting[language=C,caption=]{Codes/Y4M2YUV.c}
-\end{center}
+
 %-------------------------------------------------------------------------------
 %	SECTION 6.4
 %-------------------------------------------------------------------------------
