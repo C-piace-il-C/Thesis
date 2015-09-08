@@ -477,17 +477,14 @@ RELEASE_CPPFLAGS  = -Ofast -Wuninitialized -ftree-vectorize
 %       SUBSECTION 6.4.2
 %-----------------------------------
 \subsection{Assembly}
-// IMPOSTA FONT CONSOLAS PER I LISTATI \newline
-// INGRANDISCI IL FONT DI TESTO E LISTATI \newline
-Un'altra ottimizzazione sperimentata inizialmente è stata
- la stesura di funzioni in Assembly nel tentativo di ottimizzare alcune parti 
- di codice delle funzioni più onerose di HM.
+Un'altra ottimizzazione sperimentata inizialmente è stata la stesura di 
+funzioni in Assembly nel tentativo di ottimizzare alcune parti di codice delle 
+funzioni più onerose di HM.
 Le principali caratteristiche del linguaggio Assembly ARM che velocizzano un 
-programma sono le istruzioni condizionali e il \emph{barrel
- 	 shifter}. \newline
+programma sono le istruzioni condizionali e il \emph{barrel shifter}. \newline
 Le istruzioni condizionali sono normali istruzioni la cui esecuzione dipende
-dal valore di determinati \emph{flag}. In questo modo è possibile evitare
-parecchi branch condizionali che rallentano il codice perché rompono la
+dal valore di determinati \emph{flag}. In questo modo è possibile evitare 
+parecchi branch condizionali che rallentano il codice perché rompono la 
 \emph{pipeline}.\newline
 Il \emph{barrel shifter} è un'unità che compie una pre-elaborazione di uno dei 
 due operandi di un'istruzione attraverso una normale operazione di shift dei 
@@ -504,39 +501,58 @@ due \emph{compare}. Notando che nel codice di HM \verb|minVal| vale sempre 0, è
 possibile introdurre un'ottimizzazione che sfrutta il barrel shifter. \newline
 Segue il confronto tra l'estratto del codice Assembly generato da GCC (a 
 sinistra) e quello da noi scritto per eseguire clamp.
-// ALLINEA VERTICALMENTE I DUE LISTATI
+
+%\lstset{style=cstyle}
+%\begin{center}
+%  \begin{tabularx}{\textwidth}{ X | c }
+%  	\hline
+%    \lstinputlisting[caption=]{Codes/armgccclamp.s}
+%    \xdef\tempwidth{\thelstlisting\linewidth} &
+%    \lstinputlisting[stepnumber=0,caption=]{Codes/armclamp.s} \\
+%    \hline
+%  \end{tabularx}
+%\end{center}
 
 \lstset{style=cstyle}
-\begin{center}
-  \begin{tabularx}{\textwidth}{ X | c }
-  	\hline
-    \lstinputlisting[caption=]{Codes/armgccclamp.s}
-    \xdef\tempwidth{\thelstlisting\linewidth} &
-    \lstinputlisting[stepnumber=0,caption=]{Codes/armclamp.s} \\
-    \hline
-  \end{tabularx}
-\end{center}
+\begin{minipage}{.565\textwidth}
+  \lstinputlisting{Codes/armgccclamp.s}
+\end{minipage}
+\hfill
+\begin{minipage}{.435\textwidth}
+ \begin{lstlisting}[stepnumber=0, frame=ltb]
+ ldr     r2, [sp, #12]
+ ldr     r3, [sp, #4]
+ bics    r3, r3, r3, asr #31
+ itt     pl
+ cmppl   r3, r22
+ movpl   r3, r2
+ str     r3, [sp, #4]
+
+
+
+
+ \end{lstlisting}
+\end{minipage}
 Per maggiore chiarezza il codice generato da GCC è stato commentato riga per 
 riga e viene discusso a seguire. \newline
-Le prime due linee caricano 0 e \verb|val|, che inizia a partire da 4 byte dalla
- posizione puntata da \verb|SP| (Stack Pointer), rispettivamente nei registri
-  \verb|r2| e \verb|r3|.\newline La terza linea esegue l'operazione
-   \verb|r3 - r2| aggiornando i flag contenuti in \verb|CPSR| (Current Program 
+Le prime due linee caricano 0 e \verb|val|, che inizia a partire da 4 byte 
+dalla posizione puntata da \verb|SP| (Stack Pointer), rispettivamente nei 
+registri \verb|r2| e \verb|r3|.\newline La terza linea esegue l'operazione 
+\verb|r3 - r2| aggiornando i flag contenuti in \verb|CPSR| (Current Program 
 Status Register).\newline L'istruzione \verb|itt lt| abilita la condizione 
 \verb|lt| (lower than) per le successive due istruzioni, che verranno quindi 
 eseguite solo se \verb|r3| $<$ \verb|r2|. Ciò si riflette sull'\emph{opcode}
-delle due istruzioni successive, che eredita il suffisso \verb|lt|. Queste
+delle due istruzioni successive, che eredita il suffisso \verb|lt|. Quest 
 istruzioni mettono 0 in \verb|r3| e lo salvano in \verb|val|. \newline
 Le restanti istruzioni eseguono il secondo \verb|if| in maniera analoga.\newline
 Nel nostro codice la terza linea compendia quello che in C sarebbe 
 \verb|if(r3 < 0) r3 = 0|. Il suffisso \verb|s| specifica che l'istruzione 
-aggiorna anche il 
-registro \verb|CPSR|, così, se il risultato è positivo (i.e. \verb|r3| $>$ 0), 
-si procede con le istruzioni 5 e 6 che sostituiscono \verb|maxVal| a \verb|r3| 
-nel caso in cui \verb|r3| $>$ \verb|maxVal|.
-\par Nonostante gli esiti positivi dell'ottimizzazione in fase di
-testing, dopo l'implementazione effettiva all'interno di HM la performance 
-dell'encoder è calata, come mostra la tabella.
+aggiorna anche il registro \verb|CPSR|, così, se il risultato è positivo (i.e. 
+\verb|r3| $>$ 0), si procede con le istruzioni 5 e 6 che sostituiscono 
+\verb|maxVal| a \verb|r3| nel caso in cui \verb|r3| $>$ \verb|maxVal|.
+\par Nonostante gli esiti positivi dell'ottimizzazione in fase di testing, dopo 
+l'implementazione effettiva all'interno di HM la performance dell'encoder è 
+calata, come mostra la tabella.
 \begin{table}[h!]
 	\centering
   \begin{tabular}{l | l | l}
@@ -545,20 +561,16 @@ dell'encoder è calata, come mostra la tabella.
     $72$ frame \verb|highway_cif.yuv| & $1493.614$ (s) &  $1408.426$ (s) \\
   \end{tabular}
 \end{table}
-Le righe della tabella mostrano rispettivamente una media di $10$ prove
-fatte con un 
-codice di test 
-compilato in \verb|-Ofast| /*INSERISCI IL CODICE IN APPENDICE*/ e di $5$ prove 
-con il software HM eseguito sui primi $72$ 
-frame 
-della sequenza \verb|highway_cif.yuv|.\newline
-Il motivo di tale discrepanza può essere visto 
-nel fatto che, vicino alla funzione Assembly inline, GCC è costretto ad 
-inserire un prologo ed un epilogo in cui salva e carica lo stato del programma, 
-mentre nella serie di test ciò non è necessario.\newline
+Le righe della tabella mostrano rispettivamente una media di $10$ prove fatte 
+con un codice di test compilato in \verb|-Ofast| /*INSERISCI IL CODICE IN 
+APPENDICE*/ e di $5$ prove con il software HM eseguito sui primi $72$ 
+frame della sequenza \verb|highway_cif.yuv|.\newline
+Il motivo di tale discrepanza può essere visto nel fatto che, vicino alla 
+funzione Assembly inline, GCC è costretto ad inserire un prologo ed un epilogo 
+in cui salva e carica lo stato del programma, mentre nella serie di test ciò 
+non è necessario.\newline
 Una possibile soluzione consiste nel riscrivere almeno parzialmente la funzione 
-\verb|filter| 
-in Assembly per predisporre correttamente i dati, eventualmente
+\verb|filter| in Assembly per predisporre correttamente i dati, eventualmente
 ottimizzando anche altre parti del codice, ma è un'operazione che al momento 
 esula dalle nostre competenze.
 
