@@ -55,12 +55,24 @@ di calcolo di cui si dispone per svolgerla.
 %	SUBSECTION 1
 %-----------------------------------
 \subsection{Potenza di calcolo}
-// Far presente che la ``potenza di calcolo'' dipende anche da quali sono le \\
-// necessità di chi ne usufruisce \\
-La potenza di calcolo di un computer non è una misura che può essere effettuata
-in maniera assoluta, ma può essere ottenuta, con approssimazione, come il 
-risultato della sovrapposizione di diversi fattori:\\
-// Riorganizzare l'indice
+Il termine ``potenza di calcolo'' può essere talvolta fuorviante, in quanto
+tende ad essere intesa come la capacità di un elaboratore di eseguire uno
+specifico calcolo nel minor tempo possibile: questa è una delle discriminanti
+nell'identificazione della potenza di calcolo di un computer, ma non l'unica. 
+\\ \\
+Se il proprio progetto prevedesse di scaricare da un \emph{server} una grande
+mole di dati, effettuare le dovute elaborazioni e caricare il risultato 
+ottenuto, risulta evidente come non basti solamente effettuare i calcoli
+velocemente: se questi ultimi fossero eseguiti in pochi secondi e il
+caricamento/scaricamento richiedesse ore, la potenza di calcolo percepita
+dal \emph{server} sarebbe nettamente inferiore di quella che si potrebbe
+pensare. \\
+Un simile discorso può essere intrapreso con diverse variabili che influenzano
+la percezione della potenza di calcolo, tra cui le necessità di chi deve
+usufruire di quest'ultima; vengono presentati di seguito i fattori più
+comunemente sovrapposti per approssimare il calcolo di una potenza di calcolo
+generica:
+\newpage
 \begin{itemize}
 \item Potenza \emph{grezza} del processore (MIPS, MFLOPS)
 \item Latenza degli accessi in memoria
@@ -68,14 +80,14 @@ risultato della sovrapposizione di diversi fattori:\\
 \item Bandwidth
 \item Throughput
 \end{itemize}
-
-
-// Qui ci vuole dell'altro
-
+Ognuno di questi fattori ha subito negli anni dei miglioramenti, sopratutto il
+primo grazie alla continua diminuzione del processo produttivo usato per creare
+i transistor.
+\\ \\
 Gordon Moore predisse nel 1965\citep{GMoore} che, 
 per almeno dieci anni, il numero di transistor in un circuito integrato 
-sarebbe raddoppiato ogni anno (a parità di costo di produzione del circuito).
- Nel 1975 stimò, per la decade successiva, un periodo di due anni come 
+sarebbe raddoppiato ogni anno (a parità di costo di produzione del circuito). \\
+Nel 1975 stimò, per la decade successiva, un periodo di due anni come 
 necessario per ottenere lo stesso incremento. Quest'ultima affermazione, 
 nota come ``Legge di Moore'', sebbene abbia mostrato alcuni segni di
 cedimento negli ultimi anni\citep{MooresLaw}, ha 
@@ -84,32 +96,34 @@ cinquant'anni; una sempre maggiore \emph{densità} di transistor a parità
 di costo ha portato ad un conseguente aumento della capacità di calcolo 
 disponibile (più transistor significano più unità logiche e matematiche,
 più memoria, più interfacce I/O, etc.), rendendo possibili elaborazioni
-sempre più complesse.
-
-// Passare dalla legge di Moore al parallelismo: perché ad un certo \\
-// punto è servito mettere più \emph{core} sullo stesso \emph{die}?
-
+sempre più complesse. 
+\\ \\
+Come intuibile dal precedente paragrafo, i limiti fisici hanno imposto ad un 
+certo punto un cambio di strategia nella progettazione dei circuiti integrati,
+soprattutto le \emph{central processing unit} (CPU).
+\\ \\
 A metà del 2005 si era giunti ad un punto in cui non era più possibile 
 aumentare la potenza di calcolo di un processore semplicemente introducendo
 più transistor e incrementando la frequenza di lavoro: sebbene Intel avesse 
 dichiarato possibile raggiungere frequenze pari a 10GHz, dovette presto 
 ricredersi quando, raggiunti i 3.8GHz con il Pentium 4 670, si verificarono 
 fenomeni di dispersione di potenza nei transistor ad un ulteriore aumento della 
-frequenza, con un processo produttivo di 90nm.
+frequenza, con un processo produttivo di 90nm. \\
 Questo, e le temperature raggiunte da così tanti transistor che operano a 
 frequenze così elevate, ha reso necessario un cambio di mentalità, facendo 
 passare da una ``corsa al GHz'' a un inclusione di più processori (che 
 prendono il nome di \emph{core}) sullo stesso \emph{die}. 
+\\ \\
 Le configurazioni \emph{multi core} hanno permesso che continuasse il 
 \emph{trend} dell'incremento della potenza in concomitanza con il crescere 
 del numero dei transistor, introducendo però una grande complicazione nella 
-progettazione di un software che volesse sfruttare questo parallelismo.
+progettazione di un software che volesse sfruttare questo parallelismo. \\
 È infatti necessario prestare particolari accorgimenti nella realizzazione 
 di codici parallelizzati, in quanto è molto probabile, se non si presta la 
 dovuta attenzione, creare situazioni di \emph{race condition}, in cui due (o 
 più) \emph{thread} devono accedere e modificare la stessa risorsa globale; 
 senza una sincronizzazione o la definizione di una operazione mutuamente 
-esclusiva, il comportamento dei due \emph{thread} non è prevedibile a priori. 
+esclusiva, il comportamento dei due \emph{thread} non è prevedibile a priori. \\
 Ad esempio, se entrambi cercassero di accedere alla stessa variabile per 
 incrementarla, a seconda dell'ordine in cui verranno eseguite queste operazioni 
 cambierà il risultato ottenuto:
@@ -150,6 +164,9 @@ cambierà il risultato ottenuto:
     \end{tabular}
   }
 \end{table}
+Sebbene il \emph{multithreading} sia una risorsa indubbiamente utile, è
+importante prestare la dovuta attenzione nella realizzazione di \emph{software}
+che desideri sfruttare questa possibilità.
 %-----------------------------------
 %	SUBSECTION 2
 %-----------------------------------
