@@ -648,22 +648,22 @@ stato riprodotto in modo analogo per tutte le altre funzioni.\\
 
 %TODO sostituire [language=C] con lo stile personalizzato.
 \begin{lstlisting}[language=C]
-  Distortion uiSum = 0;
+Distortion uiSum = 0;
+
+for ( ; iRows != 0; iRows -= iSubStep)
+{
+  uiSum += abs(piOrg[0] - piCur[0]);
+  uiSum += abs(piOrg[1] - piCur[1]);
+  uiSum += abs(piOrg[2] - piCur[2]);
+  uiSum += abs(piOrg[3] - piCur[3]);
+  uiSum += abs(piOrg[4] - piCur[4]);
+  uiSum += abs(piOrg[5] - piCur[5]);
+  uiSum += abs(piOrg[6] - piCur[6]);
+  uiSum += abs(piOrg[7] - piCur[7]);
   
-  for ( ; iRows != 0; iRows -= iSubStep)
-  {
-    uiSum += abs(piOrg[0] - piCur[0]);
-    uiSum += abs(piOrg[1] - piCur[1]);
-    uiSum += abs(piOrg[2] - piCur[2]);
-    uiSum += abs(piOrg[3] - piCur[3]);
-    uiSum += abs(piOrg[4] - piCur[4]);
-    uiSum += abs(piOrg[5] - piCur[5]);
-    uiSum += abs(piOrg[6] - piCur[6]);
-    uiSum += abs(piOrg[7] - piCur[7]);
-    
-    piOrg += iStrideOrg;
-    piCur += iStrideCur;
-  }
+  piOrg += iStrideOrg;
+  piCur += iStrideCur;
+}
 \end{lstlisting}
 
 Dove \verb|Distortion| è del tipo \verb|uint32_t| (rappresentante un intero 
@@ -675,29 +675,29 @@ Il codice si presta molto bene ad essere vettorizzato utilizzando le SIMD NEON:
 
 %TODO sostituire [language=C] con lo stile personalizzato.
 \begin{lstlisting}[language=C]
-  // Set all v_iSum lanes to 0
-  int16x8_t v_iSum = vdupq_n_s16(0);
+// Set all v_iSum lanes to 0
+int16x8_t v_iSum = vdupq_n_s16(0);
+
+for ( ; iRows != 0; iRows -= iSubStep)
+{
+  // Load 8 elements into vector
+  int16x8_t v_piOrg = vld1q_s16(piOrg);
+  int16x8_t v_piCur = vld1q_s16(piCur);
   
-  for ( ; iRows != 0; iRows -= iSubStep)
-  {
-    // Load 8 elements into vector
-    int16x8_t v_piOrg = vld1q_s16(piOrg);
-    int16x8_t v_piCur = vld1q_s16(piCur);
-    
-    // v_iSum += |v_piOrg - v_piCur|
-    v_iSum = vabaq_s16(v_iSum0, v_piOrg, v_piCur);
-  
-    piOrg += iStrideOrg;
-    piCur += iStrideCur;
-  }
-  
-  // Sum all lanes in v_iSum
-  Distortion uiSum = (Distortion)(
-      vgetq_lane_s16(v_iSum, 0) + vgetq_lane_s16(v_iSum, 1) +
-      vgetq_lane_s16(v_iSum, 2) + vgetq_lane_s16(v_iSum, 3) +
-      vgetq_lane_s16(v_iSum, 4) + vgetq_lane_s16(v_iSum, 5) +
-      vgetq_lane_s16(v_iSum, 6) + vgetq_lane_s16(v_iSum, 7)
-    );
+  // v_iSum += |v_piOrg - v_piCur|
+  v_iSum = vabaq_s16(v_iSum0, v_piOrg, v_piCur);
+
+  piOrg += iStrideOrg;
+  piCur += iStrideCur;
+}
+
+// Sum all lanes in v_iSum
+Distortion uiSum = (Distortion)(
+    vgetq_lane_s16(v_iSum, 0) + vgetq_lane_s16(v_iSum, 1) +
+    vgetq_lane_s16(v_iSum, 2) + vgetq_lane_s16(v_iSum, 3) +
+    vgetq_lane_s16(v_iSum, 4) + vgetq_lane_s16(v_iSum, 5) +
+    vgetq_lane_s16(v_iSum, 6) + vgetq_lane_s16(v_iSum, 7)
+  );
 \end{lstlisting}
 
 Le \emph{intrinsic} utilizzate sono le seguenti:
