@@ -536,7 +536,7 @@ dell'encoder è calata, come mostra la tabella.
   \begin{tabular}{l | l | l}
     & ASM & C \\ \hline
     $8\cdot10^9$ clamp & $7065.6$ (ms) & $8072.7$ (ms) \\
-    $72$ frame \verb|highway_cif.yuv| & $1493.614$ (s) &  $1408.4262$ (s) \\
+    $72$ frame \verb|highway_cif.yuv| & $1493.614$ (s) &  $1408.426$ (s) \\
   \end{tabular}
 \end{table}
 Le righe della tabella mostrano rispettivamente una media di $10$ prove
@@ -1163,15 +1163,14 @@ di input per il secondo thread, \verb|argc| e \verb|argv|.
 	\begin{tabular}{l | l | l}
 		& Multithread & Singlethread \\
 		\hline
-		$72$ frame \verb|highway_cif.yuv| & $741.560$ (s) & $1493.614$ (s)
+		$72$ frame \verb|highway_cif.yuv| & $741.560$ (s) & $1408.426$ (s)
 	\end{tabular}
 \end{center}
 La tabella mostra la media dei risultati ottenuti eseguendo $5$ volte 
 l'encoding dei primi $72$ frame del file di prova \verb|highway_cif.yuv| con il 
 software HM compilato in \verb|-Ofast| nella sua versione \emph{singlethread} e 
-\emph{multithread}. Il fattore di speedup sembra superare il $2$, ma come è 
-stato detto, ciò è impossibile. Si noti che, nonostante i valori siano una 
-media, il numero di prove è basso e la variabilità è elevata (abbiamo 
-registrato un massimo di $20$ secondi di differenza tra due cicli di encoding 
-della stessa sequenza con le medesime configurazioni). \`E quindi ragionevole 
-pensare che il fattore di speedup sia molto prossimo a $2$, sebbene inferiore.
+\emph{multithread}. Il fattore di speedup è di circa $1.9$. Si noti comunque 
+che i valori mostrati sono una media in cui, per motivi di tempo, il numero di 
+prove non è molto alto, mentre la variabilità è elevata (abbiamo registrato un 
+massimo di $20$ secondi di differenza tra due cicli di encoding della stessa 
+sequenza con le medesime configurazioni).
