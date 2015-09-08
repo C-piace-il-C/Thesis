@@ -87,5 +87,43 @@ Ma le pure prestazioni non sono l'unico motivo per cui preferire un sistema
 \end{center}
 Il termine \emph{single-board} viene usato per indicare un'implementazione 
 circuitale che sia a tutti gli effetti un computer pur non presentando il 
-classico schema con \emph{motherboard, daughterboard} e CPU separate in diverse 
-schede: un solo circuito stampato contiene tutte e tre. 
+classico schema con \emph{motherboard}, \emph{daughterboard} e CPU separate in 
+diverse schede: un solo circuito stampato contiene tutte e tre.
+
+La nostra \emph{board} di riferimento, il Banana Pi M1 è di questo tipo. Grande 
+poco più d'un pacchetto di sigarette, contiene tutto il necessario per 
+sopperire a diverse esigenze applicative.
+
+Dotato del \emph{System on a Chip} (SOC) Allwinner A20, dispone di una 
+\textit{Central Processing Unit} (CPU) \emph{dual-core} Cortex-A7 con un 
+\textit{clock} pari ad 1 GHz ed una \textit{Graphics Processing Unit} (GPU) 
+Mediatek Mali-400 MP2 che condividono 1 GB di \textit{Random Access Memory} 
+(RAM) \textit{Double Data Rate 3} (DDR3) di sistema.
+
+Il sistema operativo risiede su \textit{Secure Digital} (SD) \textit{Card}, ma 
+le sue capacità di \emph{storage} non sono limitate a quello: ha infatti a 
+disposizione un connettore \textit{Serial Advanced Technology Attachment} 
+(SATA) affiancato da due \emph{pin} dedicati all'alimentazione di un'eventuale 
+memoria esterna, due porte \textit{Universal Serial Bus} (USB) 2.0 ed una 
+Micro-USB con supporto \textit{On-The-Go} (OTG).
+
+Ha a disposizione una porta \textit{High-Definition Multimedia Interface} 
+(HDMI) utilizzabile come uscita audio/video ed un connettore video composito, 
+oltre alla possibilità di essere collegato ad un pannello \textit{Liquid 
+Crystal Display} (LCD) attraverso il connettore \textit{Low-Voltage 
+Differential Signaling} (LVDS) presente. Ha anche un collegamento tramite 
+\emph{jack} da 3.5 mm utilizzabile come uscita audio ed un microfono integrato 
+sulla \emph{board}.
+
+E' inoltre possibile il collegamento via \textit{Ethernet} grazie alla porta 
+\textit{Gigabit} di cui è dotato, dotandolo tra l'altro della possibilità di 
+espandere ulteriormente lo spazio di archiviazione normalmente disponibile 
+attraverso \emph{network share}.
+
+Possiede infine un connettore \textit{Camera Serial Interface} (CSI) per poter 
+essere collegato ad una videocamera digitale, un ricevitore \textit{InfraRed} 
+(IR), 26 \textit{pin} \textit{General Purpose Input/Output} (GPIO).
+
+L'alimentazione avviene via Micro-USB, attraverso la porta dedicata.
+
+\includegraphics[width=1\textwidth]{Figures/bananapi_schema.png}
