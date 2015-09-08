@@ -341,7 +341,7 @@ diminutivo di ``size".
 Abilita tutte le opzioni specificate da \verb|-O2|.\\
 Vengono eseguite tutte le ottimizzazioni a favore della velocità di esecuzione. 
 Il tempo di compilazione aumenta così come lo spazio occupato dall'eseguibile 
-generato. E' il massimo livello di ottimizzazione possibile insieme ad 
+generato. \`E il massimo livello di ottimizzazione possibile insieme ad 
 \verb|-Ofast|.
 \item \verb|-Ofast|\\
 Abilita tutte le opzioni specificate da \verb|-O3|.\\
@@ -449,8 +449,9 @@ un'analisi mediante l'utilizzo di \verb|-fopt-info-vec-optimized| al fine di
 sapere cosa fosse stato già vettorizzato automaticamente da GCC. Questo ci ha 
 permesso di focalizzarci maggiormente sulle funzioni onerose non modificate.\\
 \\
-E' stato inoltre deciso di rendere \emph{multithread} il programma.\\
-E' stato in primo luogo provato il \emph{multithreading} offerto dallo standard 
+\`E stato inoltre deciso di rendere \emph{multithread} il programma.\\
+\`E stato in primo luogo provato il \emph{multithreading} offerto dallo 
+standard 
 C++11, aggiungendo quindi \verb|-std=c++11| alle opzioni esistenti.\\
 Avendo però notato un degrado delle performance generali in \emph{single 
 thread}, sì è deciso di utilizzare la libreria \emph{pthreads} e quindi di 
@@ -700,7 +701,7 @@ Le \emph{intrinsic} utilizzate sono le seguenti:
       \verb|vec|.      
 \end{itemize}
 
-E' stato osservato come sia più veloce l'utilizzo di \verb|vgetq_lane_s16| su 
+\`E stato osservato come sia più veloce l'utilizzo di \verb|vgetq_lane_s16| su 
 ogni componente di \verb|v_iSum| al fine di ricavare la somma di tutte le 
 componenti del vettore. Degno di nota il fatto che a partire da ARMv8 sia stata 
 inserita un'\emph{intrinsic} dedicata a questa operazione.\\
@@ -900,7 +901,7 @@ citati due spezzoni di codice da essa:
 \end{lstlisting}
 
 Analizzando il codice è stato appurato che la variabile \verb|N| può assumere 
-valori tra $4$ ed $8$. E' possibile quindi sostituire i blocchi di \verb|if| 
+valori tra $4$ ed $8$. \`E possibile quindi sostituire i blocchi di \verb|if| 
 con dei più efficienti \verb|switch|. 
 %Avendo cura di porre il caso più ricorrente per primo (\verb|N = 8|), è 
 %%%possibile rimpiazzare tutte le istruzioni condizionali con una somma ed un 
@@ -955,7 +956,7 @@ già riordinate in modo tale da velocizzare il più possibile l'esecuzione del
 codice.\\
 
 Questa modifica ha, ovviamente, un bassissimo impatto sulle prestazioni 
-complessive del codice. E' stata implementata esclusivamente a scopo didattico.
+complessive del codice. \`E stata implementata esclusivamente a scopo didattico.
 
 %-----------------------------------
 %       SUBSECTION 6.4.5
