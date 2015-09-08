@@ -66,10 +66,16 @@ e Java, nonché un progetto \emph{open source}, costantemente testato ed
 aggiornato: 
 l'ultima versione stabile ufficiale, GCC 5.2, è stata rilasciata poco prima 
 del momento della scrittura. La versione più recente disponibile nel 
-\emph{repository} era però la 4.6.3. Abbiamo provato, senza successo, a 
+\emph{repository} era però la 4.6.3. Abbiamo provato a 
 scaricare e compilare le versioni più nuove dal sito di 
-GCC\footnote{https://gcc.gnu.org/releases.html}. Cambiando il repository siamo 
-poi riusciti ad ottenere la versione 4.9.2.
+GCC\footnote{https://gcc.gnu.org/releases.html}, ma, non riuscendoci, abbiamo
+inizialmente deciso di cross-compilare i \emph{software} necessari su altre
+piattaforme più aggiornate (è necessaria una versione >= 4.7 per avere il
+supporto all'architettura Cortex-A7). \\
+Fortunatamente il sistema operativo installato sul BananaPi è stato aggiornato
+ad una nuova versione durante lo svolgimento del progetto, dandoci la 
+possibilità di avere un GCC recente (4.9.2) e compilare direttamente sulla
+piattaforma di sviluppo.
 \\ \\
 Le compilazioni sono state fatte con l'ausilio di Make, 
 uno strumento 
