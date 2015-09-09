@@ -343,7 +343,7 @@
   \pgfqkeys{/piechartthreed}{#1}
   \begin{scope}[scale=\piechartthreedscale] 
     \begin{scope}[xscale=5,yscale=3] 
-      \path[preaction={fill=black,opacity=.8,
+      \path[preaction={fill=white,opacity=.8,
         path fading=circle with fuzzy edge 20 percent,
         transform canvas={yshift=-15mm*\piechartthreedscale}}] (0,0) circle 
         (1cm);
