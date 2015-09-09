@@ -6,7 +6,19 @@
 
 \lhead{Capitolo 4. \emph{L'algoritmo H.265}} % Change X to a consecutive 
 %number; this is for the header on each page - perhaps a shortened title
-
+Per la stesura di questo capitolo è stata fondamentale la consultazione del
+libro \citep{BookHEVC}, il cui contenuto utile allo svolgimento di questa tesi è
+stato studiato, rielaborato e successivamente tradotto come segue. Ogni immagine
+è stata estratta dal suddetto libro o comunque ricreata sulla base di una già
+esistente nello stesso.
+\\ \\
+HEVC è una codifica video ibrida\footnote{Ovvero utilizza la \emph{motion 
+prediction} e la trasformazione del \emph{prediction error} seguito
+dall'\emph{entropy coding} (CABAC).} in cui ogni immagine viene suddivisa in 
+blocchi  che vengono in seguito predetti tramite \emph{intra-picture} o
+\emph{inter-picture prediction}. La prima sfrutta la ridondanza spaziale dei
+campioni già codificati all'interno della stessa immagine, la seconda sfrutta
+la ridondanza temporale dei blocchi appartenenti a \emph{frame} già codificati.
 %-------------------------------------------------------------------------------
 %	SECTION 1
 %-------------------------------------------------------------------------------
@@ -32,11 +44,9 @@ maggiore compressione dell'immagine finale, resa ammissibile dalla maggiore
 sensibilità dell'apparato visivo umano alla luminanza rispetto al colore.
 \begin{figure}[H]
   \centering
-    \includegraphics[scale=0.20]{Figures/CTU-CTB}
+    \includegraphics[scale=0.35]{Figures/CTU-CTB}
   \caption{Suddivisione del CTU in CTB}
 \end{figure}
-// Rivedere questo paragrafo: ovunque viene detto che il CTB è suddiviso \\
-// in CU. \\
 Il CTB può essere ulteriormente suddiviso in \emph{coding blocks} (CB), che 
 sono il punto in cui viene decisa quale tipo di \emph{prediction} utilizzare.
 Supponendo di avere un CTB di dimensione 64x64 la suddivisione può essere 
@@ -59,7 +69,7 @@ oggetti minuscoli che si muovono in un CB 8x8) è possibile suddividere i
 blocchi precedenti:
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.50]{Figures/PB}
+  \includegraphics[scale=0.75]{Figures/PB}
   \caption{Possibili strutture di un \emph{prediction block}}
 \end{figure}
 Un PB definisce una regione che, per effettuare una predizione, utilizza gli 
