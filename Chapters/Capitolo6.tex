@@ -623,14 +623,28 @@ aggiorna anche il registro \verb|CPSR|, così, se il risultato è positivo (i.e.
 \par Nonostante gli esiti positivi dell'ottimizzazione in fase di testing, dopo 
 l'implementazione effettiva all'interno di HM la performance dell'encoder è 
 calata, come mostra la tabella.
-\begin{table}[h!]
+
+\begin{table}[H]
 	\centering
-  \begin{tabular}{l | l | l}
-    & ASM & C \\ \hline
-    $8\cdot10^9$ clamp & $7065.6$ (ms) & $8072.7$ (ms) \\
-    $72$ frame \verb|highway_cif.yuv| & $1493.614$ (s) &  $1408.426$ (s) \\
+  \begin{tabular}{|r|c|c|}
+    \hline
+    
+    & \textbf{Assembly} & \textbf{C} \\ 
+    
+    \hline
+    \hline
+    \hline
+    
+    $8 \cdot 10^9$ \textit{clamp} & $7065.6$ ms & $8072.7$ ms \\
+    
+    \hline
+    
+    $72$ \textit{frame} \verb|highway_cif.yuv| & $1493.614$ s &  $1408.426$ s \\
+    
+    \hline
   \end{tabular}
 \end{table}
+
 Le righe della tabella mostrano rispettivamente una media di $10$ prove fatte 
 con un codice di test compilato in \verb|-Ofast| /*INSERISCI IL CODICE IN 
 APPENDICE*/ e di $5$ prove con il software HM eseguito sui primi $72$ 
