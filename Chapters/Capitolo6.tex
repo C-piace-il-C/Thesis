@@ -1191,33 +1191,50 @@ nei casi di encoding in tempo reale, anche se ciò diventa secondario se si nota
 che HM di per sé non ammette tale opzione.
 \\ \\
 Segue uno schema che riassume le due tecniche discusse.
-\\ // DIMINUISCI LA LUNGHEZZA DELLA PRIMA COLONNA
-\begin{center}
-	\begin{tabularx}{\textwidth}{>{}X|>{}X|>{}X}
-		
-		    & Pros & Cons \\ \hline
-		WPP & 
-		    \begin{itemize}
-		    	\item Più adatto ai casi reali
-			\end{itemize}
-			&
-			\begin{itemize}
-				\item Alto \emph{overhead}
-				\item Difficoltà implementativa
-				\item $P < 1$
-			\end{itemize} \\ \hline
-		SS &
-		   \begin{itemize}
-			   	\item Nessun \emph{overhead}
-			   	\item Semplicità implementativa
-			   	\item $P = 1$
-		   \end{itemize}
-		   &
-		   \begin{itemize}
-		   	    \item Preferibile \verb|intraperiod| basso
-		   \end{itemize}
-	\end{tabularx}
-\end{center}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|c|l|l|}
+    \hline
+    
+    & 
+    \textbf{Pro} & 
+    \textbf{Contro} \\
+    
+    \hline
+    \hline
+    \hline
+    
+    \textbf{WPP} &
+    $\bullet$ Più adatto ai casi reali &
+    $\bullet$ Alto \emph{overhead} \\
+    
+    &
+    &
+    $\bullet$ Difficoltà implementativa \\
+    
+    &
+    &
+    $\bullet$ $P < 1$ \\
+    
+    \hline
+    
+    \textbf{SS} &
+    $\bullet$ Nessun \emph{overhead} &
+    $\bullet$ Preferibile \verb|intraperiod| basso \\
+    
+    &
+    $\bullet$ Semplicità implementativa &
+    \\
+    
+    &
+    $\bullet$ $P = 1$ &
+    \\
+    
+    \hline
+  \end{tabular}
+\end{table}
+
 Come prima cosa abbiamo implementato la seconda tecnica, quella più 
 semplice e verosimilmente la più efficiente, data la struttura fissata del GOP, 
 riuscendo ad ottenere un quasi ideale fattore di speedup $S \approx 2$. In 
