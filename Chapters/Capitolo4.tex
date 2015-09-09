@@ -158,7 +158,8 @@ al campione centrale (che ha valore $0$).
 Utilizzando il raggruppamento e il parametro $A$ è possibile identificare 
 univocamente un modo predittivo; prendendo nuovamente in esame l'immagine la 
 sigla $H+2$ corrisponde al modo predittivo 9, la sigla $H-2$ al modo predittivo 
-11 e così via.\\
+11 e così via.
+\\ \\
 Per effettuare le predizioni dei campioni di un blocco viene prima costruito, 
 per comodità, un array che contiene i campioni di riferimento riposizionati 
 nell'ordine che risulta più conveniente per il modo predittivo scelto; infatti 
@@ -188,12 +189,18 @@ p[x][y] =
   \fcolorbox{black!50}{white}{$(y+1)*p(-1,N)$}+N] \gg log_2(N+1)
 %\right]
 \end{align*} 
-dove $NxN$ è la dimensione del TB.
-\\
-// Inserire immagine
-\\ 
-L'immagine mostra come il risultato (c) sia la media di due interpolazioni: una 
-orizzontale (a) e una verticale (b).
+dove $N{\times}N$ è la dimensione del TB.
+
+\begin{figure}[H]
+  \centering
+  \captionsetup{justification=raggedright}
+  \includegraphics[scale=0.25]{Figures/Planar}
+  \caption[Esempio di \emph{planar prediction}]
+          {Esempio di \emph{planar predicition}: il risultato (c) risulta essere
+           la media di due interpolazioni, una orizzontale (a) e una verticale 
+           (b).}
+\end{figure}
+ 
 %-----------------------------------
 %       SUBSECTION 3
 %-----------------------------------
@@ -241,7 +248,17 @@ Dove $dcVal \in {[0,1]}$
 
 L'immagine seguente mostra un esempio di CTB Luma interamente predetto intra: \\
 
-// Inserire immagine
+\begin{figure}[H]
+  \centering
+  \captionsetup{justification=raggedright}
+  \includegraphics[scale=0.5]{Figures/Intra_coding_example}
+  \caption[Esempio di predizione \emph{intra}]
+          {CTB 64$\times$64 dove (a) è l'immagine originale, (b) i possibili
+           modi di \emph{intra prediction} sulla base dei CU con predizione
+           angolare (frecce), predizione planare ($P$) e predizione DC ($DC$).
+           (c) rappresenta il segnale di predizione e (d) il residuo con il
+           corrispondente CB (linee continue) e TB (linee tratteggiate).}
+\end{figure}
 %-------------------------------------------------------------------------------
 %       SECTION 3
 %-------------------------------------------------------------------------------
@@ -251,9 +268,14 @@ L'\emph{inter prediction} sfrutta la correlazione temporale dei frame per
 ottenere una \emph{motion compensated prediction} (MCP), ovvero un PB predetto 
 a partire da PB ``predittori'' che appartengono a frame precedentemente 
 decodificati, supponendo che nel PB predetto essi siano traslati: 
-\\
-// Inserire immagine
-\\
+
+\begin{figure}[H]
+  \centering
+  \captionsetup{justification=raggedright}
+  \includegraphics[scale=0.3]{Figures/Inter_pred}
+  \caption{Concetti e parametri della \emph{inter prediction}}
+\end{figure}
+
 Per ogni PB l'encoder ricava un vettore ${(\Delta x,\Delta y,\Delta t)}$ 
 chiamato \emph{motion data}, dove ${(\Delta x,\Delta y)}$ è il 
 \emph{motion vector} e indica la traslazione compiuta dal PB in questione, 
@@ -263,14 +285,14 @@ predittore.
 due \emph{motion data} ottenendo due MCP di cui viene ricavata la media (che 
 può anche essere pesata) per ottenere il risultato, come illustra la figura 
 precedente.
-\\
+\\ \\
 Viene inoltre sfruttata la correlazione spaziale (ma sempre legata al tempo) 
 dei \emph{motion vector}, basata sulla supposizione che i \emph{motion vector} 
 relativi a PB spazialmente vicini non differiscano eccessivamente, eccezion 
 fatta per eventuali punti di discontinuità come i cambi di oggetto. È inoltre 
 ipotizzata una discreta continuità nel tempo per quanto riguarda i movimenti 
 dell'intero \emph{frame}, escludendo variazioni brusche come i cambi di scena.
-\\
+\\ \\
 Tutto questo viene tradotto nel concetto di \emph{motion vector predictor} 
 (MVP); invece di trasmettere un \emph{motion vector} per ogni PB l'encoder 
 trasmette l'errore o la \emph{motion vector difference} (MVD), tra quello 
@@ -303,7 +325,8 @@ H.265 mette a disposizione un algoritmo per la costruzione di vettori
 \emph{candidate MVP} chiamato \emph{advanced motion vector prediction} (AMVP), 
 ottenuto in seguito ad esperimenti esaustivi volti a trovare predizioni che 
 minimizzassero la complessità di codifica pur mantenendo buoni livelli di 
-predizione (i.e., bassa entropia del segnale di errore MVD).\\
+predizione (i.e., bassa entropia del segnale di errore MVD).
+\\ \\
 Una parte della sintassi di HEVC serve a comunicare al decoder quale MVP 
 utilizzare tra quelli candidati, che sono due e scelti nei modi seguenti:
 \begin{itemize}
@@ -338,7 +361,7 @@ differenza temporale dei \emph{reference id}.
 Non sono invece presi in considerazione blocchi a destra o in basso dal 
 momento che tali PB non sono ancora stati decodificati e non sono disponibili 
 al decoder per la predizione.
-\\
+\\ \\
 Per quanto concerne il \emph{temporal candidate} si lavora su una immagine 
 co-locata e temporalmente vicina della quale, in fase di decodifica, si 
 possiedono tutte le informazioni (ovvero un frame già decodificato); diversi 
@@ -360,33 +383,39 @@ grande informazione di movimento. Questo tipo di raggruppamento, tuttavia,
 origina facilmente bordi ineffettivi (\emph{over segmentation}); HEVC dispone 
 di un  algoritmo di \emph{block merging} che consente di raggruppare PB con 
 uguali parametri di predizione in modo da trasmetterne una sola copia.
-\\
-Nell'esempio mostrato dall'immagine seguente la parte a) è l'immagine 
-originale, b) è l'immagine scomposta in PB secondo la struttura a 
-\emph{quadtree} mentre c) mostra il risultato del \emph{block merging}.
-\\
-// Inserire immagine 
-\\
+
+\begin{figure}[H]
+  \centering
+  \captionsetup{justification=raggedright}
+  \includegraphics[scale=0.30]{Figures/Block_merging}
+  \caption[Esempio di \emph{block merging}]
+          {Esempio di \emph{block merging} dove a) è l'immagine originale, b)
+           l'immagine scomposta in PB secondo la struttura a \emph{quadtree}
+           mentre c) mostra il risultato del \emph{block merging}}
+\end{figure}
 %-------------------------------------------------------------------------------
 %       SECTION 4
 %-------------------------------------------------------------------------------
-
+\newpage
 \section{Transform and Quantization}
 Nel \emph{block-based video coding} i segnali di errore residui che derivano 
 dalle predizioni intra o inter vengono trasformati e quantizzati prima di 
 essere trasmessi.
 Più nel dettaglio, un'immagine è suddivisa in blocchi quadrati di dimensione $NxN$, dove $N=2^M$ con $M \in \mathbb{N}$. Per ogni blocco esisterà un blocco 
 residuo $U$ che verrà trasformato e quantizzato. \\
-L'immagine mostra il percorso dei dati durante la fase di encoding (a) e 
-di decoding (b):
+%L'immagine mostra il percorso dei dati durante la fase di encoding (a) e 
+%di decoding (b):
 \begin{figure}[H]
   \centering
+  \captionsetup{justification=raggedright}
   \begin{tabular}{cc}
     \subfloat[]{\includegraphics[scale=.66]{Figures/Transf_and_quant_a}}
     &\qquad
     \subfloat[]{\includegraphics[scale=.66]{Figures/Transf_and_quant_b}}
   \end{tabular}
-  \caption{\emph{Data flow} di encoding e decoding.}
+  \caption[\emph{Data flow} di encoding e decoding.]
+          {\emph{Data flow} di encoding e decoding, dove a) mostra il percorso
+           in fase di encoding e b) quello in fase di decoding.}
 \end{figure}
 
 %-----------------------------------
@@ -406,7 +435,7 @@ coefficienti di trasformazione DCT-II; questo sistema riduce di molto la
 complessità di encoder e decoder, e risolve un problema che era presente in 
 H.261, ovvero la deriva dovuta a lievi disallineamenti nella rappresentazione 
 fixed point dei coefficienti tra la matrice di trasformazione, costruita 
-arbitrariamente dall'implementatore dell'encoder, e quella di antitrasformazione 
+arbitrariamente dall'implementatore dell'encoder, e quella di antitrasformazione
 fornita dallo standard. \\
 Errori di questo tipo si ripercuotono amplificati in ogni immagine successiva, 
 costringendo a dover trovare un modo di ovviare al problema (il sopracitato 
@@ -523,10 +552,18 @@ grossolano, in cui vengono eseguiti molti meno controlli e vengono considerati
 meno campioni: ciò permette di ridurre la complessità dell'encoder a fronte di 
 una bassa perdita di qualità, sempre considerando il fatto che i canali chroma 
 sono meno importanti per il sistema visivo umano.
-\\
-// Inserire immagine
-\\
-L'immagine mostra il risultato del \emph{deblocking filter} su un frame.
+
+\begin{figure}[H]
+  \centering
+  \captionsetup{justification=raggedright}
+  \includegraphics[scale=.5]{Figures/deblocking_filter_example}
+  \caption[Esempio di \emph{deblocking filtering}]
+          {Esempio di \emph{deblocking filtering} per un CTB, dove le linee
+           continue rappresentano i CB, le linee tratteggiate i PB e le linee
+           puntinate i TB. a) è l'immagine originale, b) l'immagine ricostruita
+           con il \emph{deblocking}, c) la struttura di CB, PB e TB e d) 
+           presenta una ricostruzione senza l'utilizzo del \emph{deblocking}.}
+\end{figure}
 
 %-----------------------------------
 %       SUBSECTION 2
