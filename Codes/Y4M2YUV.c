@@ -38,7 +38,6 @@ convertY4MO(const char* inputFilename, const char* outputFilename)
    }
 
    uint_fast8_t  blockNumber  = 0;
-   uint_fast32_t bufferNumber = 0;
    uint_fast16_t frameSize    = 0;
    uint_fast16_t posi         = 0;
    uint_fast16_t posf         = 0;
@@ -49,7 +48,6 @@ convertY4MO(const char* inputFilename, const char* outputFilename)
    // and the position where it ends (posi and posf)
    do
    {
-      bufferNumber++;
       bytesRead = (uint_fast16_t) fread(buffer, 1, BUFFER_SIZE, input);
 
       uint_fast16_t C;
