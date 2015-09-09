@@ -187,11 +187,56 @@ KCacheGrind\footnote{http://kcachegrind.sourceforge.net/html/Home.html}, una
 \textit{graphical user interface} (GUI) per la visualizzazione grafica di 
 questo tipo di dati.
 
-La tabella che segue mostra le funzioni più influenti nel ciclo di codifica 
-della sequenza di test \verb|highway_cif.yuv|. \\
+La tabella \ref{tabel-functions} che segue mostra le funzioni più influenti nel 
+ciclo di codifica della sequenza di test \verb|highway_cif.yuv|. \\
 
-// INSERISCI TABELLA DI EXCEL \\
-// INSERISCI GRAFICO A TORTA DEI MODULI
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|l|c|l|}
+    \hline
+    Funzione & \% & Instruction Fetch \\ \hline \hline \hline
+    a & aa & aaa \\ \hline
+    b & bb & bbb \\ \hline
+    c & cc & ccc \\ \hline
+    d & dd & ddd \\ \hline
+    e & ee & eee \\ \hline
+    f & ff & fff \\ \hline
+    g & gg & ggg \\ \hline
+  \end{tabular}
+  \caption{Le funzioni più influenti.}
+  \label{tabel-functions}
+\end{table}
+
+\begin{tikzpicture}
+
+  \piechartthreed[scale=1,
+                  background color=white,
+                  mix color= darkgray]
+                  {40/green,60/blue,90/red,50/orange,120/yellow}
+                  
+  \foreach \i in {1,...,5} { \fill (pc \i) circle (.5mm);}
+    \draw[darkgray] (pc 1)  -- ++(4,0) coordinate (s1) node[anchor=south east] 
+    {Sector 1}
+    node[anchor=north east] {11\%};
+    
+    \draw[darkgray] (pc 5)  -- (pc 5 -| s1) 
+    node[anchor=south east] {Sector 5}
+    node[anchor=north east] {33\%};
+    
+    \draw[darkgray] (pc 2)  -- ++(1,1) coordinate (s2) -- (s2 -| s1) 
+    node[anchor=south east] {Sector 2}
+    node[anchor=north east] {17\%};
+    
+    \draw[darkgray] (pc 3)  -- ++(-4,0) coordinate (s3) 
+    node[anchor=south west] {Sector 3}
+    node[anchor=north west] {14\%};
+    
+    \draw[darkgray] (pc 4)  -- ++(-1,-1) coordinate (s4) --(s4 -| s3) 
+    node[anchor=south west] {Sector 4}
+    node[anchor=north west] {25\%};
+    
+\end{tikzpicture}
+
 %-------------------------------------------------------------------------------
 %	SECTION 6.3
 %-------------------------------------------------------------------------------
@@ -201,7 +246,7 @@ non compresso) trovate in rete per eseguire le prove di encoding sono
 disponibili in diverse risoluzioni. La tabella \ref{tabel-resolutions} mostra 
 quelle relative agli standard più comuni.
 
-\begin{table}[h!]
+\begin{table}[H]
   \centering
   \begin{tabular}{|l|c|l|}
     \hline
@@ -1154,33 +1199,50 @@ nei casi di encoding in tempo reale, anche se ciò diventa secondario se si nota
 che HM di per sé non ammette tale opzione.
 \\ \\
 Segue uno schema che riassume le due tecniche discusse.
-\\ // DIMINUISCI LA LUNGHEZZA DELLA PRIMA COLONNA
-\begin{center}
-	\begin{tabularx}{\textwidth}{>{}X|>{}X|>{}X}
-		
-		    & Pros & Cons \\ \hline
-		WPP & 
-		    \begin{itemize}
-		    	\item Più adatto ai casi reali
-			\end{itemize}
-			&
-			\begin{itemize}
-				\item Alto \emph{overhead}
-				\item Difficoltà implementativa
-				\item $P < 1$
-			\end{itemize} \\ \hline
-		SS &
-		   \begin{itemize}
-			   	\item Nessun \emph{overhead}
-			   	\item Semplicità implementativa
-			   	\item $P = 1$
-		   \end{itemize}
-		   &
-		   \begin{itemize}
-		   	    \item Preferibile \verb|intraperiod| basso
-		   \end{itemize}
-	\end{tabularx}
-\end{center}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|c|l|l|}
+    \hline
+    
+    & 
+    \textbf{Pro} & 
+    \textbf{Contro} \\
+    
+    \hline
+    \hline
+    \hline
+    
+    \textbf{WPP} &
+    $\bullet$ Più adatto ai casi reali &
+    $\bullet$ Alto \emph{overhead} \\
+    
+    &
+    &
+    $\bullet$ Difficoltà implementativa \\
+    
+    &
+    &
+    $\bullet$ $P < 1$ \\
+    
+    \hline
+    
+    \textbf{SS} &
+    $\bullet$ Nessun \emph{overhead} &
+    $\bullet$ Preferibile \verb|intraperiod| basso \\
+    
+    &
+    $\bullet$ Semplicità implementativa &
+    \\
+    
+    &
+    $\bullet$ $P = 1$ &
+    \\
+    
+    \hline
+  \end{tabular}
+\end{table}
+
 Come prima cosa abbiamo implementato la seconda tecnica, quella più 
 semplice e verosimilmente la più efficiente, data la struttura fissata del GOP, 
 riuscendo ad ottenere un quasi ideale fattore di speedup $S \approx 2$. In 
