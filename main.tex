@@ -208,34 +208,113 @@ The acknowledgements and the people to thank go here, don't forget to include yo
 \lhead{\emph{Abbreviations}} % Set the left side page header to "Abbreviations"
 \listofsymbols{ll} % Include a list of Abbreviations (a table of two columns)
 {
-% Chapter 4
-\textbf{CTU}   & \textbf{C}oding \textbf{T}ree \textbf{U}nit              \\
-\textbf{CTB}   & \textbf{C}oding \textbf{T}ree \textbf{B}lock             \\
-\textbf{CU}    & \textbf{C}oding \textbf{U}nit                            \\
-\textbf{CB}    & \textbf{C}oding \textbf{B}lock                           \\
-
-\textbf{PU}    & \textbf{P}rediction \textbf{U}nit                        \\
-\textbf{PB}    & \textbf{P}rediction \textbf{B}lock                       \\
-\textbf{TB}    & \textbf{T}ransform  \textbf{B}lock                       \\
-
-\textbf{MCP}   & \textbf{M}otion \textbf{C}ompensated \textbf{P}rediction \\
-\textbf{MVP}   & \textbf{M}otion \textbf{V}ector      \textbf{P}redictor  \\
-\textbf{MVD}   & \textbf{M}otion \textbf{V}ector      \textbf{D}ifference \\
-
-\textbf{AMVP}  & \textbf{A}dvanced \textbf{M}otion    \textbf{V}ector 
-                 \textbf{P}rediction                                      \\
-
-\textbf{SAO}   & \textbf{S}ample \textbf{A}daptive \textbf{O}ffset        \\
-\textbf{EO}    & \textbf{E}dge   \textbf{O}ffset                          \\
-\textbf{BO}    & \textbf{B}and   \textbf{O}ffset                          \\
-
-\textbf{CABAC} & \textbf{C}ontext-based \textbf{A}daptive \textbf{B}inary
-                 \textbf{A}rithmetic    \textbf{C}oding                   \\
-% Chapter 6
-\textbf{VNC}   & \textbf{V}irtual \textbf{N}etwork  \textbf{C}omputing    \\
-\textbf{GCC}   & \textbf{G}NU     \textbf{C}ompiler \textbf{C}ollection   \\
-
-%\textbf{Acronym} & \textbf{W}hat (it) \textbf{S}tands \textbf{F}or \\
+  % Chapter 1
+  \textbf{HEVC}  & \textbf{H}igh \textbf{E}fficiency \textbf{V}ideo 
+  \textbf{C}oding \\
+  
+  % Chapter 2
+  \textbf{MIPS}  & \textbf{M}illion Million Instructions Per Second \\
+  \textbf{MFLOPS}& \textbf{FL}oating (point) \textbf{O}perations \textbf{P}er 
+  \textbf{S}econd \\
+  \textbf{I/O}   & \textbf{I}nput / \textbf{O}utput \\
+  \textbf{CPU}   & \textbf{C}entral \textbf{P}rocessing \textbf{U}nit \\
+  \textbf{DFT}   & \textbf{D}iscrete \textbf{F}ourier \textbf{T}ransform \\
+  
+  % Chapter 3
+  \textbf{CIF}   & \textbf{C}ommon \textbf{I}ntermediate \textbf{F}ormat \\
+  \textbf{KLT}   & \textbf{K}arhunen-\textbf{L}oève \textbf{T}ransform \\
+  \textbf{DCT}   & \textbf{D}iscrete \textbf{C}osine \textbf{T}ransform \\
+  \textbf{DST}   & \textbf{D}iscrete \textbf{S}ine \textbf{T}ransform \\
+  \textbf{WHT}   & \textbf{W}alsh-\textbf{H}adamard \textbf{T}ransform \\
+  \textbf{RLE}   & \textbf{R}un-\textbf{L}ength \textbf{E}ncoding \\
+  \textbf{DPCM}  & \textbf{D}ifferential \textbf{P}ulse-\textbf{C}ode 
+  \textbf{M}odulation \\
+  \textbf{JPEG}  & \textbf{J}oint \textbf{P}hotographic \textbf{E}xperts 
+  \textbf{G}roup \\
+    
+  % Chapter 4
+  \textbf{CTU}   & \textbf{C}oding \textbf{T}ree \textbf{U}nit              \\
+  \textbf{CTB}   & \textbf{C}oding \textbf{T}ree \textbf{B}lock             \\
+  \textbf{CU}    & \textbf{C}oding \textbf{U}nit                            \\
+  \textbf{CB}    & \textbf{C}oding \textbf{B}lock                           \\
+  
+  \textbf{PU}    & \textbf{P}rediction \textbf{U}nit                        \\
+  \textbf{PB}    & \textbf{P}rediction \textbf{B}lock                       \\
+  \textbf{TB}    & \textbf{T}ransform  \textbf{B}lock                       \\
+  \textbf{MB}    & \textbf{M}acro \textbf{B}lock \\
+  
+  \textbf{MCP}   & \textbf{M}otion \textbf{C}ompensated \textbf{P}rediction \\
+  \textbf{MV}    & \textbf{M}otion \textbf{V}ector                          \\
+  \textbf{MVP}   & \textbf{M}otion \textbf{V}ector      \textbf{P}redictor  \\
+  \textbf{MVD}   & \textbf{M}otion \textbf{V}ector      \textbf{D}ifference \\
+  
+  \textbf{AMVP}  & \textbf{A}dvanced \textbf{M}otion    \textbf{V}ector 
+                   \textbf{P}rediction                                      \\
+  
+  \textbf{SAO}   & \textbf{S}ample \textbf{A}daptive \textbf{O}ffset        \\
+  \textbf{EO}    & \textbf{E}dge   \textbf{O}ffset                          \\
+  \textbf{BO}    & \textbf{B}and   \textbf{O}ffset                          \\
+  
+  \textbf{CABAC} & \textbf{C}ontext-based \textbf{A}daptive \textbf{B}inary
+                   \textbf{A}rithmetic    \textbf{C}oding                   \\
+  % Chapter 5
+  \textbf{PC}    & \textbf{P}ersonal \textbf{C}omputer \\
+  \textbf{RISC}  & \textbf{R}educed \textbf{I}nstruction \textbf{S}et 
+  \textbf{C}omputing \\
+  \textbf{CISC}  & \textbf{C}omplex \textbf{I}nstruction \textbf{S}et 
+  \textbf{C}omputing \\
+  \textbf{ABS}   & \textbf{A}ntilock \textbf{B}raking \textbf{S}ystem \\
+  \textbf{IoT}   & \textbf{I}nternet \textbf{o}f \textbf{T}hings \\
+  \textbf{SOC}   & \textbf{S}ystem \textbf{O}n (a) \textbf{C}hip \\
+  \textbf{GPU}   & \textbf{G}raphics \textbf{P}rocessing \textbf{U}nit \\
+  \textbf{RAM}   & \textbf{R}andom \textbf{A}ccess \textbf{M}emory \\
+  \textbf{DDR}   & \textbf{D}ouble \textbf{D}ata \textbf{R}ate \\
+  \textbf{SD}    & \textbf{S}ecure \textbf{D}igital \\
+  \textbf{SATA}  & \textbf{S}erial \textbf{A}dvanced \textbf{T}echnology 
+  \textbf{A}ttachment \\
+  \textbf{USB}   & \textbf{U}niversal \textbf{S}erial \textbf{B}us \\
+  \textbf{OTG}   & \textbf{O}n-\textbf{T}he-\textbf{G}o \\
+  \textbf{HDMI}  & \textbf{H}igh \textbf{D}efinition \textbf{M}ultimedia 
+  \textbf{I}nterface \\
+  \textbf{LCD}   & \textbf{L}iquid \textbf{C}rystal \textbf{D}isplay \\
+  \textbf{LVDS}  & \textbf{L}ow-\textbf{V}oltage \textbf{D}ifferential
+  \textbf{S}ignaling \\
+  \textbf{CSI}   & \textbf{C}amera \textbf{S}ignal \textbf{I}nterface \\
+  \textbf{IR}    & \textbf{I}nfra\textbf{R}ed \\
+  \textbf{GPIO}  & \textbf{G}eneral \textbf{P}urpose \textbf{I}nput / 
+  \textbf{O}utput \\
+                   
+  % Chapter 6
+  \textbf{LXDE}  & \textbf{L}ightweight \textbf{X}11 \textbf{D}esktop 
+  \textbf{E}nvironment \\
+  \textbf{VNC}   & \textbf{V}irtual \textbf{N}etwork  \textbf{C}omputing    \\
+  \textbf{RFB}   & \textbf{R}emote \textbf{F}rame\textbf{B}uffer \\
+  \textbf{GUI}   & \textbf{G}raphical \textbf{U}ser \textbf{I}nterface \\
+  \textbf{FTP}   & \textbf{F}ile \textbf{T}ransfer \textbf{P}rotocol \\
+  \textbf{SSH}   & \textbf{S}ecure \textbf{Sh}ell \\
+  \textbf{GCC}   & \textbf{G}NU     \textbf{C}ompiler \textbf{C}ollection   \\
+  \textbf{CIF}   & \textbf{C}ommon \textbf{I}ntermediate \textbf{F}ormat \\
+  \textbf{PID}   & \textbf{P}rocess \textbf{Id}entifier \\
+  \textbf{SIMD}  & \textbf{S}ingle \textbf{I}nstruction \textbf{M}ultiple 
+  \textbf{D}ata \\
+  \textbf{CPSR}  & \textbf{C}urrent \textbf{P}rogram \textbf{S}tatus 
+  \textbf{R}egister \\
+  \textbf{SP}    & \textbf{S}tack \textbf{P}ointer \\
+  \textbf{SAD}   & \textbf{S}um (of) \textbf{A}bsolute \textbf{D}ifferences \\
+  \textbf{CSE}   & \textbf{C}ommon \textbf{S}ubexpression 
+  \textbf{E}limination\\
+  \textbf{WPP}   & \textbf{W}avefront \textbf{P}arallel \textbf{P}rocessing \\
+ 
+  % Chapter 7
+  \textbf{GOP}   & \textbf{G}roup \textbf{O}f \textbf{P}ictures \\
+ 
+  % Chapter 8
+  \textbf{MPEG}  & \textbf{M}oving \textbf{P}icture \textbf{E}xperts 
+  \textbf{G}roup \\
+  \textbf{VCEG}  & \textbf{V}ideo \textbf{C}oding \textbf{E}xperts 
+  \textbf{G}roup \\
+ 
+  %\textbf{Acronym} & \textbf{W}hat (it) \textbf{S}tands \textbf{F}or \\
 }
 
 %-------------------------------------------------------------------------------
