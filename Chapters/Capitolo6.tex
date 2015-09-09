@@ -1278,13 +1278,23 @@ Segue il codice scritto per l'implementazione.\\
 La parte di main rimossa per brevità è poco interessante e consiste nella 
 lettura dei parametri dai file di configurazione per la costruzione dei valori 
 di input per il secondo thread, \verb|argc| e \verb|argv|.
+
 \begin{center}
-	\begin{tabular}{l | l | l}
-		& Multithread & Singlethread \\
+	\begin{tabular}{|r|c|c|}
+    \hline
+    
+		& \textbf{Multithread} & \textbf{Singlethread} \\
+    
+    \hline
 		\hline
-		$72$ frame \verb|highway_cif.yuv| & $741.560$ (s) & $1408.426$ (s)
+    \hline
+    
+		$72$ \textit{frame} \verb|highway_cif.yuv| & $741.560$ s & $1408.426$ s \\
+    
+    \hline
 	\end{tabular}
 \end{center}
+
 La tabella mostra la media dei risultati ottenuti eseguendo $5$ volte 
 l'encoding dei primi $72$ frame del file di prova \verb|highway_cif.yuv| con il 
 software HM compilato in \verb|-Ofast| nella sua versione \emph{singlethread} e 
