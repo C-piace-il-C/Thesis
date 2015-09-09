@@ -34,73 +34,66 @@ Il secondo file invece specifica tutti i parametri dell'\emph{encoder}. A puro
 scopo di test è stato definito un GOP in questo modo: il primo frame è sempre 
 un'Intra, seguito dalla seguente struttura ripetuta 3 volte (PBBB). 
 L'intervallo tra due Intra è dunque 12. \\
-
 Verranno ora discussi i vari risultati.
-
-\paragraph{Versione originale \\}
+\\ \\
+\textbf{Versione originale}\\
   Scaricato il codice sorgente dal \emph{repository} ufficiale di HM, è stato 
   subito compilato senza alcuna modifica al fine di valutarne le prestazioni 
   \emph{as-is}. Il tempo medio impiegato a codificare $72$ \emph{frame} di 
   \verb|highway_cif.yuv| secondo le modalità specificate sopra è risultato pari 
   a $1552.86$ s.
-
-\paragraph{Opzioni di compilazione \\}
+\\ \\
+\textbf{Opzioni di compilazione}\\
   Dopo aver dedicato il tempo necessario al test delle opzioni di compilazione, 
   i risultati ottenuti sono stati i seguenti: in media si è ottenuto un 
   miglioramento pari a $144.43$ s, portando il tempo totale a $1408.43$ s 
   (\textit{speed-up}: $1.102$).
-  
   La versione con le opzioni di compilazione è diventata poi la base per tutti 
   gli altri test, ogni tempo è quindi da confrontarsi con quello descritto in 
   questo paragrafo.
-  
-\paragraph{Assembly \\}
+\\ \\
+\textbf{Assembly}\\
   I risultati delle funzioni ottimizzate a mano in \emph{assembly}, sebbene 
   siano state un'ottima esperienza dal punto di vista didattico, purtroppo non 
   sono stati soddisfacenti. 
-  
   La durata media si è allungata di $85$ s, arrivando a $1493.62$ s. Questa 
   opzione è stata quindi scartata.
-  
-\paragraph{Intrinsic NEON \\}
+\\ \\
+\textbf{Intrinsic Neon}\\
   Di tutte le strategie applicate, l'utilizzo delle SIMD di ARM ha prodotto i 
   migliori risultati sulle singole funzioni. Avendo inoltre avuto cura di 
   scegliere come obiettivo le più pesanti, il tempo complessivo ha subito un 
   discreto abbassamento.
-  
   L'ottimizzazione delle funzioni dedicate al calcolo delle SAD ha accorciato i 
   tempi di $81.89$ s, quella sulle funzioni dedicate al calcolo della WHT di 
   altri $99.98$ s. Il tempo complessivo è quindi sceso a $1226.56$ s   
   (\textit{speed-up}: $1.148$).
   
   // Instruction Fetch
-  
-\paragraph{Switch \\}
+\\ \\
+\textbf{Switch}\\
   La sostituzione degli \verb|if| ha portato a vantaggi relativamente bassi in 
   positivo, di seguito i risultati relativi ad essa.
-  
   La modifica ha migliorato l'esecuzione di soli $11.14$ s, abbassando il tempo 
   complessivo a $1397.29$ s.
-  
-\paragraph{Attributi \\}
+\\ \\
+\textbf{Attributi}\\
   L'aggiunta di attributi al codice in alcuni casi peggiorava drasticamente il 
   tempo di esecuzione, in altri invece non lo cambiava affatto. La modifica è 
   stata infine accantonata, non avendo ottenuto risultati migliori della 
   versione con le sole opzioni di compilazione, presa come riferimento.
-  
-\paragraph{Multithread \\}
+\\ \\
+\textbf{Multithreading}\\
   Il passaggio da un singolo \emph{tread} a due, secondo le modalità 
   specificate nel capitolo 6.4.6, ha portato grossolanamente ad un raddoppio 
   delle prestazioni del programma.
-  
   L'esecuzione si è accorciata di ben $666.87$ s, arrivando a $741.56$ s 
   (\textit{speed-up}: $1.899$).
-
-\paragraph{Prestazioni complessive \\}
+\\ \\
+\textbf{Prestazioni complessive}\\
   Di tutte le modifiche effettuate, che risiedono in \textit{branch} separati 
   nella \textit{repository} su GitHub, sono state selezionate ed inglobate solo 
   quelle che avevano portato a miglioramenti nelle prestazioni.
-  
   Come risultato finale, il tempo complessivo è sceso dagli originali $1552.86$ 
   s a $660.92$ s, ottenendo quindi uno \textit{speed-up} pari a $2.351$.
     

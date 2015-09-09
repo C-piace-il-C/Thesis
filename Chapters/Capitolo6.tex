@@ -297,7 +297,7 @@ file di destinazione.
 Il programma intero è disponibile 
 online\footnote{https://github.com/C-piace-il-C/Y4M2YUV}, mentre qui di seguito 
 è presente un estratto che mostra la funzione principale. \\
-
+\lstset{style=cstyle}
 \lstinputlisting[language=C,caption=]{Codes/Y4M2YUV.c}
 
 %-------------------------------------------------------------------------------
@@ -460,13 +460,13 @@ compilatore GCC:
   \item \verb|-mfpu=|\emph{name}\\
   Specifica quale hardware (o emulazione hardware) \emph{floating-point} è 
   disponibile sul dispositivo.\\
-  Quest'opzione è \underline{necessaria} per poter utilizzare le varie SIMD (in 
+  Quest'opzione è necessaria per poter utilizzare le varie SIMD (in 
   questo caso NEON) messe a disposizione dall'architettura ARM.
   
   \item \verb|-mfloat-abi=|\emph{name}\\
   Specifica quale ABI (o \emph{Application Binary Interface}) utilizzare per le 
   operazioni \emph{floating-point}. \\
-  Quest'opzione è \underline{necessaria} per poter utilizzare le varie SIMD (in 
+  Quest'opzione è necessaria per poter utilizzare le varie SIMD (in 
   questo caso NEON) messe a disposizione dall'architettura ARM.
   
 \end{itemize}
@@ -1241,10 +1241,11 @@ Segue uno schema che riassume le due tecniche discusse.
     
     \hline
     
-    \textbf{SS} &
+    \textbf{Suddivisione} &
+     
     $\bullet$ Nessun \emph{overhead} &
     $\bullet$ Preferibile \verb|intraperiod| basso \\
-    
+    \textbf{Sequenza} 
     &
     $\bullet$ Semplicità implementativa &
     \\
