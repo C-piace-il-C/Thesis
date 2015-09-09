@@ -23,7 +23,7 @@ riferimento per l'encoder di HEVC.
 La prima decisione che ha riguardato la piattaforma è stato il sistema 
 operativo da installare. Vi sono a disposizione diversi sistemi 
 Unix-like\footnote{Reperibili all'indirizzo
-http://www.lemaker.org/portal.php?mod=list\&catid=4}, 
+http://www.lemaker.org/portal.php?mod=list\&catid=4.}, 
 dai più personalizzabili (come Gentoo o Arch Linux) a quelli più
  \emph{user-friendly} (come Lubuntu); la nostra scelta è ricaduta su Bananian, 
 una distribuzione che deriva da Debian 7, appositamente ottimizzata per il 
@@ -551,26 +551,37 @@ Un'altra ottimizzazione sperimentata inizialmente è stata la stesura di
 funzioni in Assembly nel tentativo di ottimizzare alcune parti di codice delle 
 funzioni più onerose di HM.
 Le principali caratteristiche del linguaggio Assembly ARM che velocizzano un 
-programma sono le istruzioni condizionali e il \emph{barrel shifter}. \newline
+programma sono le istruzioni condizionali ed il \emph{barrel shifter}. \newline
 Le istruzioni condizionali sono normali istruzioni la cui esecuzione dipende
-dal valore di determinati \emph{flag}. In questo modo è possibile evitare 
-parecchi branch condizionali che rallentano il codice perché rompono la 
-\emph{pipeline}.\newline
-Il \emph{barrel shifter} è un'unità che compie una pre-elaborazione di uno dei 
-due operandi di un'istruzione attraverso una normale operazione di shift dei 
-bit. \newline
-//SPIGA PERCHE IL BARREL SHIFTER VELOCIZZA (NON AGGIUNGE TEMPO ESECUZIONE)
-//AGGIUNGI IMMAGINE BARREL SHIFTER \newline
-
+dal valore di determinati \emph{flag}, ovvero bit del registro di stato 
+\emph{Current Program Status Register} (CPSR) precedentemente aggiornati dalle 
+operazioni matematiche. In questo modo è possibile evitare 
+parecchi branch condizionali presenti originariamente nel sorgente C che 
+rallentano le 
+procedure perché rompono la \emph{pipeline}.\newline
+Il \emph{barrel shifter} è un'unità aritmetica a 32 bit che compie una 
+pre-elaborazione del secondo operando di un'istruzione attraverso una semplice 
+operazione di shift dei bit. Diverse istruzioni forniscono la possibilità di 
+controllare il \emph{barrel shifter} scegliendo la tipologia dell'operazione 
+(tra shift matematici, logici e rotazioni) ed il numero di bit, specificato 
+come \emph{immediate value}\footnote{Si tratta di un numero 
+disponibile immediatamente dopo il fetch, perché codificato 
+all'intero dell'istruzione.} tra 0 e 31. Questa funzionalità rende le 
+istruzioni che ne fanno uso più flessibili, diminuisce la dimensione del 
+programma rendendolo più \emph{cache friendly} e può essere usata in 
+combinazione con le istruzioni codizionali, visto che specificando il suffisso 
+\verb|s| dopo l'opcode il \emph{barrel shifter} può aggiornare i \emph{flag}.
 \par Per esempio, la funzione matematica $\text{clamp}(x) = 
 \max(a,\min(x,b))$, assente dalla libreria standard, viene implementata da 
-\verb+filter+ in questo modo:
+\verb+filter+ in questo modo: \\
+\lstset{style=cstyle}
 \lstinputlisting[language=C,caption=]{Codes/cclamp.c}
+
 Questo codice viene tradotto in \verb|-Ofast| in una dozzina di istruzioni con 
 due \emph{compare}. Notando che nel codice di HM \verb|minVal| vale sempre 0, è 
 possibile introdurre un'ottimizzazione che sfrutta il barrel shifter. \newline
 Segue il confronto tra l'estratto del codice Assembly generato da GCC (a 
-sinistra) e quello da noi scritto per eseguire clamp.
+sinistra) e quello da noi scritto per eseguire clamp.\\
 
 %\lstset{style=cstyle}
 %\begin{center}
@@ -583,7 +594,6 @@ sinistra) e quello da noi scritto per eseguire clamp.
 %  \end{tabularx}
 %\end{center}
 
-\lstset{style=cstyle}
 \begin{minipage}{.565\textwidth}
   \lstinputlisting{Codes/armgccclamp.s}
 \end{minipage}
@@ -608,11 +618,11 @@ riga e viene discusso a seguire. \newline
 Le prime due linee caricano 0 e \verb|val|, che inizia a partire da 4 byte 
 dalla posizione puntata da \verb|SP| (Stack Pointer), rispettivamente nei 
 registri \verb|r2| e \verb|r3|.\newline La terza linea esegue l'operazione 
-\verb|r3 - r2| aggiornando i flag contenuti in \verb|CPSR| (Current Program 
-Status Register).\newline L'istruzione \verb|itt lt| abilita la condizione 
-\verb|lt| (lower than) per le successive due istruzioni, che verranno quindi 
+\verb|r3 - r2| aggiornando i flag contenuti in \verb|CPSR|.\newline 
+L'istruzione \verb|itt lt| abilita la condizione 
+\verb|lt| (lower than) per le successive due istruzioni, che verranno  
 eseguite solo se \verb|r3| $<$ \verb|r2|. Ciò si riflette sull'\emph{opcode}
-delle due istruzioni successive, che eredita il suffisso \verb|lt|. Quest 
+delle due istruzioni successive, che eredita il suffisso \verb|lt|. Queste 
 istruzioni mettono 0 in \verb|r3| e lo salvano in \verb|val|. \newline
 Le restanti istruzioni eseguono il secondo \verb|if| in maniera analoga.\newline
 Nel nostro codice la terza linea compendia quello che in C sarebbe 
@@ -623,14 +633,28 @@ aggiorna anche il registro \verb|CPSR|, così, se il risultato è positivo (i.e.
 \par Nonostante gli esiti positivi dell'ottimizzazione in fase di testing, dopo 
 l'implementazione effettiva all'interno di HM la performance dell'encoder è 
 calata, come mostra la tabella.
-\begin{table}[h!]
+
+\begin{table}[H]
 	\centering
-  \begin{tabular}{l | l | l}
-    & ASM & C \\ \hline
-    $8\cdot10^9$ clamp & $7065.6$ (ms) & $8072.7$ (ms) \\
-    $72$ frame \verb|highway_cif.yuv| & $1493.614$ (s) &  $1408.426$ (s) \\
+  \begin{tabular}{|r|c|c|}
+    \hline
+    
+    & \textbf{Assembly} & \textbf{C} \\ 
+    
+    \hline
+    \hline
+    \hline
+    
+    $8 \cdot 10^9$ \textit{clamp} & $7065.6$ ms & $8072.7$ ms \\
+    
+    \hline
+    
+    $72$ \textit{frame} \verb|highway_cif.yuv| & $1493.614$ s &  $1408.426$ s \\
+    
+    \hline
   \end{tabular}
 \end{table}
+
 Le righe della tabella mostrano rispettivamente una media di $10$ prove fatte 
 con un codice di test compilato in \verb|-Ofast| /*INSERISCI IL CODICE IN 
 APPENDICE*/ e di $5$ prove con il software HM eseguito sui primi $72$ 
@@ -642,7 +666,7 @@ non è necessario.\newline
 Una possibile soluzione consiste nel riscrivere almeno parzialmente la funzione 
 \verb|filter| in Assembly per predisporre correttamente i dati, eventualmente
 ottimizzando anche altre parti del codice, ma è un'operazione che al momento 
-esula dalle nostre competenze.
+esula alle nostre competenze.
 
 %-----------------------------------
 %       SUBSECTION 6.4.3
@@ -1104,8 +1128,6 @@ per l'ottimizzazione, anche se in seguito non sono stati sfruttati tutti.
 
 L'utilizzo degli attributi, però, non ha avuto alcun riscontro sulle 
 performance, che in media sono rimaste invariate. \\
-// MOSTRA ASM DEI CAMBIAMENTI \\
-// FAI IPOTESI
 %-----------------------------------
 %       SUBSECTION 6.4.6
 %-----------------------------------
@@ -1191,33 +1213,50 @@ nei casi di encoding in tempo reale, anche se ciò diventa secondario se si nota
 che HM di per sé non ammette tale opzione.
 \\ \\
 Segue uno schema che riassume le due tecniche discusse.
-\\ // DIMINUISCI LA LUNGHEZZA DELLA PRIMA COLONNA
-\begin{center}
-	\begin{tabularx}{\textwidth}{>{}X|>{}X|>{}X}
-		
-		    & Pros & Cons \\ \hline
-		WPP & 
-		    \begin{itemize}
-		    	\item Più adatto ai casi reali
-			\end{itemize}
-			&
-			\begin{itemize}
-				\item Alto \emph{overhead}
-				\item Difficoltà implementativa
-				\item $P < 1$
-			\end{itemize} \\ \hline
-		SS &
-		   \begin{itemize}
-			   	\item Nessun \emph{overhead}
-			   	\item Semplicità implementativa
-			   	\item $P = 1$
-		   \end{itemize}
-		   &
-		   \begin{itemize}
-		   	    \item Preferibile \verb|intraperiod| basso
-		   \end{itemize}
-	\end{tabularx}
-\end{center}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|c|l|l|}
+    \hline
+    
+    & 
+    \textbf{Pro} & 
+    \textbf{Contro} \\
+    
+    \hline
+    \hline
+    \hline
+    
+    \textbf{WPP} &
+    $\bullet$ Più adatto ai casi reali &
+    $\bullet$ Alto \emph{overhead} \\
+    
+    &
+    &
+    $\bullet$ Difficoltà implementativa \\
+    
+    &
+    &
+    $\bullet$ $P < 1$ \\
+    
+    \hline
+    
+    \textbf{SS} &
+    $\bullet$ Nessun \emph{overhead} &
+    $\bullet$ Preferibile \verb|intraperiod| basso \\
+    
+    &
+    $\bullet$ Semplicità implementativa &
+    \\
+    
+    &
+    $\bullet$ $P = 1$ &
+    \\
+    
+    \hline
+  \end{tabular}
+\end{table}
+
 Come prima cosa abbiamo implementato la seconda tecnica, quella più 
 semplice e verosimilmente la più efficiente, data la struttura fissata del GOP, 
 riuscendo ad ottenere un quasi ideale fattore di speedup $S \approx 2$. In 
@@ -1247,13 +1286,23 @@ Segue il codice scritto per l'implementazione.\\
 La parte di main rimossa per brevità è poco interessante e consiste nella 
 lettura dei parametri dai file di configurazione per la costruzione dei valori 
 di input per il secondo thread, \verb|argc| e \verb|argv|.
+
 \begin{center}
-	\begin{tabular}{l | l | l}
-		& Multithread & Singlethread \\
+	\begin{tabular}{|r|c|c|}
+    \hline
+    
+		& \textbf{Multithread} & \textbf{Singlethread} \\
+    
+    \hline
 		\hline
-		$72$ frame \verb|highway_cif.yuv| & $741.560$ (s) & $1408.426$ (s)
+    \hline
+    
+		$72$ \textit{frame} \verb|highway_cif.yuv| & $741.560$ s & $1408.426$ s \\
+    
+    \hline
 	\end{tabular}
 \end{center}
+
 La tabella mostra la media dei risultati ottenuti eseguendo $5$ volte 
 l'encoding dei primi $72$ frame del file di prova \verb|highway_cif.yuv| con il 
 software HM compilato in \verb|-Ofast| nella sua versione \emph{singlethread} e 

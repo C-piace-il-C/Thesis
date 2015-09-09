@@ -15,6 +15,7 @@ due file di configurazione creati appositamente.\\
 Il primo file specifica il percorso completo alla sequenza d'ingresso, inclusi 
 i dati su risoluzione, \emph{frame rate}, formato dei dati e numero di 
 \emph{frame} da codificare.
+
 \begin{lstlisting}
   #======== File I/O ===============
   InputFile          : /home/cpc/ssd/samples/yuv/highway_cif.yuv
@@ -39,15 +40,15 @@ Verranno ora discussi i vari risultati.
 \paragraph{Versione originale \\}
   Scaricato il codice sorgente dal \emph{repository} ufficiale di HM, è stato 
   subito compilato senza alcuna modifica al fine di valutarne le prestazioni 
-  \emph{as-is}. Il tempo medio impiegato a codificare 72 \emph{frame} di 
+  \emph{as-is}. Il tempo medio impiegato a codificare $72$ \emph{frame} di 
   \verb|highway_cif.yuv| secondo le modalità specificate sopra è risultato pari 
-  a 1552,86 s.
+  a $1552.86$ s.
 
 \paragraph{Opzioni di compilazione \\}
   Dopo aver dedicato il tempo necessario al test delle opzioni di compilazione, 
   i risultati ottenuti sono stati i seguenti: in media si è ottenuto un 
-  miglioramento pari a 144,43 s, portando il tempo totale a 1408,43 s 
-  (\textit{speed-up}: 1,102).
+  miglioramento pari a $144.43$ s, portando il tempo totale a $1408.43$ s 
+  (\textit{speed-up}: $1.102$).
   
   La versione con le opzioni di compilazione è diventata poi la base per tutti 
   gli altri test, ogni tempo è quindi da confrontarsi con quello descritto in 
@@ -58,8 +59,8 @@ Verranno ora discussi i vari risultati.
   siano state un'ottima esperienza dal punto di vista didattico, purtroppo non 
   sono stati soddisfacenti. 
   
-  La durata media si è allungata di 85 s, arrivando a 1493,62 s. Questa opzione 
-  è stata quindi scartata.
+  La durata media si è allungata di $85$ s, arrivando a $1493.62$ s. Questa 
+  opzione è stata quindi scartata.
   
 \paragraph{Intrinsic NEON \\}
   Di tutte le strategie applicate, l'utilizzo delle SIMD di ARM ha prodotto i 
@@ -68,9 +69,9 @@ Verranno ora discussi i vari risultati.
   discreto abbassamento.
   
   L'ottimizzazione delle funzioni dedicate al calcolo delle SAD ha accorciato i 
-  tempi di 81,89 s, quella sulle funzioni dedicate al calcolo della WHT di 
-  altri 99,98 s. Il tempo complessivo è quindi sceso a 1226,56 s 
-  (\textit{speed-up}: 1,148).
+  tempi di $81.89$ s, quella sulle funzioni dedicate al calcolo della WHT di 
+  altri $99.98$ s. Il tempo complessivo è quindi sceso a $1226.56$ s   
+  (\textit{speed-up}: $1.148$).
   
   // Instruction Fetch
   
@@ -78,8 +79,8 @@ Verranno ora discussi i vari risultati.
   La sostituzione degli \verb|if| ha portato a vantaggi relativamente bassi in 
   positivo, di seguito i risultati relativi ad essa.
   
-  La modifica ha migliorato l'esecuzione di soli 11,14 s, abbassando il tempo 
-  complessivo a 1397,29 s.
+  La modifica ha migliorato l'esecuzione di soli $11.14$ s, abbassando il tempo 
+  complessivo a $1397.29$ s.
   
 \paragraph{Attributi \\}
   L'aggiunta di attributi al codice in alcuni casi peggiorava drasticamente il 
@@ -89,20 +90,20 @@ Verranno ora discussi i vari risultati.
   
 \paragraph{Multithread \\}
   Il passaggio da un singolo \emph{tread} a due, secondo le modalità 
-  specificate nel capitolo 6.3.6, ha portato grossolanamente ad un raddoppio 
+  specificate nel capitolo 6.4.6, ha portato grossolanamente ad un raddoppio 
   delle prestazioni del programma.
   
-  L'esecuzione si è accorciata di ben 666,87 s, arrivando a 741,56 s 
-  (\textit{speed-up}: 1,899).
+  L'esecuzione si è accorciata di ben $666.87$ s, arrivando a $741.56$ s 
+  (\textit{speed-up}: $1.899$).
 
 \paragraph{Prestazioni complessive \\}
   Di tutte le modifiche effettuate, che risiedono in \textit{branch} separati 
   nella \textit{repository} su GitHub, sono state selezionate ed inglobate solo 
   quelle che avevano portato a miglioramenti nelle prestazioni.
   
-  Come risultato finale, il tempo complessivo è sceso dagli originali 1552,86 s 
-  a 660,92 s, ottenendo quindi uno \textit{speed-up} pari a 2,351.
-  
+  Come risultato finale, il tempo complessivo è sceso dagli originali $1552.86$ 
+  s a $660.92$ s, ottenendo quindi uno \textit{speed-up} pari a $2.351$.
+    
 %TODO grafico
 
 %HAD    da 198,803,125,750 a 116,394,523,093
