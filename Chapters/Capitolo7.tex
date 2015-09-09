@@ -17,24 +17,24 @@ i dati su risoluzione, \emph{frame rate}, formato dei dati e numero di
 \emph{frame} da codificare.
 
 \begin{lstlisting}
-  #======== File I/O ===============
-  InputFile          : /home/cpc/ssd/samples/yuv/highway_cif.yuv
-  InputBitDepth      : 8      # Input bitdepth
-  InputChromaFormat  : 420    # Ratio of luminance to chrominance samples
-  FrameRate          : 30     # Frame Rate per second
-  FrameSkip          : 0      # Number of frames to be skipped in input
-  SourceWidth        : 352    # Input frame width
-  SourceHeight       : 288    # Input frame height
-  FramesToBeEncoded  : 72     # Number of frames to be coded
-  
-  Level              : 3.1
+#=========================== File I/O ============================
+InputFile          : /home/cpc/ssd/samples/yuv/highway_cif.yuv
+InputBitDepth      : 8      # Input bitdepth
+InputChromaFormat  : 420    # Ratio of luma to cr samples
+FrameRate          : 30     # Frame Rate per second
+FrameSkip          : 0      # Num of frames to be skipped in input
+SourceWidth        : 352    # Input frame width
+SourceHeight       : 288    # Input frame height
+FramesToBeEncoded  : 72     # Number of frames to be coded
+ 
+Level              : 3.1
 \end{lstlisting}
 
 Il secondo file invece specifica tutti i parametri dell'\emph{encoder}. A puro 
-scopo di test è stato definito un GOP in questo modo: il primo frame è sempre 
-un'Intra, seguito dalla seguente struttura ripetuta 3 volte (PBBB). 
-L'intervallo tra due Intra è dunque 12. \\
-Verranno ora discussi i vari risultati.
+scopo di test è stato definito un \textit{group of pictures} (GOP) in questo 
+modo: il primo frame è sempre un'Intra, seguito dalla seguente struttura 
+ripetuta 3 volte (PBBB). L'intervallo tra due Intra è dunque 12. \\
+Verranno ora discussi i vari risultati. 
 \\ \\
 \textbf{Versione originale}\\
   Scaricato il codice sorgente dal \emph{repository} ufficiale di HM, è stato 
