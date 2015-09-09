@@ -25,19 +25,21 @@ la ridondanza temporale dei blocchi appartenenti a \emph{frame} già codificati.
 
 \section{Suddivisione in blocchi dell'immagine} 
 Un'immagine viene inizialmente suddivisa in \emph{coding tree unit} (CTU), di 
-forma quadrata e dimensione costante per tutta la sequenza video: 64x64, 32x32 
-o 16x16 pixel. Questa ``flessibilità'' nella dimensione del blocco fondamentale 
+forma quadrata e dimensione costante per tutta la sequenza video: 
+$64{\times}64$, $32{\times}32$ o $16{\times}16$ pixel. 
+Questa ``flessibilità'' nella dimensione del blocco fondamentale 
 della suddivisione è stata introdotta da HEVC, in quanto tutti i suoi 
-predecessori utilizzano un \emph{macroblocco} di 16x16 pixel; ciò permette a 
-HEVC di sapersi adattare meglio a -e comprimere maggiormente- video di diverse 
-dimensioni.
+predecessori utilizzano un \emph{macroblocco} di $16{\times}16$ pixel; 
+ciò permette a HEVC di sapersi adattare meglio a -e comprimere maggiormente- 
+video di diverse dimensioni.
 Il CTU è un'unità logica che consiste di tre ulteriori blocchi: Luma, 
 ChromaB e ChromaR (Y, Cb e Cr). Ognuno di questi blocchi è un 
 \emph{coding tree block} (CTB), ed è della stessa dimensione relativa 
 del CTU, sebbene la dimensione effettiva di ogni blocco sia regolata dal 
 \emph{chroma sampling format}: se il formato fosse 4:2:0, tipico di questi 
-encoding, il blocco Y sarebbe 64x64 pixel, mentre i due blocchi di crominanza 
-risulterebbero di 32x32 pixel. Quando un blocco risulta più piccolo del 
+encoding, il blocco Y sarebbe $64{\times}64$ pixel, mentre i due blocchi di 
+crominanza risulterebbero di $32{\times}32$ pixel. 
+Quando un blocco risulta più piccolo del 
 CTU di partenza (in questo caso, e quasi sempre, i due di crominanza) 
 subisce un \emph{upscaling}: questo comporta una minore definizione e una 
 maggiore compressione dell'immagine finale, resa ammissibile dalla maggiore 
@@ -50,8 +52,9 @@ sensibilità dell'apparato visivo umano alla luminanza rispetto al colore.
 Il CTB può essere ulteriormente suddiviso in \emph{coding blocks} (CB), che 
 sono il punto in cui viene decisa quale tipo di \emph{prediction} utilizzare.
 Supponendo di avere un CTB di dimensione 64x64 la suddivisione può essere 
-effettuata con CB grandi 64x64, 32x32, 16x16 o 8x8, ottenendo una struttura
-detta \emph{quad-tree}, in cui il CTB è suddiviso ricorsivamente. 
+effettuata con CB grandi $64{\times}64$, $32{\times}32$, $16{\times}16$ o 
+$8{\times}8$, ottenendo una struttura detta \emph{quad-tree}, in cui il CTB è
+suddiviso ricorsivamente. 
 Il CB, così come il CTB, consiste ancora nei tre blocchi Y, Cb e 
 Cr, che definiscono un \emph{coding unit} (CU), ovvero l'unità in cui viene 
 codificato il tipo di predizione. La scelta di quest'ultima è autonoma per ogni 
@@ -63,8 +66,8 @@ CU.
 struttura a \emph{quadtree}}
 \end{figure}
 In caso ci sia bisogno di una maggiore precisione nella predizione (e.g., 
-oggetti minuscoli che si muovono in un CB 8x8) è possibile suddividere i
-\emph{coding block} in \emph{prediction block} (PB), che, in caso di 
+oggetti minuscoli che si muovono in un CB $8{\times}8$) è possibile suddividere
+i \emph{coding block} in \emph{prediction block} (PB), che, in caso di 
 \emph{inter prediction}, possono non seguire la struttura a \emph{quadtree} dei
 blocchi precedenti:
 \begin{figure}[H]
@@ -109,7 +112,7 @@ seguenti:
 \begin{enumerate}
 \item Un semplice \emph{lowpass filter} lineare con risposta all'impulso 
 [1 2 1]/4 (a)
-\item Se la dimensione del TB è 32x32 e i campioni di riferimento sono 
+\item Se la dimensione del TB è $32{\times}32$ e i campioni di riferimento sono 
 abbastanza ``morbidi'', questi vengono sostituiti con le corrispondenti 
 interpolazioni lineari dei campioni agli estremi (b)
 \end{enumerate}
@@ -372,7 +375,7 @@ Specificamente il vettore viene predetto utilizzando sempre il blocco in basso
 a destra, salvo la mancanza di disponibilità d quest'ultimo; ciò significa che 
 esso risiede fuori dai bordi dell'immagine o viola vincoli imposti per motivi 
 di memoria.
-\newline \\
+\\ \\
 Infine HEVC risolve un problema legato alla struttura di suddivisione delle 
 immagini \emph{quadtree}: quest'ultime permettono una grande flessibilità 
 delle dimensioni dei blocchi con un basso costo di \emph{overhead} in termini 
@@ -429,7 +432,7 @@ ottenga un risultato praticamente lossless.
 HEVC utilizza due tipologie di trasformate, ovvero quelle derivate dalla DCT e
 quelle derivate dalla DST; fornisce inoltre delle matrici precostruite per 
 eseguire l'antitrasformata DCT e DST per tutte le possibili dimensioni dei 
-blocchi: $4x4$, $8x8$, $16x16$ e $32x32$.
+blocchi: $4{\times}4$, $8{\times}8$, $16{\times}16$ e $32{\times}32$.
 Queste matrici contengono approssimazioni ad interi con precisione finita dei 
 coefficienti di trasformazione DCT-II; questo sistema riduce di molto la 
 complessità di encoder e decoder, e risolve un problema che era presente in 
@@ -522,7 +525,7 @@ per decidere:
 \end{itemize}
 Questi semplici controlli misurano un indice di distorsione dei vettori di 
 campioni rispetto ad una delle funzioni continue più semplici, ovvero una rampa 
-che attraversa il confine \textbf{/*(di che cosa?)*/}. Se questo indice supera 
+che attraversa il confine. Se questo indice supera 
 una certa soglia, che dipende dal passo di quantizzazione $Q_p$ secondo una 
 \emph{look-up table}, si esegue il filtraggio.
 
@@ -644,8 +647,8 @@ finale all'interno del ciclo di codifica che esegue una compressione
 all'encoder. La compressione si basa sulle proprietà statistiche dei dati 
 relative al loro contesto di codifica (da qui il \emph{context-based}), cercando
 di rendere la dimensione in bit di una parola di codice proporzionale in modo 
-logaritmico alla probabilità del dato che essa codifica (dal teorema di Shannon:
-\textbf{/*QUALE?*/} la codifica ottima pesa $-log_2p$). \\
+logaritmico alla probabilità del dato che essa codifica (dal primo 
+teorema di Shannon: la codifica ottima pesa $-log_2p$). \\
 CABAC opera solamente sui \emph{syntax element} all'interno del \emph{binary 
 stream}, ovvero quei dati che contengono principalmente i parametri che 
 riguardano gli algoritmi di codifica; il suo compito è dunque quello di ridurre
