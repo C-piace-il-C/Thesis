@@ -11,7 +11,8 @@ lessico comune il termine \emph{computer}, si è ampiamente esteso. Nei primi
 anni del XIX secolo vennero poste le basi concettuali del computer programmabile, 
 il primo modernamente definibile Turing-completo, da parte di Charles Babbage 
 (non a caso considerato il padre del computer\citep{CBabbage})
-e negli anni '30 del XX secolo proprio Alan Turing definì i principi del odierno computer. 
+e negli anni '30 del XX secolo proprio Alan Turing definì i principi dell' 
+odierno computer. 
 \\
 Il calcolatore, dunque, passa dall'essere uno strumento usato per
 eseguire semplici calcoli matematici (in questa categoria potrebbe rientrare
@@ -29,10 +30,10 @@ complessi (a cui ci si riferisce talvolta con il termine \emph{elaboratore}).
 Affinché un computer possa eseguire dei calcoli è necessario che disponga di
 \emph{dati} su cui effettuarli. L'acquisizione di questi ultimi può avvenire
 in diversi modi, con o senza l'intervento di un essere umano.
-Nel secondo caso i dati vengono spesso ottenuti grazie alla trasduzione 
+Nel secondo caso i dati vengono spesso ottenuti dalla trasduzione 
 di parametri fisici, acquisiti da sensori, in segnali elettrici, successivamente
 tradotti da un convertitore analogico-digitale in modo da ottenere valori che 
-possano essere compresi da un calcolatore binario.
+possano essere compresi da un calcolatore digitale.
 \\ \\
 In entrambi i casi è raro che un'acquisizione sia fine a sé stessa e venga
 semplicemente memorizzata dentro ad un supporto digitale: che sia ricavata una
@@ -62,7 +63,7 @@ nell'identificazione della potenza di calcolo di un computer, ma non l'unica.
 \\ \\
 Se il proprio progetto prevedesse di scaricare da un \emph{server} una grande
 mole di dati, effettuare le dovute elaborazioni e caricare il risultato 
-ottenuto, risulta evidente come non basti solamente effettuare i calcoli
+ottenuto, risulterebbe evidente come non basti solamente effettuare i calcoli
 velocemente: se questi ultimi fossero eseguiti in pochi secondi e il
 caricamento/scaricamento richiedesse ore, la potenza di calcolo percepita
 dal \emph{server} sarebbe nettamente inferiore di quella che si potrebbe
@@ -70,8 +71,7 @@ pensare. \\
 Un simile discorso può essere intrapreso con diverse variabili che influenzano
 la percezione della potenza di calcolo, tra cui le necessità di chi deve
 usufruire di quest'ultima; vengono presentati di seguito i fattori più
-comunemente sovrapposti per approssimare il calcolo di una potenza di calcolo
-generica:
+comuni per stimare una generica potenza di calcolo:
 \newpage
 \begin{itemize}
 \item Potenza \emph{grezza} del processore (MIPS, MFLOPS)
@@ -81,8 +81,8 @@ generica:
 \item Throughput
 \end{itemize}
 Ognuno di questi fattori ha subito negli anni dei miglioramenti, sopratutto il
-primo grazie alla continua diminuzione del processo produttivo usato per creare
-i transistor.
+primo grazie alla continua diminuzione della dimensione dei transistor. 
+%diminuzione del processo costruttivo non ha senso
 \\ \\
 Gordon Moore predisse nel 1965\citep{GMoore} che, 
 per almeno dieci anni, il numero di transistor in un circuito integrato 
@@ -111,11 +111,12 @@ fenomeni di dispersione di potenza nei transistor ad un ulteriore aumento della
 frequenza, con un processo produttivo di 90nm. \\
 Questo, e le temperature raggiunte da così tanti transistor che operano a 
 frequenze così elevate, ha reso necessario un cambio di mentalità, facendo 
-passare da una ``corsa al GHz'' a un inclusione di più processori (che 
+passare da una ``corsa al GHz'' all'inclusione di più processori (che 
 prendono il nome di \emph{core}) sullo stesso \emph{die}. 
 \\ \\
 Le configurazioni \emph{multi core} hanno permesso che continuasse il 
-\emph{trend} dell'incremento della potenza in concomitanza con il crescere 
+trend %questa è nel dizionario italiano
+ dell'incremento della potenza in concomitanza con il crescere 
 del numero dei transistor, introducendo però una grande complicazione nella 
 progettazione di un software che volesse sfruttare questo parallelismo. \\
 È infatti necessario prestare particolari accorgimenti nella realizzazione 
@@ -190,41 +191,51 @@ che desideri sfruttare questa possibilità.
 
 \subsection{Ottimizzazione di algoritmi}
 
-La pura potenza di per sé non è lo strumento ottimale con cui si riesce a
+La sola potenza di calcolo %o pura o di per sé
+non è lo strumento ottimale con cui si riesce a
 ridurre il tempo impiegato ad effettuare un'elaborazione, ma è possibile agire
 su un altro aspetto del \emph{computing} che porta enormi benefici a prescindere
 dalla potenza disponibile, ovverosia l'ottimizzazione dell'algoritmo utilizzato
-per compiere l'elaborazione desiderata. \\
-Un algoritmo non ottimizzato, che non sfrutta quindi tutte le potenzialità
-offerte dalla piattaforma su cui viene implementato, risulterà sempre più lento 
-e meno efficiente di un algoritmo scritto in modo tale da usufruire di tutte le
-caratteristiche del sistema in cui viene implementato; ciò è valido quasi 
-sempre, eccezion fatta per quando la seconda piattaforma è estremamente meno
-performante della prima\footnote{In questo caso la seconda piattaforma risulta
-più lenta, ma rimane comunque più efficiente.}.
+per compiere l'elaborazione desiderata.
+L'ottimizzazione di un algoritmo consiste tipicamente nella ricerca e 
+successiva rimozione di operazioni inutili al fine di incrementarne 
+l'efficienza.
+ %non confondere l'ottimizzazione dell'algoritmo con l'ottimizzazione del 
+ %codice: ottimizzare un algoritmo significa diminuire il numero di operazioni 
+ %per svolgere un lavoro, che non significa proprio sfruttare più risorse 
+ %disponibili nella piattaforma.
 \\ \\ 
 Introducendo un esempio che è caratteristico dell'ambito elettronico e
 telematico, si pensi all'algoritmo per il calcolo della trasformata discreta
 di Fourier; traducendo ``letteralmente'' la formula matematica in codice
 compilabile ed eseguibile da un calcolatore, si ottiene che il peso
-computazionale risulta $O(n^2)$ (ovvero, per una sequenza di $N$ elementi
-servono $N^2$ operazioni), quindi la debolezza di questa implementazione aumenta
-al crescere della sequenza: se quest'ultima fosse lunga 4'096 elementi
+computazionale risulta $O(n^2)$ (ovvero, per una sequenza di $N$ 
+elementi servono $N^2$ operazioni), quindi la debolezza di questo algoritmo 
+%continui a confondere algoritmo e implementazione
+si percepisce di più al crescere della sequenza: %la debolezza non aumenta: 
+%sono i suoi effetti che aumentano
+ se quest'ultima fosse lunga 4'096 elementi
 sarebbero necessarie quasi diciassette milioni di somme e moltiplicazioni. \\
-Se invece si sfruttano le proprietà della DFT e si calcola quest'ultima
-come un calcolo successivo di DFT più piccole (suddividendo la sequenza $x(n)$
-in ingresso in sottosequenze sempre più piccole, effettuando dunque una
-\emph{decimazione nel tempo}) si ottiene un peso computazionale pari a 
-$Nlog_{2}(N)$, che scende a $\frac{N}{2}log_{2}(N)$ se la sequenza è reale
-(ovverosia nella grande maggioranza dei casi). \\
-Riutilizzando l'esempio precedente, si nota come in presenza di una sequenza di 
-4096 elementi sarebbero necessarie rispettivamente circa 50'000 e 25'000 tra
-somme e moltiplicazioni. 
+Se invece si sfruttano le proprietà di simmetria della DFT calcolando 
+quest'ultima attraverso una suddivisione ricorsiva su DFT più piccole 
+(\emph{decimazione nel tempo}) si ottiene un peso computazionale pari a 
+$Nlog_{2}(N)$, che scende a $\frac{N}{2}log_{2}(\frac{N}{2})$ se la sequenza è 
+reale, %Se la sequenza è reale devo calcolarla su N/2 punti..
+come nella grande maggioranza dei casi. %davvero troppi incisi
+\\ Riutilizzando l'esempio precedente, si nota che in presenza di una sequenza 
+di 4096 elementi diventano necessarie solo circa 50'000 somme e 
+moltiplicazioni. %nell'esempio precedente non si parla di sequenze reali, 
+%comunque sarebbe 4096/2 log2(4096/2) = 22528, quindi circa 22'500.. non 
+%sarebbe comunque bello parlare solo qui di sequenze reali in quanto sembra 
+%un'ottimizzazione dovuta alla trasformata veloce. Ho tolto il "tra somme e 
+%moltiplicazioni" perché per essere precisi, la FFT richiede N/2log2(N) 
+%Moltiplicazioni + Nlog2(N) somme
 \\ \\
 Il fattore di \emph{speed-up} del precedente esempio risulta pari a 340$\times$
-nel primo caso e 680$\times$ nel secondo: pur volendo essere ottimisti ed 
+ pur volendo essere ottimisti ed 
 ipotizzando che la prima previsione di Moore fosse rimasta tale all'infinito, 
 sarebbero comunque serviti rispettivamente circa 8.5 e 9.5 anni di sviluppo 
 tecnologico per ottenere un miglioramento paragonabile affidandosi alla pura 
 potenza bruta di un processore, ma avendo in ogni caso un algoritmo che possiede
-grandi limitazioni con sequenze di dimensione crescente.
+grandi limitazioni con sequenze di dimensione crescente. %molto bello questo 
+%discorso
