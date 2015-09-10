@@ -43,6 +43,7 @@
 \usepackage{tabularx}
 \usepackage{nicefrac}
 \usepackage{moresize}
+\usepackage[italian]{babel}
 \captionsetup[figure]{name=Figura}
 \hypersetup{urlcolor=black, colorlinks=true} % Colors hyperlinks in blue - change to black if annoying
 \title{\ttitle} % Defines the thesis title - don't touch this
@@ -188,13 +189,13 @@ The acknowledgements and the people to thank go here, don't forget to include yo
 
 \pagestyle{fancy} % The page style headers have been "empty" all this time, now use the "fancy" headers as defined before to bring them back
 
-\lhead{\emph{Contents}} % Set the left side page header to "Contents"
+\lhead{\emph{Indice}} % Set the left side page header to "Contents"
 \tableofcontents % Write out the Table of Contents    \renewcommand{\chaptername}{}
 
-\lhead{\emph{List of Figures}} % Set the left side page header to "List of Figures"
+\lhead{\emph{Elenco delle Figure}} % Set the left side page header to "List of Figures"
 \listoffigures % Write out the List of Figures
 
-\lhead{\emph{List of Tables}} % Set the left side page header to "List of Tables"
+\lhead{\emph{Elenco delle Tabelle}} % Set the left side page header to "List of Tables"
 \listoftables % Write out the List of Tables
 
 %-------------------------------------------------------------------------------
@@ -205,7 +206,7 @@ The acknowledgements and the people to thank go here, don't forget to include yo
 
 \setstretch{1.5} % Set the line spacing to 1.5, this makes the following tables easier to read
 
-\lhead{\emph{Abbreviations}} % Set the left side page header to "Abbreviations"
+\lhead{\emph{Acronimi}} % Set the left side page header to "Abbreviations"
 \listofsymbols{ll} % Include a list of Abbreviations (a table of two columns)
 {
   % A
@@ -456,7 +457,7 @@ The acknowledgements and the people to thank go here, don't forget to include yo
 
 \label{Bibliography}
 
-\lhead{\emph{Bibliography}} % Change the page header to say "Bibliography"
+\lhead{\emph{Bibliografia}} % Change the page header to say "Bibliography"
 
 \bibliographystyle{unsrtnat} % Use the "unsrtnat" BibTeX style for formatting the Bibliography
 

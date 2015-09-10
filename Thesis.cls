@@ -46,12 +46,12 @@
 \newcommand\bhrule{\typeout{------------------------------------------------------------------------------}}
 
 \newcommand\Declaration[1]{
-\btypeout{Declaration of Authorship}
-\addtotoc{Declaration of Authorship}
+\btypeout{Dichiarazione di Autenticità}
+\addtotoc{Dichiarazione di Autenticità}
 \thispagestyle{plain}
 \null\vfil
 %\vskip 60\p@
-\begin{center}{\huge\bf Declaration of Authorship\par}\end{center}
+\begin{center}{\huge\bf Dichiarazione di Autenticit{\`a}\par}\end{center}
 %\vskip 60\p@
 {\normalsize #1}
 \vfil\vfil\null
@@ -442,8 +442,8 @@
 \refstepcounter{dummy}
 \addcontentsline{toc}{chapter}{#1}}
 \renewcommand\tableofcontents{
-\btypeout{Table of Contents}
-\addtotoc{Contents}
+\btypeout{Tabella dei Contenuti}
+\addtotoc{Indice}
 \begin{spacing}{1}{
     \setlength{\parskip}{1pt}
     \if@twocolumn
@@ -460,8 +460,8 @@
 }\end{spacing}
 }
 \renewcommand\listoffigures{
-\btypeout{List of Figures}
-\addtotoc{List of Figures}
+\btypeout{Elenco delle Figure}
+\addtotoc{Elenco delle Figure}
 \begin{spacing}{1}{
     \setlength{\parskip}{1pt}
     \if@twocolumn
@@ -478,8 +478,8 @@
 }\end{spacing}
 }
 \renewcommand\listoftables{
-\btypeout{List of Tables}
-\addtotoc{List of Tables}
+\btypeout{Elenco delle Tabelle}
+\addtotoc{Elenco delle Tabelle}
 \begin{spacing}{1}{
     \setlength{\parskip}{1pt}
     \if@twocolumn
@@ -495,7 +495,7 @@
     \cleardoublepage
 }\end{spacing}
 }
-\newcommand\listsymbolname{Abbreviations}
+\newcommand\listsymbolname{Acronimi}
 \usepackage{longtable}
 \newcommand\listofsymbols[2]{
 \btypeout{\listsymbolname}
@@ -529,10 +529,10 @@
     \cleardoublepage
 }
 \newcommand\acknowledgements[1]{
-\btypeout{Acknowledgements}
-\addtotoc{Acknowledgements}
+\btypeout{Ringraziamenti}
+\addtotoc{Ringraziamenti}
 \thispagestyle{plain}
-\begin{center}{\huge{\textit{Acknowledgements}} \par}\end{center}
+\begin{center}{\huge{\textit{Ringraziamenti}} \par}\end{center}
 {\normalsize #1}
 \vfil\vfil\null
 
