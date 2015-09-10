@@ -18,9 +18,6 @@ Il calcolatore, dunque, passa dall'essere uno strumento usato per
 eseguire semplici calcoli matematici (in questa categoria potrebbe rientrare
 anche un abaco) a macchina capace di eseguire calcoli matematici anche molto 
 complessi (a cui ci si riferisce talvolta con il termine \emph{elaboratore}).
-\\
-// Aggiungere?
-
 %-------------------------------------------------------------------------------
 %	SECTION 1
 %-------------------------------------------------------------------------------
@@ -219,7 +216,7 @@ sarebbero necessarie quasi diciassette milioni di somme e moltiplicazioni. \\
 Se invece si sfruttano le proprietà di simmetria della DFT calcolando 
 quest'ultima attraverso una suddivisione ricorsiva su DFT più piccole 
 (\emph{decimazione nel tempo}) si ottiene un peso computazionale pari a 
-$Nlog_{2}(N)$, che scende a $\frac{N}{2}log_{2}(\frac{N}{2})$ se la sequenza è 
+$N\log_{2}N$, che scende a $\frac{N}{2}\log_{2}\frac{N}{2}$ se la sequenza è 
 reale, %Se la sequenza è reale devo calcolarla su N/2 punti..
 come nella grande maggioranza dei casi. %davvero troppi incisi
 \\ Riutilizzando l'esempio precedente, si nota che in presenza di una sequenza 
@@ -231,7 +228,7 @@ moltiplicazioni. %nell'esempio precedente non si parla di sequenze reali,
 %moltiplicazioni" perché per essere precisi, la FFT richiede N/2log2(N) 
 %Moltiplicazioni + Nlog2(N) somme
 \\ \\
-Il fattore di \emph{speed-up} del precedente esempio risulta pari a 340$\times$
+Il fattore di \emph{speed-up} del precedente esempio risulta pari a $340\times$
  pur volendo essere ottimisti ed 
 ipotizzando che la prima previsione di Moore fosse rimasta tale all'infinito, 
 sarebbero comunque serviti rispettivamente circa 8.5 e 9.5 anni di sviluppo 

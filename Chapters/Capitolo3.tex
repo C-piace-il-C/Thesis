@@ -18,25 +18,30 @@ queste elaborazioni vengono svolte. \\
 Per fare un esempio nel 1988 venne proposto, all'interno di H.261, lo standard
 \emph{Common Intermediate Format} (CIF) per uniformare la risoluzione verticale
 ed orizzontale delle sequenze video solitamente utilizzate nelle teleconferenze.
-Lo standard prevede una risoluzione pari a 352${\times}$288 pixel ed un
+Lo standard prevede una risoluzione pari a $352{\times}288$ pixel ed un
 \emph{frame rate} pari a 30000/1001 (circa 29.97) \emph{frame} al secondo;
 prendendo in considerazione una codifica senza compressione in uno spazio
 colore RGB con 8 bit per canale ed applicando la formula
 \begin{align*}
   \displaystyle Throughput = \frac{
-  W \cdot H \cdot bit\_depth \cdot fps}{8\cdot10^6} 
+  W \cdot H \cdot bit\_depth\footnotemark[1] \cdot 
+  fps\footnotemark[2]}{8\cdot10^6} 
   \ \nicefrac{\text{MB}}{\text{s}}
 \end{align*}%Perché bit_depth/3? così si ottiene il peso per la trasmissione di 
 %un solo canale..
 %ragazzi.. W*H*bit_depth*fps è il numero di bit per un secondo di video.. 
 %quindi per ottenere i megabyte dobbiamo dividere per 8*10^6
 %e poi MB/s = ... ma è un'unità di misura, dai
+\footnotetext[1]{Il numero di bit per la codifica del colore, in questo caso 
+24.}
+\footnotetext[2]{Il numero di frame al secondo.}
 si ottiene che un secondo di sequenza video pesa circa 9 \emph{megabyte}. \\
 Considerando la capacità tipica di un disco rigido dell'epoca (compresa
 tra i 20 e i 60MB), la sua velocità di scrittura/lettura o la larghezza di 
 banda necessaria a trasmettere una tale sequenza, risulta evidente come la 
 compressione dei dati sia stata una grande necessità; se effettuiamo lo stesso 
-calcolo utilizzando una risoluzione standard moderna (e.g., 1920$\times$1080), 
+calcolo utilizzando una risoluzione standard moderna (e.g., 
+$1920{\times}1080$), 
 otteniamo un peso di circa 187MB per ogni secondo contenuto nella sequenza 
 video. \\
 Sebbene a tutt'oggi le capacità di memorizzazione siano incrementate di fattori
@@ -45,8 +50,8 @@ rispettivamente capacità di 500GB e 8TB con la capacità media di 40MB
 dell'epoca.}, la velocità di trasmissione dei dati non è aumentata di pari 
 passo, mentre è esploso il traffico di contenuti video online; la compressione 
 dei dati rimane comunque anche un'ottima risorsa per
-poter immagazzinare grandi quantità di dati con la possibilità di preservare
-la qualità originale, o almeno quella percepita, di questi ultimi.
+poter immagazzinare grandi quantità di dati preservandone la qualità originale, 
+o almeno quella percepita.
 %-----------------------------------
 %	SUBSECTION 1
 %-----------------------------------

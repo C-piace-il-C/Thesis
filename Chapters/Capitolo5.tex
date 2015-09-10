@@ -25,7 +25,9 @@ funzione. Di conseguenza non è raro che in un sistema \emph{embedded}
 le scelte architetturali e le risorse disponibili siano funzionali
 all'applicazione cui è destinato. Rispetto ai sistemi \emph{general purpose}, 
 questo generalmente comporta la presenza di architetture differenti, come la 
-memoria Harvard e microprocessori RISC anziché CISC, e di hardware 
+memoria Harvard e microprocessori RISC anziché CISC\footnote{\emph{Reduced 
+Instruction Set Computer} e \emph{Complex Instruction Set Computer}.}, e di 
+hardware 
 \emph{custom}, 
 alcune volte addirittura progettato \emph{ad hoc} per determinati compiti.
 \`E proprio 
@@ -82,7 +84,7 @@ La nostra \emph{board} di riferimento, il Banana Pi M1 è di questo tipo. Grande
 poco più d'un pacchetto di sigarette, contiene tutto il necessario per 
 sopperire a diverse esigenze applicative.
 
-Dotato del \emph{System on a Chip} (SOC) Allwinner A20, dispone di una 
+Dotato del \emph{System On a Chip} (SOC) Allwinner A20, dispone di una 
 CPU \emph{dual-core} ARM Cortex-A7 con frequenza di 
 \textit{clock} pari ad 1GHz ed una GPU
 Mediatek Mali-400 MP2 che condividono 1GB di RAM DDR3 di sistema.
@@ -109,7 +111,7 @@ attraverso \emph{network share}.
 
 Possiede infine un connettore \textit{Camera Serial Interface} (CSI) per poter 
 essere collegato ad una videocamera digitale, un ricevitore \textit{InfraRed} 
-(IR), 26 \textit{pin} \textit{General Purpose Input/Output} (GPIO).
+(IR) e 26 \textit{pin} \textit{General Purpose Input/Output} (GPIO).
 
 L'alimentazione avviene via Micro-USB, attraverso la porta dedicata.
 
