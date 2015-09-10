@@ -238,33 +238,36 @@ risultare  marginali, come nel caso delle predizioni diagonali, e dalla ricerca
 di un buon rapporto tra qualità e precedente complessità.
 In seguito a test sperimentali è stato notato che le predizioni dei canali 
 Chroma risultano sempre relativamente morbide; conseguentemente questo 
-filtraggio viene eseguito solo sui canali Luma, e consiste nella modifica dei 
+filtraggio viene eseguito solo sul canale Luma, e consiste nella modifica dei 
 pixel ai bordi all'interno del blocco, secondo le seguenti modalità:
 \begin{enumerate}
 \item \emph{Angular prediction}, angolo verticale: \\
 \begin{align*}
-p(0,y)\mathrel{+}=\left(\frac{p*(-1,y)-p*(-1,-1)}{2}\right) 
-\forall y \in {[0,N-1]}
+p(0,y)\mathrel{+}=\left(\frac{p(-1,y)-p(-1,-1)}{2}\right) 
+\forall\ y \in {[0,N-1]}
+%non so perché TeX appiccichi così la A rovesciata al simbolo successivo
 \end{align*}
 
 \item \emph{Angular prediction}, angolo orizzontale: \\
 \begin{align*}
-p(x,0)\mathrel{+}=\left(\frac{p*(x,-1)-p*(-1,-1)}{2}\right) 
-\forall x \in {[0,N-1]}
+p(x,0)\mathrel{+}=\left(\frac{p(x,-1)-p(-1,-1)}{2}\right) 
+\forall\ x \in {[0,N-1]}
 \end{align*}
 
-\item{ \emph{DC prediction}, posto $dcVal$ il valore della posizione: \\
+\item{ \emph{DC prediction}, posto $\text{dcVal}$ il valore della posizione: \\
+	%reso \text perché altrimenti TeX mette spazio tra V ed a
 \begin{align*}
-p(0,0)=(p*(-1,0)+2dcVal+p*(0,-1)+2)*4
+p(0,0)=(p(-1,0)+2\ \text{dcVal}+p(0,-1)+2)*4
 \end{align*}
 
 Con i campioni ai bordi filtrati nel seguente modo:
 \begin{align*}
-p(x,0)&=(p*(x,-1)+3dcVal+2)*4 \forall y \in {[0,N-1]} \\
-p(0,y)&=(p*(-1,y)+3dcVal+2)*4 \forall y \in {[0,N-1]}
+p(x,0)&=\left[p(x,-1)+3\ \text{dcVal}+2\right]\cdot4\ \forall\ y \in {[0,N-1]} 
+\\
+p(0,y)&=\left[p(-1,y)+3\ \text{dcVal}+2\right]\cdot4\ \forall\ y \in {[0,N-1]}
 \end{align*}
 
-Dove $dcVal \in {[0,1]}$
+Dove $\text{dcVal} \in {[0,1]}$
 }
 \end{enumerate}
 
@@ -289,7 +292,10 @@ L'immagine seguente mostra un esempio di CTB Luma interamente predetto intra: \\
 L'\emph{inter prediction} sfrutta la correlazione temporale dei frame per 
 ottenere una \emph{motion compensated prediction} (MCP), ovvero un PB predetto 
 a partire da PB ``predittori'' che appartengono a frame precedentemente 
-decodificati, supponendo che nel PB predetto essi siano traslati: 
+decodificati, supponendo che siano traslati nel PB predetto:
+% Con questa frase volevo far capire che i PB "predittori" si sono spostati 
+%fisicamente nel posto dove sta il PB predetto, non solo dire che si sono 
+%traslati 
 
 \begin{figure}[H]
   \centering
@@ -319,11 +325,14 @@ Tutto questo viene tradotto nel concetto di \emph{motion vector predictor}
 (MVP); invece di trasmettere un \emph{motion vector} per ogni PB l'encoder 
 trasmette l'errore o la \emph{motion vector difference} (MVD), tra quello 
 predetto a partire da blocchi spazialmente o temporalmente contigui e quello 
-normalmente calcolato con $MVD=MV-MP$.
+normalmente calcolato con $MVD=MV-MVP$.
 Il decoder riceve la MVD e la sintassi necessaria a determinare il MVP (ovvero 
 il tipo di predizione da utilizzare) e può dunque ricavare $MV$ come $MVD+MVP$.
  
-Sebbene gli algoritmi che hanno preceduto H.265 (H.264, AVC) possiedano questo 
+Sebbene anche gli algoritmi che hanno preceduto H.265 (H.264 AVC) %H.264 
+%Advanced 
+%Video Coding è una cosa sola, qui ho sbagliato io nei riassunti
+possiedano questo 
 tipo di predizione, essi si limitano a calcolare $MVP$ come una media dei $MV$ 
 vicini spazialmente: questa strategia non è più applicabile in HEVC a causa 
 dell'elevata flessibilità delle strutture di predizione.
@@ -357,7 +366,8 @@ vicini;
 \item Viene tenuto come riserva un \emph{temporal candidate} derivato da due 
 blocchi co-locati e temporalmente vicini:
 \begin{itemize}
-\item Nel caso che i due \emph{spatial candidate} siano uguali, o se uno di loro
+\item Nel caso che i due \emph{spatial candidate} siano uguali o uno di 
+loro
  non sia disponibile, i due vettori candidati saranno uno spaziale e uno 
 temporale;
 
@@ -371,9 +381,10 @@ non siano disponibili, entrambi i candidati saranno \emph{zero motion vector}.
 \end{itemize}
 
 Gli \emph{spatial candidate} sono ottenuti prendendo in considerazione cinque 
-blocchi spazialmente vicini suddivisi in due gruppi: il gruppo A contenente i 
+blocchi spazialmente vicini suddivisi in due gruppi: il primo contenente i 
 due blocchi in basso a sinistra rispetto a quello che si vuole predire, il 
-gruppo B con al suo interno tre blocchi in alto.
+secondo con i tre blocchi in alto.
+% I nomi A e B facevano riferimento ad un'immagine che non è stata usata
 Generalmente, se i vettori dei blocchi considerati sono riconducibili allo 
 stesso \emph{reference id} (l'indice dell'immagine a cui fanno 
 riferimento) di quello del blocco che si vuole predire, tali vettori saranno 
@@ -423,7 +434,9 @@ uguali parametri di predizione in modo da trasmetterne una sola copia.
 Nel \emph{block-based video coding} i segnali di errore residui che derivano 
 dalle predizioni intra o inter vengono trasformati e quantizzati prima di 
 essere trasmessi.
-Più nel dettaglio, un'immagine è suddivisa in blocchi quadrati di dimensione $NxN$, dove $N=2^M$ con $M \in \mathbb{N}$. Per ogni blocco esisterà un blocco 
+Più nel dettaglio, un'immagine è suddivisa in blocchi quadrati di dimensione 
+$N{\times}N$, dove $N=2^M$ con $M \in \mathbb{N}$. Per ogni blocco esisterà un 
+blocco 
 residuo $U$ che verrà trasformato e quantizzato. \\
 %L'immagine mostra il percorso dei dati durante la fase di encoding (a) e 
 %di decoding (b):
@@ -480,20 +493,23 @@ una moltiplicazione di $Q_s$ per un fattore $2^{\frac{1}{6}}\approx 1.12$, ovver
 nell'incremento di $Q_s$ del $12\%$. Una variazione di $6$ si traduce in un 
 raddoppiamento di $Q_s$ \\
 Si può anche eseguire una quantizzazione \emph{frequency dependent} specificando
- una matrice $w$ con un valore di quantizzazione per ogni frequenza, con un 
+ una matrice $\omega$ con un valore di quantizzazione per ogni frequenza, con 
+ un 
 risultato che risulta il seguente:
 \begin{align*}
-q[x][y] = \frac{tc[x][y]}{q[x][y]*Q_s}+offset
+q[x][y] = \frac{tc[x][y]}{\omega[x][y]\cdot Q_s}+offset
 \end{align*}
 dove $tc$ sono i coefficienti trasformati. \\
 Si ottiene una compressione in quanto i valori, una volta quantizzati, verranno 
 arrotondati all'intero più vicino. Il fine è quello di portare a 0 il maggior 
 numero possibile di coefficienti in modo che la codifica successiva (marcata 
 come \emph{Entropy encode}) sia in grado di comprimere al meglio la sequenza in 
-uscita; dividendo un intero per un numero più grande il risultato sarà più 
+uscita; con $\omega$ si può agire sul denominatore, dividendo un intero per un 
+numero più grande il risultato sarà più 
 vicino a zero. Tipicamente le matrici di quantizzazione possiedono valori più 
-grandi alle basse frequenze e viceversa alle alte, perché il contenuto utile 
+piccoli alle basse frequenze e viceversa alle alte, perché il contenuto utile 
 per il sistema visivo umano è concentrato alle basse frequenze.
+%dividendo le basse frequenze per valori piu grandi le rendo 0
 
 %-------------------------------------------------------------------------------
 %       SECTION 5
@@ -513,7 +529,8 @@ filtraggi: il \emph{deblocking filter} e il \emph{sample adaptive offset} (SAO).
 Questi filtraggi sono chiamati \emph{in-loop filters} perché vengono eseguiti 
 all'interno dei cicli di encoding/decoding, e i risultati vengono utilizzati 
 nei cicli successivi oltre che durante la visualizzazione delle sequenze 
-decodificate; in questo modo si trae vantaggio da questa procedura anche durante
+decodificate; in questo modo si trae vantaggio dalla procedura di filtraggio 
+anche durante
  il decoding dei frame successivi, perché le predizioni inter vengono effettuate
  a valle di frame reference di maggiore qualità.
 \\ \\
@@ -551,7 +568,8 @@ una certa soglia, che dipende dal passo di quantizzazione $Q_p$ secondo una
 \begin{figure}[H]
   \captionsetup{justification=raggedright}
   \centering
-  \includegraphics[scale=0.45]{Figures/Deblocking_filter}
+  \includegraphics[scale=0.3]{Figures/Deblocking_filter}
+  %era veramente troppo grande
     \caption[Filtraggio \emph{deblocking} di tipo \textbf{normal}]
     {Filtraggio \emph{deblocking} di tipo \textbf{normal}: la linea nera mostra
       il confine originale del blocco, la linea grigia tratteggiata quello 
@@ -560,7 +578,7 @@ una certa soglia, che dipende dal passo di quantizzazione $Q_p$ secondo una
 
 L'immagine mostra il risultato di un filtraggio \textbf{normal} eseguito su un 
 vettore di 8 campioni, con questi ultimi appartenenti a due blocchi confinanti 
-chiamati $P$ e $Q$. \\
+chiamati $P$ e $Q$.
 In generale, un filtraggio \textbf{normal} può arrivare a modificare fino a due
 campioni per lato avvicinandoli alla rampa, come accade nell'immagine.
 Il filtraggio \textbf{strong} viene utilizzato nelle aree che racchiudono 
@@ -578,7 +596,8 @@ sono meno importanti per il sistema visivo umano.
 \begin{figure}[H]
   \centering
   \captionsetup{justification=raggedright}
-  \includegraphics[scale=.5]{Figures/deblocking_filter_example}
+  \includegraphics[scale=.42]{Figures/deblocking_filter_example}
+  %una volta stampata, questa era visivamente più grande dell'img originale
   \caption[Esempio di \emph{deblocking filtering}]
           {Esempio di \emph{deblocking filtering} per un CTB, dove le linee
            continue rappresentano i CB, le linee tratteggiate i PB e le linee
@@ -607,7 +626,7 @@ phenomenon}) mostrato nell'immagine.
 \begin{figure}[H]
   \centering
   \captionsetup{justification=raggedright}
-  \includegraphics[scale=0.35]{Figures/SAO_Gibbs}
+  \includegraphics[scale=0.3]{Figures/SAO_Gibbs}
   \caption[Fenomeno di Gibbs]
   	  {Fenomeno di Gibbs, dove la linea tratteggiata rappresenta i
 	   campioni originali mentre la linea continua mostra i campioni
@@ -636,7 +655,8 @@ costante al variare dei campioni e può essere corretto, almeno in media, con un
 \begin{figure}[H]
   \centering
   \captionsetup{justification=raggedright}
-	  \includegraphics[scale=0.5]{Figures/Band_offset}
+	  \includegraphics[scale=0.37]{Figures/Band_offset}
+	  %abbiamo la fissa per le cose grosse, eh?
   \caption[Esempio di \emph{Band Offset}]
   	  {Esempio di \emph{Band Offset}, in cui la linea tratteggiata
 	   rappresenta i campioni originali mentre la linea continua mostra
@@ -671,8 +691,8 @@ teorema di Shannon: la codifica ottima pesa $-log_2p$). \\
 CABAC opera solamente sui \emph{syntax element} all'interno del \emph{binary 
 stream}, ovvero quei dati che contengono principalmente i parametri che 
 riguardano gli algoritmi di codifica; il suo compito è dunque quello di ridurre
-l'\emph{overhead} della side information dovuta alla flessibilità dell'encoder 
-video ibrido. \\
+l'\emph{overhead} della \emph{side information} dovuta alla flessibilità 
+dell'encoder video ibrido. \\
 
 \begin{figure}[H]
   \centering
@@ -726,8 +746,9 @@ risultano essere i seguenti:
 
 \subsection{Context Modeling}\label{ref-context-modeling}
 Questa è la fase in cui avvengono tutte le decisioni \emph{context-based}, tra
-cui la prima è la scelta della modalità di codifica che può essere \emph{
-regular} o \emph{bypass}. Nel secondo caso si suppone una densità di probabilità
+cui la prima è la scelta della modalità di codifica che può essere 
+\emph{regular} o \emph{bypass}. Nel secondo caso si suppone una densità di 
+probabilità
 uniforme e si associa $0.5$ di default ad ogni bit. La codifica \emph{regular}
 può invece dare una probabilità basata sul tipo di \emph{syntax element} e sulla
 posizione del bin, oppure selezionare un modello probabilistico per il bin 
@@ -743,13 +764,14 @@ variano al variare del bin secondo la formula:
 
 \[ p_{LPS} = 
 \begin{cases}
-  \alpha * p_{LPS},         & \quad \text{se bin = } v_{MPS} \\
-  1- \alpha *(1-p_{LPS}),   & \quad \text{altrimenti} \\
+  \alpha\cdot p_{LPS},         & \quad \text{se bin = } v_{MPS} \\
+  1- \alpha\cdot(1-p_{LPS}),   & \quad \text{altrimenti} \\
 \end{cases}
 \]
 
 che deve essere letta come una riassegnazione di valore del parametro all'arrivo
-di un bin; quando i parametri raggiungono il valore massimo vengono scalati
+di un bin, dove $\alpha$ è detto fattore di crescita del modello; quando i 
+parametri raggiungono il valore massimo vengono scalati
 nuovamente.
 %-----------------------------------
 %       SUBSECTION 3
@@ -760,17 +782,20 @@ Il \emph{Regular Arithmetic Encoder} prende in ingresso una sequenza di $N$ bin
 insieme ai relativi valori di $p_{LPS}$, ne calcola la codifica aritmetica e la 
 manda in uscita. La codifica aritmetica consiste nella suddivisione ricorsiva
 di un intervallo, inizialmente lungo $1$, in due intervalli pesati sulle 
-probabilità dei simboli: se il primo simbolo corrispondesse al $MPS$ e si 
-avesse $p_{LPS}=0.2$, allora l'intervallo verrebbe suddiviso in due intervalli,
-il primo, relativo a al $LPS$ lungo $0.2$, il secondo, relativo al $MPS$ lungo
-$0.8$. Visto che il simbolo uscito è un $MPS$ l'intervallo verrà suddiviso in
-due intervalli della lunghezza di $0.8*0.2=0.16$ e $0.8*0.8= 0.64$. \\
-Supponendo che il secondo simbolo sia un $LPS$ verrà scelto l'intervallo lungo
-0.16 (che va da $0.8$ a $0.96$ nell'intervallo iniziale) e così via fino ad
-ottenere l'intervallo finale $F={[a,b[}$ che rappresenta l'intera stringa di
-$N$ bin. \\
+probabilità dei simboli: se si 
+avesse $p_{LPS}=0.2$ (e quindi $p_{MPS}=0.8$), allora l'intervallo 
+verrebbe suddiviso in due intervalli, il primo, relativo al $LPS$ lungo $0.2$, 
+il secondo, relativo al $MPS$ lungo
+$0.8$. Se il primo bin in ingresso fosse un $MPS$, l'intervallo relativo al 
+$MPS$ 
+verrebbe suddiviso nuovamente in due intervalli della lunghezza di 
+$0.8\cdot0.2=0.16$ e $0.8\cdot0.8= 0.64$. \\
+Supponendo che il secondo simbolo sia un $LPS$, verrà scelto l'intervallo lungo
+$0.16$ (che va da $0.8$ a $0.96$ relativamente all'intervallo iniziale) e così 
+via fino ad ottenere l'intervallo finale $F={[a,b[}$ che rappresenta l'intera 
+stringa di $N$ bin. \\
 La codifica aritmetica di $F$ è la sequenza di bit minima che si riferisce ad un
 intervallo completamente contenuto in $F$: l'intervallo cui si riferisce una
 sequenza di bit (e non di bin) si può pensare come l'intervallo che si
 otterrebbe mediante l'algoritmo precedentemente descritto se la suddivisione
-fosse sempre binaria , ovvero quando $p_{LPS} = p_{MPS} = 0.5$.
+fosse sempre binaria, ovvero quando $p_{LPS} = p_{MPS} = 0.5$.
