@@ -1123,7 +1123,7 @@ per l'ottimizzazione, anche se in seguito non sono stati sfruttati tutti.
 	può quindi essere richiamata meno volte di quanto accade esplicitamente nel 
 	codice, o, addiriturra, in posizioni diverse, a patto di non modificare i 
 	parametri in ingresso. \verb|pure| è stato applicato a tutte le 
-	funzioni \verb|xCalcHADs|
+	funzioni \verb|xCalcHADs|.
 	
 	\item\verb|const|\\
 	L'attributo \verb|const| è simile a \verb|pure| ma più restrittivo, visto 
@@ -1140,9 +1140,10 @@ per l'ottimizzazione, anche se in seguito non sono stati sfruttati tutti.
 	programma. Per questo motivo, GCC può evitare le ottimizzazioni più dure 
 	risparmiando risorse che possono essere utilizzate per altre funzioni. 
 	Anche questo attributo non è stato utilizzato in quanto, nonostante tutte 
-	le ottimizzazioni implementate, il software non raggiunge mai i $300$ B di 
-	memoria occupata (neanche $\nicefrac{1}{3}$ di quella disponibile) 
-	\\ //AGGIUNGI CONFRONTO DIMENSIONE ESEGUIBILE opt/non opt.
+	le ottimizzazioni implementate, il software non raggiunge mai i $300$MB di 
+	memoria occupata (neanche $\nicefrac{1}{3}$ di quella disponibile), ed 
+	inoltre il peso dell'eseguibile, in seguito a tutte le ottimizzazioni, è 
+	diminuito di alcuni KB (da $963$ a $954$).
 \end{itemize}
 
 L'utilizzo degli attributi, però, non ha avuto alcun riscontro sulle 
@@ -1159,7 +1160,9 @@ caratteristica. Ne segue che una delle ottimizzazioni più doverose è stata il
 multithreading.
 \par Teoricamente, il limite massimo raggiungibile dallo \emph{speedup} $S$ 
 servendosi 
-di $N$ thread paralleli è proprio $N$, ottenuto secondo la legge di Amdahl
+di $N$ thread paralleli è proprio $N$, ottenuto secondo la legge di Amdahl 
+così formulata\footnote{Amdahl presentò solo una descrizione teorica della 
+propria legge, cui venne data una vera e propria formula solo dopo.}:
 $$S = \frac{1}{(1-P)+\frac{P}{N}}$$
 essendo $P$ la frazione di codice parallelizzabile, dove $1$ corrisponde al 
 $100\%$. Ponendo infatti $P = 1$ si ricava $S = N$. Ovviamente uno speedup 
@@ -1176,10 +1179,9 @@ parallelizzazione dei CTU (\emph{Wavefront Parallel Processing}, WPP) e dei
 frame della sequenza.
 
 \paragraph*{WPP} Questa tecnica consiste nella parallelizzazione della parte di 
-\emph{prediction} ed \emph{entropy coding} a livello di CTU, che vengono 
-suddivisi in righe.
-Come è noto, però, i CTU non sono 
-indipendenti tra loro, e dunque le operazioni che li riguardano non possono 
+\emph{prediction} ed \emph{entropy coding} a livello di CTU. Come è noto, però, 
+i CTU non sono indipendenti tra loro, e dunque le operazioni che li riguardano 
+non possono 
 essere parallelizzate senza i controlli adeguati. Nello specifico la predizione 
 di un CTU, sia essa intra o inter, necessita delle informazioni relative ai 
 blocchi vicini a sinistra, alto-sinitra, alto, alto-destra, come visto nei 
@@ -1189,9 +1191,13 @@ informazioni necessarie al loro lavoro non diventano disponibili. Per quanto
 riguarda l'\emph{entropy coding}, che normalmente richiede la completa codifica 
 del CTU precedente (si veda \ref{ref-context-modeling}) impedendone la 
 parallelizzazione, WPP introduce 
-un 
-cambiamento nella procedura di encoding che consiste nell'utilizzo dello stato 
-del CABAC dopo la codifica del blocco in alto a destra. \\
+un cambiamento nella procedura di encoding che consiste nell'utilizzo dello 
+stato 
+del CABAC dopo la codifica del blocco in alto a destra. Questo espediente 
+consente la parallelizzazione basata su righe di CTU: ogni riga può partire 
+quando sono stati codificati i primi due CTU della riga precedente, in ordine 
+\emph{raster}, dando luogo all'effetto di ``cresta dell'onda'' da cui prende il 
+nome WPP.\\
 Una possibile implementazione di questa tecnica consiste nell'utilizzo di una 
 tavola condivisa tra i thread, per esempio attraverso un riferimento globale, 
 con le informazioni circa lo stato di completamento dei vari CTU. Ogni thread 
@@ -1269,6 +1275,12 @@ Segue uno schema che riassume le due tecniche discusse.
     &
     &
     $\bullet$ $P < 1$ \\
+    &
+    &
+    $\bullet$ Altera il normale funzionamento \\
+    &
+    &
+    \ \ \ dell'encoder \\ 
     
     \hline
     
