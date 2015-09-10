@@ -12,7 +12,7 @@ Completato il progetto è sono stati dedicati gli ultimi giorni ai vari
 I test sono stati fatti sullo stesso file, utilizzando ogni volta i seguenti 
 due file di configurazione creati appositamente.\\
 
-Il primo file specifica il percorso completo alla sequenza d'ingresso, inclusi 
+Il primo specifica il percorso completo alla sequenza d'ingresso, inclusi 
 i dati su risoluzione, \emph{frame rate}, formato dei dati e numero di 
 \emph{frame} da codificare.
 
@@ -30,10 +30,11 @@ FramesToBeEncoded  : 72     # Number of frames to be coded
 Level              : 3.1
 \end{lstlisting}
 
-Il secondo file invece specifica tutti i parametri dell'\emph{encoder}. A puro 
+Il secondo invece specifica tutti i parametri dell'\emph{encoder}. A puro 
 scopo di test è stato definito un \textit{group of pictures} (GOP) in questo 
 modo: il primo frame è sempre un'Intra, seguito dalla seguente struttura 
-ripetuta 3 volte (PBBB). L'intervallo tra due Intra è dunque 12. \\
+ripetuta 3 volte: ``PBBB'' (dove P sta per \textit{predicted}, B per 
+\textit{bilateral}). \\
 Verranno ora discussi i vari risultati. 
 \\ \\
 \textbf{Versione originale}\\
@@ -91,10 +92,9 @@ Verranno ora discussi i vari risultati.
   Di tutte le modifiche effettuate, che risiedono in \textit{branch} separati 
   nella \textit{repository} su GitHub, sono state selezionate ed inglobate solo 
   quelle che avevano portato a miglioramenti nelle prestazioni.
-  Come risultato finale, il tempo complessivo è sceso dagli originali 
+  Come risultato finale il tempo complessivo si è abbassato dagli originali 
   $1552.86$s a $660.92$s, ottenendo quindi uno \textit{speed-up} pari a $2.351$.
-    
-%TODO grafico
+  
 %TODO IF
 
 %HAD    da 198,803,125,750 a 116,394,523,093
