@@ -192,16 +192,18 @@ ciclo di codifica della sequenza di test \verb|highway_cif.yuv|. \\
 
 \begin{table}[H]
   \centering
-  \begin{tabular}{|l|c|l|}
+  \begin{tabular}{|r|c|r|}
     \hline
     Funzione & \% & Instruction Fetch \\ \hline \hline \hline
-    a & aa & aaa \\ \hline
-    b & bb & bbb \\ \hline
-    c & cc & ccc \\ \hline
-    d & dd & ddd \\ \hline
-    e & ee & eee \\ \hline
-    f & ff & fff \\ \hline
-    g & gg & ggg \\ \hline
+    \verb|filter|            & $30.38$ & $1\,359\,764\,918\,025$ \\ \hline
+    \verb|xCalcHADs8x8|      & $25.39$ & $1\,136\,031\,192\,219$ \\ \hline
+    \verb|xRateDistOptQuant| & $ 5.09$ & $   227\,619\,416\,384$ \\ \hline
+    \verb|filterCopy|        & $ 2.58$ & $   115\,495\,814\,774$ \\ \hline
+    \verb|xGetSAD16|         & $ 2.29$ & $   102\,520\,078\,171$ \\ \hline
+    \verb|xGetSAD8|          & $ 2.02$ & $    90\,278\,784\,941$ \\ \hline
+    \verb|xGetSAD32|         & $ 2.01$ & $    90\,077\,132\,509$ \\ \hline
+    \verb|xCalcHADs4x4|      & $ 1.57$ & $    70\,415\,998\,092$ \\ \hline
+    \verb|xGetSAD64|         & $ 0.95$ & $    42\,552\,019\,037$ \\ \hline
   \end{tabular}
   \caption{Le funzioni più influenti.}
   \label{tabel-functions}
