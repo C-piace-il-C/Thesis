@@ -697,8 +697,8 @@ dato largo spazio alle SIMD di ARM: le cosiddette NEON.\\
 La tecnologia NEON permette di accelerare le operazioni matematiche più usate 
 permettendo di effettuare più calcoli in parallelo.\\
 Architettura introdotta con ARMv7, utilizza 32 registri a 64-bit interpretati 
-come ``vettori di elementi''. I registri possono essere accoppiati in modo da 
-lavorare con vettori a 128 bit, ognuno di essi può essere utilizzato come:
+come ``vettori di elementi''. Essi possono essere accoppiati in modo da 
+lavorare con vettori a 128 bit, ognuno dei quali può essere utilizzato come:
 
 \begin{itemize}
   \item Un vettore con 2 elementi da 64 bit ciascuno.
@@ -707,12 +707,12 @@ lavorare con vettori a 128 bit, ognuno di essi può essere utilizzato come:
   \item Un vettore con 16 elementi da 8 bit ciascuno.
 \end{itemize}
 
-Tutti gli elementi (\emph{lanes}) di un vettore devono essere dello stesso 
-tipo, nello specifico possono essere:
+Tutti gli elementi (\emph{lanes}) di un vettore devono essere omogenei, nello 
+specifico:
 
 \begin{itemize}
-  \item Un intero \emph{signed} oppure \emph{unsigned}.
-  \item Un \emph{floating-point} a singola precisione: \verb|float|.
+  \item Interi \emph{signed} oppure \emph{unsigned}.
+  \item \emph{Floating point} a singola precisione: \verb|float|.
 \end{itemize}
 
 Ogni istruzione NEON effettua la \textbf{stessa} operazione su tutti i 
@@ -724,8 +724,8 @@ compilazione relative all'hardware \emph{floating-point}: \verb|-mfpu=neon| e
 \verb|-mfloat-abi=softfp|. Una spiegazione più approfondita dei sopracitati 
 \emph{flag} è stata data nella sezione dedicata alle opzioni di compilazione.\\
 
-Avendo alla mano i dati sulle funzioni più onerose in termini di istruzioni, 
-facendo un controllo incrociato con \emph{log} generato dall'opzione 
+Avendo alla mano i dati sulle funzioni più onerose in termini di istruzioni ed 
+avendo fatto un controllo incrociato col \emph{log} generato dall'opzione 
 \verb|-fopt-info-vec-optimized|, si è osservato che tutte le la quasi totalità 
 di quelle dedicate alle SAD (\emph{Sum of Absolute Differences}) non era stata 
 automaticamente vettorizzata.\\
@@ -821,8 +821,8 @@ inserita un'\emph{intrinsic} dedicata a questa operazione.\\
 Più spinosa è stata la vettorizzazione delle funzioni dedicate al calcolo della 
 trasformata Walsh–Hadamard su blocchi di immagine, già implementata nella sua 
 versione \emph{fast}. Questa categoria di funzioni è stata vettorizzata solo 
-parzialmente ma, essendo le più onerose, il miglioramento prestazionale è stato 
-significativo.\\
+parzialmente ma, essendo tra le più onerose, il miglioramento prestazionale è 
+stato significativo.\\
 
 Di seguito un estratto della versione originale di \verb|xCalcHADs4x4|, presa 
 come esempio:
@@ -937,7 +937,7 @@ vst1q_s32(d + 12, v_d[3]);
 /* ... */
 \end{lstlisting}
 
-Oltre alle precedenti \emph{intrinsic} vengono utilizzate le seguenti:
+In aggiunta alle precedenti \emph{intrinsic} vengono utilizzate le seguenti:
 
 \begin{itemize}
   \item \verb|vsubl_s16(int16x4_t a, int16x4_t b)| (\emph{\textbf{V}ector 
