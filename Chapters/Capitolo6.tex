@@ -209,15 +209,9 @@ ciclo di codifica della sequenza di test \verb|highway_cif.yuv|. \\
   \label{tabel-functions}
 \end{table}
 
-%Motion Estimation	57,241
-%Motion Compensation	18,0275
-%Transform & Quantization	14,74
-%In-loop Filter	0,25
-%CABAC	0,21
-%Intra	0,59
-
-\textbf{\underline{// AGGIUNGERE COME SI E' ARRIVATI AL GRAFICO!! \\}}
-
+Dopo aver riconosciuto le funzioni con un maggior peso si è passati alla 
+classificazione di quest'ultime. Il grafico che segue descrive il peso dei 
+principali moduli dell'\textit{encoder} di HM. \\
 
 \begin{tikzpicture}
   \centering
@@ -240,10 +234,12 @@ ciclo di codifica della sequenza di test \verb|highway_cif.yuv|. \\
     node[anchor=north west] {Transform \& Quant.};
     
     \draw[darkgray] (pc 4)  -- ++(+1.5,0) coordinate (s4) 
-    node[anchor=south west] {Miscellaneous}
+    node[anchor=south west] {Miscellaneous\footnotemark}
     node[anchor=north west] {9.99\%};
     
 \end{tikzpicture}
+
+\footnotetext{SAO, In-Loop Filter, CABAC, Intra prediction.}
 
 %-------------------------------------------------------------------------------
 %	SECTION 6.3
