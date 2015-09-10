@@ -68,7 +68,8 @@ l'ultima versione stabile ufficiale, GCC 5.2, è stata rilasciata poco prima
 del momento della scrittura. La versione più recente disponibile nel 
 \emph{repository} era però la 4.6.3. Abbiamo provato a 
 scaricare e compilare le versioni più nuove dal sito di 
-GCC\footnote{https://gcc.gnu.org/releases.html}, ma, non riuscendoci, abbiamo
+GCC\footnote{Reperibili all'indirizzo https://gcc.gnu.org/releases.html.}, ma, 
+non riuscendoci, abbiamo
 inizialmente deciso di cross-compilare i \emph{software} necessari su altre
 piattaforme più aggiornate (è necessaria una versione $\geq$ 4.7 per avere il
 supporto all'architettura Cortex-A7). \\
@@ -134,7 +135,7 @@ Il primo è stato subito scartato non appena è stato chiaro che il sorgente non
 è compatibile con la piattaforma in nostro possesso (il codice è stato scritto 
 unicamente per architettura x86).\\
 x265 ha mostrato già in partenza ottime performance riuscendo a 
-codificare una sequenza in formato CIF a 1.52 fps, nonostante la versione per 
+codificare una sequenza in formato CIF a 1.52 fsps, nonostante la versione per 
 ARM fosse completamente priva delle funzioni in Assembly presenti per le altre 
 architetture.\\
 HM, infine, nuovamente privo di codice Assembly e scritto in C++ generico, si è 
@@ -179,7 +180,9 @@ lo strumento di interesse, Callgrind; la seconda parte, quella che inizia con
 HM, che è stato precedentemente compilato in \emph{debug} per il 
 \emph{profiling}. \\
 Al termine del suo lavoro Callgrind genera un file testuale, di default 
-denominato \verb|callgrind.out.|\textit{PID} (\textit{Process Identifier}), 
+denominato \verb|callgrind.out.pid|\footnote{PID sta per \textit{Process 
+Identifier}, un numero che identifica il processo in cui è stato eseguito il 
+\emph{profiling}.}, 
 contenente tutti i risultati del \emph{profiling}, anche se in un formato poco 
 \emph{human-friendly}. 
 Per analizzare i risultati abbiamo quindi utilizzato il software 
@@ -347,24 +350,31 @@ seconda categoria.
 %-----------------------------------
 \subsection{Opzioni di Compilazione}
 Per prima cosa abbiamo dedicato del tempo allo studio delle opzioni di 
-compilazione fornite da GCC (\emph{GNU Compiler Collection}) al fine di partire 
+compilazione fornite da GCC al fine di partire 
 da una ``base stabile" da ottimizzare.\\
-Particolare attenzione è stata dedicata ai \emph{flag} dedicati al 
-miglioramento delle performance ed a quelli specifici per ARM.\\
-
-Senza alcuna opzione di compilazione espressa l'obiettivo del compilatore è 
-quello di ridurre il più possibile il costo della compilazione e di rendere al 
+\`E stata prestata particolare attenzione ai \emph{flag} dedicati al 
+miglioramento delle performance ed a quelli specifici per ARM.
+\\ \\
+Se non si fornisce alcuna opzione, il comportamento di default del compilatore 
+è 
+quello di ridurre il più possibile il tempo della compilazione e di rendere al 
 contempo praticabile il \emph{debug} del programma. Per ottenere ciò è 
-necessario in primo luogo che ogni \emph{statement} sia indipendente: è 
-possibile fermare l'esecuzione in qualsiasi punto utilizzando un 
-\emph{breakpoint} al fine di assegnare a piacere valori alle variabili e/o di 
-modificare il \emph{program counter}, ottenendo i risultati attesi dal codice.\\
-
-Il compilatore ottimizza codice basandosi sulla conoscenza che ha del 
-programma. Non tutte le ottimizzazioni sono controllabili direttamente via 
-\emph{flag}. \\
-
-Passiamo ora ad una breve descrizione delle opzioni utilizzate e dei loro 
+necessario in primo luogo che ogni \emph{statement} del codice sorgente sia 
+indipendente all'interno dell'eseguibile: in questo modo è 
+possibile fermarne l'esecuzione in qualsiasi punto utilizzando un 
+\emph{breakpoint} per controllare i valori delle variabili e proseguire 
+l'esecuzione del programma per passsi, per verificare la correttezza del 
+codice.\\
+%non si può modificare direttamente il program counter, e lo scopo primario è 
+%quello di visualizzare il valore delle variabili, non di cambiarlo. Un 
+%generico 
+%controllare è perfetto visto che include entrambi i significati ma ha una 
+%certa tendenza per il primo.
+Utilizzando le giuste opzioni, però, è possibile fare in modo che il 
+compilatore ottimizzi il codice basandosi sulla conoscenza del codice sorgente.
+%Non tutte le ottimizzazioni sono controllabili direttamente via \emph{flag}. 
+%questa la tolgo perché è un'affermazione a sé stante senza esempi.
+Segue una breve descrizione delle opzioni utilizzate e dei loro 
 effetti sull'eseguibile generato.
 
 \paragraph{Famiglia `-O' \\}
@@ -376,54 +386,56 @@ compilatore GCC:
 \begin{itemize}
   
   \item \verb|-O0|\\
-  Opzione predefinita: riduce il tempo di compilazione cercando di dare la 
-  migliore esperienza di \emph{debug} possibile.
+  Opzione predefinita: riduce il tempo di compilazione e rende disponibile la 
+  modalità di \emph{debug} possibile.
   
   \item \verb|-O / -O1|\\
-  Abilita tutte le opzioni specificate da \verb|-O0|.\\
+  %non ci sono opzioni in O0
   Il compilatore cerca di ridurre la dimensione del compilato ed il tempo di 
-  esecuzione utilizzando \emph{flag} che non peggiorano drasticamente il tempo 
-  di compilazione.
+  esecuzione attivando quelle ottimizzazioni che non peggiorano drasticamente 
+  il tempo di compilazione.
   
   \item \verb|-O2|\\
   Abilita tutte le opzioni specificate da \verb|-O / -O1|.\\
-  Vengono eseguite tutte le ottimizzazioni che non coinvolgono un 
+  Vengono attivate, inoltre, tutte quelle ottimizzazioni che non coinvolgono un 
   \emph{trade-off} spazio-velocità. Rispetto al precedente migliora le 
   prestazioni allungando il tempo di compilazione.
   
   \item \verb|-Os|\\
-  Abilita tutte le opzioni specificate da \verb|-O2| che tipicamente non 
-  aumentano la dimensione dell'eseguibile. Vengono eseguite tutte le 
-  ottimizzazioni a favore dello spazio occupato dal compilato. La `s' è un 
-  diminutivo di ``size".
+  Ottimizza con l'obiettivo di ridurre la dimensione dell'eseguibile (la `s' è 
+  l'iniziale di ``size"), abilitando tutte quelle opzioni di \verb|-O2| che 
+  tipicamente non la incrementano. Vengono inoltre eseguite tutte le 
+  ottimizzazioni adibite alla riduzione dello spazio occupato dal compilato.
   
   \item \verb|-O3|\\
   Abilita tutte le opzioni specificate da \verb|-O2|.\\
-  Vengono eseguite tutte le ottimizzazioni a favore della velocità di 
-  esecuzione. 
-  Il tempo di compilazione aumenta così come lo spazio occupato dall'eseguibile 
-  generato. \`E il massimo livello di ottimizzazione possibile insieme ad 
-  \verb|-Ofast|.
+  Vengono eseguite tutte le ottimizzazioni che favoriscono la velocità 
+  d'esecuzione. %cos'è il genio? 
+  Il tempo di compilazione aumenta, così come lo spazio occupato 
+  dall'eseguibile generato. \`E il massimo livello di ottimizzazione possibile 
+  insieme ad \verb|-Ofast|.
   
   \item \verb|-Ofast|\\
   Abilita tutte le opzioni specificate da \verb|-O3|.\\
-  Ignora l'adesione rigorosa allo standard abilitando \verb|-ffast-math|.
+  Oltre a questo, ignora l'adesione rigorosa allo standard attivando 
+  l'ottimizzazione \verb|-ffast-math|.
   
   \item \verb|-Og|\\
-  Ottimizza l'esperienza di \emph{debug} abilitando tutte le opzioni che non 
+  Migliora l'esperienza di \emph{debug} abilitando tutte le ottimizzazioni che 
+  non 
   interferiscono con quest'ultimo.
   
 \end{itemize}
-
-\paragraph{Opzioni di ottimizzazione indipendenti dall'hardware}
+\paragraph{Principali opzioni di compilazione indipendenti dall'hardware}
 
 \begin{itemize}
   
   \item \verb|-ftree-vectorize|\\
   Abilita la vettorizzazione dei \emph{tree}.\\
-  Il compilatore cerca di riorganizzare dati in vettori permettendo così 
+  Il compilatore cerca di riorganizzare i dati in vettori permettendo così 
   l'utilizzo di istruzioni SIMD (\emph{Single Instruction Multiple Data}) al 
-  fine di migliorare il tempo di esecuzione del codice.\\
+  fine di diminuire il tempo di esecuzione del codice.\\ %il tempo non si 
+  %migliora, portanna.
   Essa abilita inoltre \verb|-ftree-loop-vectorize| e 
   \verb|-ftree-slp-vectorize|, che abilitano rispettivamente la vettorizzazione 
   dei \emph{loop} e dei \emph{basic block}.
@@ -431,7 +443,7 @@ compilatore GCC:
   \item \verb|-finline-functions|\\
   Considera tutte le funzioni come candidate per un possibile \emph{inlining}, 
   anche quelle che non sono dichiarate esplicitamente come \verb|inline|.\\
-  Il compilatore decide attraverso un calcolo euristico di effettuare o no 
+  Il compilatore decide attraverso un calcolo euristico se effettuare o no 
   l'\emph{inlining} della funzione.
   
   \item \verb|-funswitch-loops|\\
@@ -444,9 +456,12 @@ compilatore GCC:
   Abilita l'\emph{unrolling} dei \emph{loop} per i quali è possibile 
   determinare il numero di iterazioni a \emph{compile time}.
   
+    \item \verb|-fopt-info-|\emph{options}\\
+    Mostra un \emph{log} contenente informazioni su ciò che è o non è stato 
+    ottimizzato.
 \end{itemize}
 
-\paragraph{Opzioni di ottimizzazione specifiche per l'hardware ARM}
+\paragraph{Opzioni salienti di compilazione specifiche per l'hardware ARM}
 
 \begin{itemize}
   
@@ -475,13 +490,11 @@ compilatore GCC:
   
 \end{itemize}
 
-\paragraph{Opzioni del linguaggio e di \emph{debug}}
+\paragraph{Opzioni di compilazione del linguaggio C e di \emph{debug}}
 
 \begin{itemize}
   
-  \item \verb|-fopt-info-|\emph{options}\\
-  Mostra un \emph{log} contenente informazioni su ciò che è o non è stato 
-  ottimizzato.
+
   
   \item \verb|-std=|\emph{name}\\
   Determina quale standard utilizzare per il linguaggio C da compilare.
@@ -505,37 +518,39 @@ DEBUG_CPPFLAGS    = -g -D_DEBUG
 RELEASE_CPPFLAGS  = -O3 -Wuninitialized
 \end{lstlisting}
 
-Per prima cosa è stato cambiato il livello di ottimizzazione da \verb|-O3| a 
-\verb|-Ofast| per quanto riguarda i \verb|RELEASE_CPPFLAGS|.\\
-Questa modifica è stata effettuata al fine di migliorare le \emph{performance} 
-sulle operazioni matematiche, è stato inoltre verificato che il comportamento 
-del programma non fosse cambiato (\verb|-ffast-math| può portare a risultati 
-sbagliati in certe configurazioni).\\
-Assieme a suddetta modifica è stato cambiato il \emph{flag} \verb|-g| in 
-\verb|-Og| per quanto riguarda i \verb|DEBUG_CPPFLAGS|.\\
-Questo al fine di velocizzare il più possibile il \emph{debug} 
-dell'applicazione, particolarmente lento utilizzando \verb|-g|.\\
-Sono state poi inserite tutte le opzioni relative all'hardware ARM in 
-\verb|CPPFLAGS|, i \emph{flag} condivisi da tutte le configurazioni.\\
-Nello specifico sono state inserite le seguenti voci: \verb|-march=armv7-a|, 
+Per quanto riguarda i \verb|RELEASE_CPPFLAGS|, per prima cosa abbiamo cambiato 
+il livello di ottimizzazione da \verb|-O3| a \verb|-Ofast| per migliorare la 
+\emph{performance} 
+sulle operazioni matematiche, ed abbiamo verificato che il comportamento 
+del programma non fosse stato alterato, dal momento che \verb|-ffast-math| può 
+anche 
+dare luogo a calcoli approssimati in certe configurazioni.\\
+% Se il motivo non è l'approssimazione (posso vederla solo causata da un 
+%decremento dei bit per il calcolo, in modo da velocizzarlo, tipo nel calcolo 
+%parallelo o nelle moltiplicazioni), fatemelo sapere in tempo.
+Oltre alla suddetta modifica abbiamo cambiato l'opzione \verb|-g| in 
+\verb|-Og| nella configurazione \verb|DEBUG_CPPFLAGS|,
+per velocizzare il più possibile il \emph{debug} 
+dell'applicazione, altrimenti sensibilmente lento.\\
+Abbiamo poi inserito in \verb|CPPFLAGS|, ovvero i \emph{flag} condivisi da 
+tutte le configurazioni, tutte le opzioni relative all'hardware ARM.\\
+Nello specifico sono state inserite le seguenti voci:\\ \verb|-march=armv7-a|, 
 \verb|-mtune=cortex-a7|, \verb|-mfpu=neon|, \verb|-mfloat-abi=softfp|.\\
-Subito dopo questa modifica è stato ancora aggiunta ai \verb|RELEASE_CPPFLAGS| 
-l'opzione \verb|-ftree-vectorize|.\\
-
-Prima di iniziare la modifica vera e propria del codice è stata effettuata 
-un'analisi mediante l'utilizzo di \verb|-fopt-info-vec-optimized| al fine di 
-sapere cosa fosse stato già vettorizzato automaticamente da GCC. Questo ci ha 
-permesso di focalizzarci maggiormente sulle funzioni onerose non modificate.\\
-
-\`E stato inoltre deciso di rendere \emph{multithread} il programma.\\
-\`E stato in primo luogo provato il \emph{multithreading} offerto dallo 
-standard C++11, aggiungendo quindi \verb|-std=c++11| alle opzioni esistenti.\\
-Avendo però notato un degrado delle performance generali in \emph{single 
-thread}, sì è deciso di utilizzare la libreria \emph{pthreads} e quindi di 
-sostituire il \emph{flag} \verb|-std=c++11| con \verb|-pthread|.
-
-Il file \verb|makefile.base| finale è quindi il seguente:\\
-
+Infine, abbiamoo aggiunto ai \emph{flag} di \verb|RELEASE_CPPFLAGS| 
+l'opzione \verb|-ftree-vectorize|.
+\\ \\
+Prima di iniziare a modificare il codice sorgente, abbiamo portato a termine 
+una compilazione con la presenza dell'opzione \verb|-fopt-info-vec-optimized| 
+per conoscere cosa fosse già stato vettorizzato automaticamente da GCC. Questo 
+ci ha permesso di focalizzarci dapprima sulle funzioni rimaste invariate.
+\\ \\
+In seguito, avendo deciso di implementare il \emph{multithreading} offerto 
+dalle funzioni della libreria standard C++11, abbiamo aggiunto 
+\verb|-std=c++11| alle opzioni precedenti.
+Avendo però constatato un certo degrado delle performance generali in 
+\emph{single thread}, abbiamo deciso di passare alla libreria \emph{pthreads} 
+sostituendo il \emph{flag} \verb|-std=c++11| con \verb|-pthread|.\\
+Il file \verb|makefile.base| finale è il seguente:\\
 \begin{lstlisting}[language=make]
 # default cpp flags for all configurations
 CPPFLAGS          = -fPIC $(DEFS) -I$(CURDIR)/$(INC_DIR) $(USER_INC_DIRS) -Wall 
@@ -1135,7 +1150,7 @@ performance, che in media sono rimaste invariate. \\
 %-----------------------------------
 %       SUBSECTION 6.4.6
 %-----------------------------------
-\label{sect-multi}\subsection{Multithread}
+\label{sect-multi}\subsection{Multithreading}
 Nonostante l'evoluzione di software ed hardware sia ormai da anni concentrata 
 sulla parallelizzazione, presa in considerazione anche nello standard HEVC, HM 
 non è stato 
