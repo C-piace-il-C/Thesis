@@ -1,14 +1,13 @@
 % Chapter Template
 
 \chapter{L'algoritmo H.265} % Main chapter title
-
 \label{Chapter4} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ChapterX}
 
 \lhead{Capitolo 4. \emph{L'algoritmo H.265}} % Change X to a consecutive 
 %number; this is for the header on each page - perhaps a shortened title
 Per la stesura di questo capitolo è stata fondamentale la consultazione del
-libro \citep{BookHEVC}, il cui contenuto utile allo svolgimento di questa tesi è
-stato studiato, rielaborato e successivamente tradotto come segue. Ogni immagine
+libro \citep{BookHEVC}, il cui contenuto utile allo svolgimento di questa Tesi è
+stato studiato, rielaborato e successivamente proposto come segue. Ogni immagine
 è stata estratta dal suddetto libro o comunque ricreata sulla base di una già
 esistente nello stesso.
 \\ \\
@@ -30,15 +29,16 @@ $64{\times}64$, $32{\times}32$ o $16{\times}16$ pixel.
 Questa ``flessibilità'' nella dimensione del blocco fondamentale 
 della suddivisione è stata introdotta da HEVC, in quanto tutti i suoi 
 predecessori utilizzano un \emph{macroblocco} di $16{\times}16$ pixel; 
-ciò permette a HEVC di sapersi adattare meglio a -e comprimere maggiormente- 
+ciò permette a HEVC di sapersi adattare meglio a - e comprimere maggiormente - 
 video di diverse dimensioni.
 Il CTU è un'unità logica che consiste di tre ulteriori blocchi: Luma, 
 ChromaB e ChromaR (Y, Cb e Cr). Ognuno di questi blocchi è un 
 \emph{coding tree block} (CTB), ed è della stessa dimensione relativa 
 del CTU, sebbene la dimensione effettiva di ogni blocco sia regolata dal 
 \emph{chroma sampling format}: se il formato fosse 4:2:0, tipico di questi 
-encoding, il blocco Y sarebbe $64{\times}64$ pixel, mentre i due blocchi di 
-crominanza risulterebbero di $32{\times}32$ pixel. 
+encoding, ed il blocco Y fosse grande $64{\times}64$ pixel, i due blocchi di 
+crominanza risulterebbero di $32{\times}32$ pixel. %il formato 4:2:0 non dice 
+%nulla sulla dimensione in pixel del blocco Y
 Quando un blocco risulta più piccolo del 
 CTU di partenza (in questo caso, e quasi sempre, i due di crominanza) 
 subisce un \emph{upscaling}: questo comporta una minore definizione e una 
@@ -51,10 +51,11 @@ sensibilità dell'apparato visivo umano alla luminanza rispetto al colore.
 \end{figure}
 Il CTB può essere ulteriormente suddiviso in \emph{coding blocks} (CB), che 
 sono il punto in cui viene decisa quale tipo di \emph{prediction} utilizzare.
-Supponendo di avere un CTB di dimensione 64x64 la suddivisione può essere 
+Supponendo di avere un CTB di dimensione $64{\times}64$ la suddivisione può 
+essere 
 effettuata con CB grandi $64{\times}64$, $32{\times}32$, $16{\times}16$ o 
-$8{\times}8$, ottenendo una struttura detta \emph{quad-tree}, in cui il CTB è
-suddiviso ricorsivamente. 
+$8{\times}8$, secondo una struttura detta \emph{quadtree}, in cui ogni blocco 
+può essere suddiviso ricorsivamente in $4$ blocchi.
 Il CB, così come il CTB, consiste ancora nei tre blocchi Y, Cb e 
 Cr, che definiscono un \emph{coding unit} (CU), ovvero l'unità in cui viene 
 codificato il tipo di predizione. La scelta di quest'ultima è autonoma per ogni 
@@ -62,7 +63,8 @@ CU.
 \begin{figure}[H]
   \centering
   \includegraphics[scale=0.50]{Figures/CTB-CU-CB}
-  \caption[Suddivisione del CTB in CU]{Suddivisione di un CTB 64x64 in una 
+  \caption[Suddivisione del CTB in CU]{Suddivisione di un CTB $64{\times}64$ in 
+  una 
 struttura a \emph{quadtree}}
 \end{figure}
 In caso ci sia bisogno di una maggiore precisione nella predizione (e.g., 
@@ -77,11 +79,15 @@ blocchi precedenti:
 \end{figure}
 Un PB definisce una regione che, per effettuare una predizione, utilizza gli 
 stessi parametri di movimento: il numero di ipotesi di movimento (che può 
-valere uno o due a seconda che si usi l'immagine precedente o quest'ultima 
-e le successiva per cercare il blocco che si è mosso) e, per ognuna di queste, 
-l'indice dell'immagine di riferimento e il vettore di movimento.
-L'insieme dei tre PB, che possiedono lo stesso tipo di suddivisione, 
-forma una \emph{prediction unit} (PU).
+valere uno o due a seconda che si usi una sola immagine precedentemente 
+decodificata, oppure due, per cercare il blocco che si è mosso)
+%non è che si debba usare per forza quella precedente ( e quest'ultima + quella 
+%successiva, quindi quella precedente e la stessa?).
+ e, per ognuna di queste, 
+l'indice dell'immagine di riferimento ed il vettore di movimento.
+L'insieme dei tre PB relativi ai tre canali del colore, che possiedono lo 
+stesso tipo di suddivisione, forma una \emph{prediction unit} (PU).
+%era la prima volta che menzionavi l'esistenza di 3 PB e non si capiva.
 Per effettuare la codifica del segnale di errore un CB viene suddiviso in 
 \emph{transform block}, dando forma ad una struttura a \emph{quadtree} che 
 viene chiamata \emph{residual quadtree} (RQT); solitamente la suddivisione 
@@ -96,13 +102,18 @@ viene chiamata \emph{residual quadtree} (RQT); solitamente la suddivisione
 Su un blocco di campioni contigui che possiedono gli stessi parametri 
 predittivi, siano essi CB o PB, verrà eseguita la stessa 
 \emph{intra prediction}.
-Di quest'ultima esistono due tipologie a seconda delle caratteristiche 
+Di quest'ultima esistono tre tipologie a seconda delle caratteristiche 
 del blocco: in caso di figure e strutture geometriche sarà utilizzata 
 la \emph{angular prediction}, viceversa, se la predizione viene eseguita 
-su contenuti meno strutturati, sarà eseguita una \emph{planar + DC prediction}. 
-In entrambi i casi, la predizione si basa sui campioni contigui (o 
-\emph{neighbour}) al blocco che si trovano a sinistra e a destra di 
+su contenuti meno strutturati, sarà eseguita una \emph{planar prediction} 
+oppure una \emph{DC prediction}.
+%Qui c'è un po' di confusione, la planar non implica la DC, né viceversa.
+%Ci sono a tutti gli effetti 3 possibili predizioni intra
+In ogni caso, la predizione si basa sui campioni contigui (o 
+\emph{neighbour}) al blocco che si trovano a sinistra e in alto rispetto a 
 quest'ultimo.
+%I campioni a destra non si possono utilizzare visto che il blocco a destra non 
+%è ancora stato codificato!
 
 \paragraph*{Pre-filtering}
 Prima di effettuare una delle due predizioni è possibile eseguire uno 
@@ -123,6 +134,8 @@ interpolazioni lineari dei campioni agli estremi (b)
     \subfloat[]{\includegraphics[scale=.35]{Figures/Filtering_a}}
     &
     \subfloat[]{\includegraphics[scale=.35]{Figures/Filtering_b}}
+    % Se hai voglia ci sarebbe da cambiare le lettere da (A), (B) ad (a), (b)
+    % nel grafico, magari dopo vedo se riesco a farlo io
   \end{tabular}
   \caption{I due diversi tipi di \emph{pre-filtering}}
 \end{figure}
@@ -148,6 +161,7 @@ dell'encoder.
   \caption[Definizione degli angoli nella \emph{angular prediction}]
 	  {Definizione degli angoli nella \emph{angular prediction} di HEVC,
            numerati da 2 a 34 con i relativi parametri di spostamento.}
+%Attenzione! i quadretti corrispondenti a V+5 e V+21 non sono colorati
 \end{figure}
 
 Gli angoli prendono il nome di ``modi predittivi'' (\emph{prediction modes}) e 
@@ -168,13 +182,13 @@ per comodità, un array che contiene i campioni di riferimento riposizionati
 nell'ordine che risulta più conveniente per il modo predittivo scelto; infatti 
 ogni campione $p[x][y]$ da predire viene ottenuto mediante l'interpolazione dei 
 due campioni contigui all'interno dell'array di riferimento, con il fattore di 
-interpolazione che risulta essere proporzionale all'angolo -o modo predittivo- 
-selezionato.
+interpolazione che risulta essere proporzionale all'angolo - o modo predittivo 
+- selezionato.
 %-----------------------------------
 %       SUBSECTION 2
 %-----------------------------------
 
-\subsection{DC + Planar prediction }
+\subsection{DC \& Planar prediction }
 \paragraph*{DC} La predizione DC prevede un valore costante per tutto il 
 blocco, determinato dalla media dei valori dei campioni di riferimento che si 
 trovano sopra e a sinistra del blocco.
@@ -186,13 +200,18 @@ riferimento (evidenziati in giallo) con i loro estremi (evidenziati in grigio):
 \begin{align*}
 p[x][y] = 
 %\left
-[&\fcolorbox{yellow}{white}{$(N-1-x)*p(-1,y)$}+
-  \fcolorbox{black!50}{white}{$(x+1)*p(N,-1)$}+\\
- &\fcolorbox{yellow}{white}{$(N-1-y)*p(x,-1)$}+
-  \fcolorbox{black!50}{white}{$(y+1)*p(-1,N)$}+N] \gg log_2(N+1)
+[&\fcolorbox{yellow!60}{yellow!60}{$(N-1-x)\cdot p(-1,y)$}+
+  \fcolorbox{black!10}{black!10}{$(x+1)\cdot p(N,-1)$}+\\
+ &\fcolorbox{yellow!60}{yellow!60}{$(N-1-y)\cdot p(x,-1)$}+
+  \fcolorbox{black!10}{black!10}{$(y+1)\cdot p(-1,N)$}+N] \gg log_2N+1
+  %stava scritto log2N+1, che prende solo N, d'altro canto N è potenza di 2, e  
+  %>> log2(N+1) produce uno shift decimale non definito
 %\right]
+% li ho evidenziati col colore anche all'interno perché mi sembra più carino
+% e poi solo il bordo non è troppo chiaro
 \end{align*} 
-dove $N{\times}N$ è la dimensione del TB.
+dove $N{\times}N$ è la dimensione del PB.
+%questo era sicuramente un errore nei miei riassunti, sorry
 
 \begin{figure}[H]
   \centering
