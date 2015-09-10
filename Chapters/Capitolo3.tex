@@ -23,13 +23,18 @@ Lo standard prevede una risoluzione pari a 352${\times}$288 pixel ed un
 prendendo in considerazione una codifica senza compressione in uno spazio
 colore RGB con 8 bit per canale ed applicando la formula
 \begin{align*}
-  \text{MB}\!/\!\text{s} = 
-  W \cdot H \cdot (bit\_depth \:/\: 3) \cdot frames\!/\!\text{s} \:/\: 1000000
-\end{align*}
+  \displaystyle Throughput = \frac{
+  W \cdot H \cdot bit\_depth \cdot fps}{8\cdot10^6} 
+  \ \nicefrac{\text{MB}}{\text{s}}
+\end{align*}%Perché bit_depth/3? così si ottiene il peso per la trasmissione di 
+%un solo canale..
+%ragazzi.. W*H*bit_depth*fps è il numero di bit per un secondo di video.. 
+%quindi per ottenere i megabyte dobbiamo dividere per 8*10^6
+%e poi MB/s = ... ma è un'unità di misura, dai
 si ottiene che un secondo di sequenza video pesa circa 9 \emph{megabyte}. \\
 Considerando la capacità tipica di un disco rigido dell'epoca (compresa
-tra i 20 e i 60MB) o la larghezza di banda 
-necessaria a trasmettere una tale sequenza, risulta evidente come la 
+tra i 20 e i 60MB), la sua velocità di scrittura/lettura o la larghezza di 
+banda necessaria a trasmettere una tale sequenza, risulta evidente come la 
 compressione dei dati sia stata una grande necessità; se effettuiamo lo stesso 
 calcolo utilizzando una risoluzione standard moderna (e.g., 1920$\times$1080), 
 otteniamo un peso di circa 187MB per ogni secondo contenuto nella sequenza 
@@ -38,29 +43,33 @@ Sebbene a tutt'oggi le capacità di memorizzazione siano incrementate di fattori
 che variano tra le 12'500 e le 200'000 volte\footnote{Sono state confrontate
 rispettivamente capacità di 500GB e 8TB con la capacità media di 40MB 
 dell'epoca.}, la velocità di trasmissione dei dati non è aumentata di pari 
-passo; la compressione dei dati rimane comunque anche un'ottima risorsa per
+passo, mentre è esploso il traffico di contenuti video online; la compressione 
+dei dati rimane comunque anche un'ottima risorsa per
 poter immagazzinare grandi quantità di dati con la possibilità di preservare
-la qualità originale di questi ultimi.
+la qualità originale, o almeno quella percepita, di questi ultimi.
 %-----------------------------------
 %	SUBSECTION 1
 %-----------------------------------
 \subsection{Compressione \emph{lossless}}
 
-Gli algoritmi di compressione senza perdita (\emph{lossless}) sfruttano
-solitamente le ridondanze, di qualsiasi tipo esse siano,  per rappresentare i
+Gli algoritmi di compressione senza perdita (\emph{lossless}) cercano 
+solitamente di rimuovere le ridondanze dovute alle correlazioni naturalmente 
+presenti nell'informazione di interesse, per rappresentare i
 dati nel modo più sintetico possibile senza andare ad intaccare il messaggio
-originale, ovvero senza causare alcuna perdita d'informazione.\\
-
-Il limite di questa classe di algoritmi è definito dal primo teorema di 
+originale, ovvero senza causare alcuna perdita d'informazione.
+\\ \\ %per uniformare il .tex
+Il limite di questa classe di algoritmi è posto dal primo teorema di 
 Shannon, che definisce il significato operativo di entropia e vincola la 
-massima compressione ottenibile; eccetto alcuni casi particolari è estremamente 
+massima compressione ottenibile; normalmente è estremamente 
 dispendioso in termini computazionali avvicinarsi all'esatto limite teorico 
-della compressione.\\
-
+della lunghezza di codifica. %se diciamo eccetto alcuni casi particolari poi 
+%bisognerebbe saperne fare un esempio
+%non sarebbe stato male enunciare il teorema e aggiungere bibliografia
+\\ \\
 Queste tecniche sono necessarie laddove non sia ammessa la corruzione del dato 
-originale: compressione di documenti e programmi ma anche di audio e video ad 
-alta qualità, per applicazioni professionali o di estrazione d'informazione da 
-parte di un calcolatore.
+originale: compressione di documenti e programmi, ma anche di audio e video ad 
+alta qualità per applicazioni professionali o scientifiche, come l'estrazione 
+di informazione da parte di un calcolatore.
 
 %-----------------------------------
 %	SUBSECTION 2
@@ -68,16 +77,18 @@ parte di un calcolatore.
 
 \subsection{Compressione \emph{lossy}}
 
-Se l'applicazione non richiede una ricostruzione esatta del messaggio originale 
-è possibile utilizzare più efficienti algoritmi di compressione con perdita 
-(\emph{lossy}).
-Questa classe di algoritmi ha solitamente come fruitore del risultato l'uomo:
-per questo motivo vengono sfruttate le conoscenze che si hanno dell'apparato 
-audio-visivo al fine di rendere impercettibile la perdita d'informazione, in 
+Se l'applicazione non richiede la ricostruzione esatta del messaggio originale 
+è possibile utilizzare algoritmi di compressione più efficaci, %non efficienti
+ammettendo una certa perdita di informazione (compressione \emph{lossy}).
+Questa classe di algoritmi è pensata su misura d'uomo:
+si sfrutta infatti la conoscenza sugli organi sensoriali umani al 
+fine di rendere impercettibile la perdita d'informazione rimuovendo quel  
+contenuto che non potrebbe comunque essere percepito, in
+%stiamo parlando di compressione in generale, non solo audio video
 aggiunta a tutte le tecniche di compressione \emph{lossless}.
-La resa in termini di dimensioni del dato compresso è molto superiore rispetto 
+La resa della compressione \emph{lossy} è molto superiore rispetto 
 alla variante senza perdita: nel caso di audio ed immagini la dimensione del 
-risultato in uscita rispetto all'originale passa in media dal $50\%$ della 
+risultato rispetto all'originale passa in media dal $50\%$ della 
 variante \emph{lossless} al $10\%$ se viene utilizzata una compressione 
 \emph{lossy}.
 
@@ -98,9 +109,9 @@ variante \emph{lossless} al $10\%$ se viene utilizzata una compressione
 I metodi più diffusi per quanto riguarda la compressione di immagini prevedono 
 l'utilizzo di trasformate con lo scopo di rendere l'immagine più adatta ad 
 essere codificata: questa viene prima divisa in blocchi di dimensioni ridotte, 
-$N \times N$, solitamente quadrate e non superiori a $64 \times 64$.\\
+$N\times N$, solitamente quadrate e non superiori a $64\times64$.\\
 
-Su ogni blocco viene effettuata separatamente una trasformata, 
+Su ogni blocco viene effettuata una trasformata, 
 il cui obiettivo è quello di decorrelare il più possibile il segnale originale.
 La bontà di una trasformata viene solitamente definita in base alle sue 
 capacità di decorrelazione e implementazione veloce.\\
@@ -113,19 +124,21 @@ Tra le trasformate si ricordano:
     Largamente utilizzata in analisi e filtraggio, ha la proprietà di avere un 
     nucleo separabile (rendendo possibile quindi il calcolo della trasformata 
     isolatamente su righe e colonne). Ha una sua implementazione veloce, 
-    \emph{fast Fourier transform} (FFT), che rende il suo utilizzo molto 
+    \emph{Fast Fourier Transform} (FFT), che ne rende l'utilizzo 
+    particolarmente 
     desiderabile.
     
   \item \textbf{\emph{Karhunen–Loève transform} (KLT)}\\
     Fornisce la miglior compressione d'energia rispetto alle altre 
     trasformazioni possibili. Purtroppo la mancanza di un algoritmo veloce e la 
-    necessità di uno studio della covarianza dell'immagine da comprimere per 
-    generare le funzioni base la rendono scarsamente utilizzata.
+    necessità di uno studio della covarianza dell'immagine da comprimere per la 
+    generazione delle funzioni base la rendono scarsamente utilizzata.
     
   \item \textbf{\emph{Discrete Cosine transform} (DCT)}\\
-    Molto simile alla DFT, da cui differisce per l'utilizzo di soli coseni come 
+    Analoga alla DFT, da cui differisce per l'utilizzo di soli coseni come 
     funzioni base.
-    Permette di ottenere una decorrelazione molto simile a quella ottenibile 
+    Permette di ottenere una decorrelazione simile a quella ottenibile %daie 
+    %con ste ripetizioni
     trasformando con la KLT. La presenza di un algoritmo veloce la rende 
     tutt'ora la trasformata più utilizzata per la compressione d'immagini.
    
@@ -142,15 +155,15 @@ Tra le trasformate si ricordano:
 %-----------------------------------
 
 \subsection{Principali algoritmi}
-
-\paragraph{\textit{Run-length encoding} \\}
+  % per uniformare
+  \textbf{Run-length encoding} \\
   La compressione RLE è una forma molto semplice di codifica d'immagine 
   \emph{lossless}: applicata solitamente a immagini in bianco e nero, sfrutta 
   il fatto che pixel bianchi e neri si presentano in sequenza. Invece di 
   trasmettere singolarmente i bit dell'immagine vengono trasmesse le lunghezze 
   (\emph{length}) dei tratti (\emph{run}) aventi lo stesso colore.
-
-\paragraph{\textit{Differential Pulse-Code Modulation lossless} \\}
+  \\ \\
+  \textbf{Differential Pulse-Code Modulation lossless} \\
   La codifica DPCM sfrutta la correlazione tra i \emph{pixel} adiacenti di 
   un'immagine: si prova a predire il valore di un pixel a partire da quelli 
   vicini già conosciuti. Questo tipo di codifica permette di avvicinarsi molto 
@@ -159,9 +172,10 @@ Tra le trasformate si ricordano:
   e se ne fa la differenza con l'originale, ricavando quindi la funzione 
   ``errore'', che verrà in seguito codificata. Il vantaggio rispetto alla 
   semplice codifica dei pixel risiede nel fatto che la suddetta funzione è molto
-  meno correlata all'immagine rispetto all'originale.
-
-\paragraph{\textit{Joint Photographic Experts Group} \\}
+  meno autocorrelata rispetto rispetto all'originale.
+  %l'originale è l'immagine, quindi l'immagine è correlata all'immagine.lul.
+  \\ \\
+  \textbf{Joint Photographic Experts Group} \\
   JPEG è un formato molto utilizzato per la compressione \emph{lossy} di 
   immagini digitali, in particolar modo per quelle fotografiche. La codifica 
   JPEG sfrutta alcune peculiarità del sistema visivo umano per poter comprimere 
@@ -192,8 +206,8 @@ governano tutti gli algoritmi di compressione d'immagini in sequenza.
 
 \subsection{Ridondanza spaziale}
 
-Sfrutta il fatto che ogni immagine (\emph{frame}) del video, presa 
-singolarmente, può essere compressa: valgono infatti tutte le teorie della 
+Sfrutta il fatto che ogni fotogramma (\emph{frame}) del video, preso
+singolarmente, può essere compresso: valgono infatti tutte le teorie della 
 compressione di immagini trattate nel capitolo precedente.
 La sola ridondanza spaziale non è però sufficiente a garantire una buona 
 dimensione del video compresso, a meno ovviamente di non rinunciare a parecchia 
@@ -205,16 +219,20 @@ qualità.
 
 \subsection{Ridondanza temporale}
 
-La vera differenza tra un algoritmo di compressione d'immagine ed uno video sta 
-nello sfruttare la ridondanza temporale dei \emph{frame}. Essendo il video 
-infatti nient'altro che una serie di fotografie prese ad intervalli costanti e 
-molto ravvicinati (il minimo numero possibile affinché l'occhio abbia la 
-percezione di movimento è $24$ immagini al secondo), si sfrutta il fatto che 
-tra due immagini ``vicine'' vi sia una grande correlazione temporale. 
+La vera differenza tra un algoritmo di compressione di immagini ed uno video 
+sta nel fatto che il secondo sfrutta la ridondanza temporale dei \emph{frame}. 
+Essendo infatti il video nient'altro che una serie di immagini dal  
+campionamento uniforme e relativamente frequente (il minor \emph{framerate} 
+possibile affinché 
+l'occhio abbia la 
+percezione del movimento è di $24$ immagini al secondo), si sfrutta il fatto 
+che 
+tra due \emph{frame} %per evitare ripetizioni
+ ``vicini'' vi sia una grande correlazione temporale. 
 Infatti solitamente, a meno di situazioni particolari (come un cambio di scena 
 o un movimento brusco), in due \emph{frame} adiacenti vi sono gli stessi oggetti
-al più spostati di poco rispetto alla loro posizione originale.\\
-
+al più spostati di poco rispetto alla loro posizione originale.
+\\ \\ %per uniformare
 Questa intuizione permette di andare molto oltre il classico $10\%$ della mera 
 compressione basata su ridondanza spaziale arrivando ad addirittura allo 
 $0.39\%$\footnote{Utilizzando un video di risoluzione 4k ($3996\times2160$ 
