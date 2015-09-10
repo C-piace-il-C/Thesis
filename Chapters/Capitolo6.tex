@@ -350,28 +350,30 @@ seconda categoria.
 %-----------------------------------
 \subsection{Opzioni di Compilazione}
 Per prima cosa abbiamo dedicato del tempo allo studio delle opzioni di 
-compilazione fornite da GCC al fine di partire 
-da una ``base stabile" da ottimizzare.\\
+compilazione fornite da GCC al fine di partire da una ``base stabile" da 
+ottimizzare.\\
 \`E stata prestata particolare attenzione ai \emph{flag} dedicati al 
 miglioramento delle performance ed a quelli specifici per ARM.
 \\ \\
 Se non si fornisce alcuna opzione, il comportamento di default del compilatore 
-è 
-quello di ridurre il più possibile il tempo della compilazione e di rendere al 
-contempo praticabile il \emph{debug} del programma. Per ottenere ciò è 
+è quello di ridurre il più possibile il tempo della compilazione e di rendere 
+al contempo praticabile il \emph{debug} del programma. Per ottenere ciò è 
 necessario in primo luogo che ogni \emph{statement} del codice sorgente sia 
-indipendente all'interno dell'eseguibile: in questo modo è 
-possibile fermarne l'esecuzione in qualsiasi punto utilizzando un 
-\emph{breakpoint} per controllare i valori delle variabili e proseguire 
-l'esecuzione del programma per passsi, per verificare la correttezza del 
-codice.\\
+indipendente all'interno dell'eseguibile: in questo modo è possibile fermarne 
+l'esecuzione in qualsiasi punto utilizzando un \emph{breakpoint} per 
+controllare i valori delle variabili, eventualmente assegnarne di nuovi, e 
+proseguire l'esecuzione del programma per passi, verificando la correttezza del 
+codice. \\
 %non si può modificare direttamente il program counter, e lo scopo primario è 
 %quello di visualizzare il valore delle variabili, non di cambiarlo. Un 
 %generico 
 %controllare è perfetto visto che include entrambi i significati ma ha una 
 %certa tendenza per il primo.
-Utilizzando le giuste opzioni, però, è possibile fare in modo che il 
-compilatore ottimizzi il codice basandosi sulla conoscenza del codice sorgente.
+Utilizzando le giuste opzioni è possibile ``addestrare'' al meglio il 
+compilatore per fare in modo che ottimizzi basandosi sulla nostra conoscenza 
+della piattaforma e del programma.
+%fare in modo che il 
+%compilatore ottimizzi il codice basandosi sulla conoscenza del codice sorgente.
 %Non tutte le ottimizzazioni sono controllabili direttamente via \emph{flag}. 
 %questa la tolgo perché è un'affermazione a sé stante senza esempi.
 Segue una breve descrizione delle opzioni utilizzate e dei loro 
@@ -422,8 +424,7 @@ compilatore GCC:
   
   \item \verb|-Og|\\
   Migliora l'esperienza di \emph{debug} abilitando tutte le ottimizzazioni che 
-  non 
-  interferiscono con quest'ultimo.
+  non interferiscono con quest'ultimo.
   
 \end{itemize}
 \paragraph{Principali opzioni di compilazione indipendenti dall'hardware}
@@ -520,23 +521,21 @@ RELEASE_CPPFLAGS  = -O3 -Wuninitialized
 
 Per quanto riguarda i \verb|RELEASE_CPPFLAGS|, per prima cosa abbiamo cambiato 
 il livello di ottimizzazione da \verb|-O3| a \verb|-Ofast| per migliorare la 
-\emph{performance} 
-sulle operazioni matematiche, ed abbiamo verificato che il comportamento 
-del programma non fosse stato alterato, dal momento che \verb|-ffast-math| può 
-anche 
-dare luogo a calcoli approssimati in certe configurazioni.\\
+\emph{performance} sulle operazioni matematiche, ed abbiamo verificato che il 
+comportamento del programma non fosse stato alterato, dal momento che 
+\verb|-ffast-math| può anche dare luogo a calcoli approssimati in certe 
+configurazioni.\\
 % Se il motivo non è l'approssimazione (posso vederla solo causata da un 
 %decremento dei bit per il calcolo, in modo da velocizzarlo, tipo nel calcolo 
 %parallelo o nelle moltiplicazioni), fatemelo sapere in tempo.
-Oltre alla suddetta modifica abbiamo cambiato l'opzione \verb|-g| in 
-\verb|-Og| nella configurazione \verb|DEBUG_CPPFLAGS|,
-per velocizzare il più possibile il \emph{debug} 
-dell'applicazione, altrimenti sensibilmente lento.\\
+Oltre alla suddetta modifica abbiamo cambiato l'opzione \verb|-g| in \verb|-Og| 
+nella configurazione \verb|DEBUG_CPPFLAGS|, per velocizzare il più possibile il 
+\emph{debug} dell'applicazione, altrimenti sensibilmente lento.\\
 Abbiamo poi inserito in \verb|CPPFLAGS|, ovvero i \emph{flag} condivisi da 
 tutte le configurazioni, tutte le opzioni relative all'hardware ARM.\\
 Nello specifico sono state inserite le seguenti voci:\\ \verb|-march=armv7-a|, 
 \verb|-mtune=cortex-a7|, \verb|-mfpu=neon|, \verb|-mfloat-abi=softfp|.\\
-Infine, abbiamoo aggiunto ai \emph{flag} di \verb|RELEASE_CPPFLAGS| 
+Infine, abbiamo aggiunto ai \emph{flag} di \verb|RELEASE_CPPFLAGS| 
 l'opzione \verb|-ftree-vectorize|.
 \\ \\
 Prima di iniziare a modificare il codice sorgente, abbiamo portato a termine 
@@ -697,8 +696,8 @@ dato largo spazio alle SIMD di ARM: le cosiddette NEON.\\
 La tecnologia NEON permette di accelerare le operazioni matematiche più usate 
 permettendo di effettuare più calcoli in parallelo.\\
 Architettura introdotta con ARMv7, utilizza 32 registri a 64-bit interpretati 
-come ``vettori di elementi''. I registri possono essere accoppiati in modo da 
-lavorare con vettori a 128 bit, ognuno di essi può essere utilizzato come:
+come ``vettori di elementi''. Essi possono essere accoppiati in modo da 
+lavorare con vettori a 128 bit, ognuno dei quali può essere utilizzato come:
 
 \begin{itemize}
   \item Un vettore con 2 elementi da 64 bit ciascuno.
@@ -707,12 +706,12 @@ lavorare con vettori a 128 bit, ognuno di essi può essere utilizzato come:
   \item Un vettore con 16 elementi da 8 bit ciascuno.
 \end{itemize}
 
-Tutti gli elementi (\emph{lanes}) di un vettore devono essere dello stesso 
-tipo, nello specifico possono essere:
+Tutti gli elementi (\emph{lanes}) di un vettore devono essere omogenei, nello 
+specifico:
 
 \begin{itemize}
-  \item Un intero \emph{signed} oppure \emph{unsigned}.
-  \item Un \emph{floating-point} a singola precisione: \verb|float|.
+  \item Interi \emph{signed} oppure \emph{unsigned}.
+  \item \emph{Floating point} a singola precisione: \verb|float|.
 \end{itemize}
 
 Ogni istruzione NEON effettua la \textbf{stessa} operazione su tutti i 
@@ -724,8 +723,8 @@ compilazione relative all'hardware \emph{floating-point}: \verb|-mfpu=neon| e
 \verb|-mfloat-abi=softfp|. Una spiegazione più approfondita dei sopracitati 
 \emph{flag} è stata data nella sezione dedicata alle opzioni di compilazione.\\
 
-Avendo alla mano i dati sulle funzioni più onerose in termini di istruzioni, 
-facendo un controllo incrociato con \emph{log} generato dall'opzione 
+Avendo alla mano i dati sulle funzioni più onerose in termini di istruzioni ed 
+avendo fatto un controllo incrociato col \emph{log} generato dall'opzione 
 \verb|-fopt-info-vec-optimized|, si è osservato che tutte le la quasi totalità 
 di quelle dedicate alle SAD (\emph{Sum of Absolute Differences}) non era stata 
 automaticamente vettorizzata.\\
@@ -821,8 +820,8 @@ inserita un'\emph{intrinsic} dedicata a questa operazione.\\
 Più spinosa è stata la vettorizzazione delle funzioni dedicate al calcolo della 
 trasformata Walsh–Hadamard su blocchi di immagine, già implementata nella sua 
 versione \emph{fast}. Questa categoria di funzioni è stata vettorizzata solo 
-parzialmente ma, essendo le più onerose, il miglioramento prestazionale è stato 
-significativo.\\
+parzialmente ma, essendo tra le più onerose, il miglioramento prestazionale è 
+stato significativo.\\
 
 Di seguito un estratto della versione originale di \verb|xCalcHADs4x4|, presa 
 come esempio:
@@ -937,7 +936,7 @@ vst1q_s32(d + 12, v_d[3]);
 /* ... */
 \end{lstlisting}
 
-Oltre alle precedenti \emph{intrinsic} vengono utilizzate le seguenti:
+In aggiunta alle precedenti \emph{intrinsic} vengono utilizzate le seguenti:
 
 \begin{itemize}
   \item \verb|vsubl_s16(int16x4_t a, int16x4_t b)| (\emph{\textbf{V}ector 
