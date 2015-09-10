@@ -184,9 +184,15 @@ Tra le trasformate si ricordano:
   dell'algoritmo: JPEG/Exif è il più comune nelle immagini generate da 
   fotocamere digitali mentre JPEG/JFIF è utilizzato maggiormente per salvare e 
   trasmettere immagini su Internet, questo per citare solo le due versioni più 
-  utilizzate.
-
-%TODO chroma subsampling
+  utilizzate. \\
+  Tra le varie strategie sfruttate da JPEG per aumentare la compressione si 
+  ricorda il \textit{chroma subsampling}, il sottocampionamento del piano 
+  colore. L'occhio umano, infatti, percepisce meglio le variazioni di 
+  \textit{luma} (luminosità) rispetto a quelle di \textit{chroma} (colore).
+  %TODO spiegare che YCrCb è uno spazio colore completo, si può passare da RGB 
+  %a YCrCb senza perdita.
+  Si può quindi operare una riduzione della risoluzione dedicata ai due piani 
+  colore Cr e Cb senza visibili peggioramenti della qualità.
 
 %-------------------------------------------------------------------------------
 %       SECTION 3
