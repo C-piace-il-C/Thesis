@@ -92,7 +92,7 @@ viene chiamata \emph{residual quadtree} (RQT); solitamente la suddivisione
 %-------------------------------------------------------------------------------
 %	SECTION 2
 %-------------------------------------------------------------------------------
-\section{Intra prediction}
+\section{Intra prediction}\label{ref-intra}
 Su un blocco di campioni contigui che possiedono gli stessi parametri 
 predittivi, siano essi CB o PB, verrà eseguita la stessa 
 \emph{intra prediction}.
@@ -266,7 +266,7 @@ L'immagine seguente mostra un esempio di CTB Luma interamente predetto intra: \\
 %       SECTION 3
 %-------------------------------------------------------------------------------
 
-\section{Inter Prediction}
+\section{Inter Prediction}\label{ref-inter}
 L'\emph{inter prediction} sfrutta la correlazione temporale dei frame per 
 ottenere una \emph{motion compensated prediction} (MCP), ovvero un PB predetto 
 a partire da PB ``predittori'' che appartengono a frame precedentemente 
@@ -705,7 +705,7 @@ risultano essere i seguenti:
 %       SUBSECTION 2
 %-----------------------------------
 
-\subsection{Context Modeling}
+\subsection{Context Modeling}\label{ref-context-modeling}
 Questa è la fase in cui avvengono tutte le decisioni \emph{context-based}, tra
 cui la prima è la scelta della modalità di codifica che può essere \emph{
 regular} o \emph{bypass}. Nel secondo caso si suppone una densità di probabilità
