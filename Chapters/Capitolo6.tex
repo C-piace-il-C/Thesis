@@ -759,7 +759,7 @@ for ( ; iRows != 0; iRows -= iSubStep)
 
 Dove \verb|Distortion| è del tipo \verb|uint32_t| (rappresentante un intero 
 \emph{unsigned} a 32-bit), mentre \verb|piOrg| e \verb|piCur| sono del tipo 
-\verb|int16_t*| (rappresentanti un \emph{array} di interi \emph{signed} a 
+\verb|int16_t *| (rappresentanti un \emph{array} di interi \emph{signed} a 
 16-bit).\\
 Il codice si presta molto bene ad essere vettorizzato utilizzando le SIMD NEON:
 
