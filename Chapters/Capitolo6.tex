@@ -348,7 +348,7 @@ seconda categoria.
 %-----------------------------------
 %       SUBSECTION 6.4.1
 %-----------------------------------
-\subsection{Opzioni di Compilazione}
+\subsection{Opzioni di Compilazione}\label{ref-compiling-optionos}
 Per prima cosa abbiamo dedicato del tempo allo studio delle opzioni di 
 compilazione fornite da GCC al fine di partire da una ``base stabile" da 
 ottimizzare.\\
@@ -691,49 +691,53 @@ esula alle nostre competenze.
 %-----------------------------------
 \subsection{Intrinsic NEON}
 
-Tra le varie ottimizzazioni che implicavano la modifica del codice, è stato 
+Tra le varie ottimizzazioni che implicavano la modifica del codice, abbiamo
 dato largo spazio alle SIMD di ARM: le cosiddette NEON.\\
-La tecnologia NEON permette di accelerare le operazioni matematiche più usate 
-permettendo di effettuare più calcoli in parallelo.\\
-Architettura introdotta con ARMv7, utilizza 32 registri a 64-bit interpretati 
-come ``vettori di elementi''. Essi possono essere accoppiati in modo da 
-lavorare con vettori a 128 bit, ognuno dei quali può essere utilizzato come:
+La tecnologia SIMD permette di accelerare le operazioni matematiche svolte su 
+più dati consentendo di effettuare i calcoli in parallelo.\\
+In particolare, l'architettura NEON introdotta con ARMv7 possiede 32 registri a 
+64-bit interpretati 
+come vettori di elementi detti \emph{lane}. I registri possono essere 
+accoppiati in 
+modo da funzionare come un unico vettore da 128 bit, le cui configurazioni 
+possibili sono:
 
 \begin{itemize}
-  \item Un vettore con 2 elementi da 64 bit ciascuno.
-  \item Un vettore con 4 elementi da 32 bit ciascuno.
-  \item Un vettore con 8 elementi da 16 bit ciascuno.
-  \item Un vettore con 16 elementi da 8 bit ciascuno.
+  \item 2 \emph{lane} da 64 bit ciascuno.
+  \item 4 \emph{lane} da 32 bit ciascuno.
+  \item 8 \emph{lane} da 16 bit ciascuno.
+  \item 16 \emph{lane} da 8 bit ciascuno.
 \end{itemize}
 
-Tutti gli elementi (\emph{lanes}) di un vettore devono essere omogenei, nello 
+Tutti gli elementi di un vettore devono essere omogenei, nello 
 specifico:
 
 \begin{itemize}
   \item Interi \emph{signed} oppure \emph{unsigned}.
-  \item \emph{Floating point} a singola precisione: \verb|float|.
+  \item \emph{Floating point} a singola precisione (\verb|float|).
 \end{itemize}
 
 Ogni istruzione NEON effettua la \textbf{stessa} operazione su tutti i 
-\emph{lane}.\\
-
+\emph{lane}.
+\\ \\
 Per poter utilizzare le \emph{intrinsic} NEON in un contesto C (ma anche C++) è 
 necessario includere la libreria \verb|arm_neon.h| ed aggiungere le opzioni di 
 compilazione relative all'hardware \emph{floating-point}: \verb|-mfpu=neon| e 
-\verb|-mfloat-abi=softfp|. Una spiegazione più approfondita dei sopracitati 
-\emph{flag} è stata data nella sezione dedicata alle opzioni di compilazione.\\
-
-Avendo alla mano i dati sulle funzioni più onerose in termini di istruzioni ed 
-avendo fatto un controllo incrociato col \emph{log} generato dall'opzione 
-\verb|-fopt-info-vec-optimized|, si è osservato che tutte le la quasi totalità 
-di quelle dedicate alle SAD (\emph{Sum of Absolute Differences}) non era stata 
-automaticamente vettorizzata.\\
-
-Il lavoro con le \emph{intrinsic} è iniziato da lì. Verranno spiegati i 
-passaggi a partire dal codice originale di \verb|xGetSAD8|, il procedimento è 
-stato riprodotto in modo analogo per tutte le altre funzioni.\\
-
-%TODO sostituire [language=C] con lo stile personalizzato.
+\verb|-mfloat-abi=softfp|. Una spiegazione più approfondita delle sopracitate 
+opzioni è presente nella sezione \ref{ref-compiling-optionos}.
+\\ \\ 
+Avendo controllato, \emph{log} di 
+\verb|-fopt-info-vec-optimized| alla mano, tutte le funzioni precedentemente 
+rintracciate come le più pesanti, abbiamo osservato che la quasi totalità 
+di quelle relative alle \emph{Sum of Absolute Differences} (SAD) non viene
+vettorizzata automaticamente da GCC. Il lavoro con le \emph{intrinsic} è 
+iniziato da lì. Segue la spiegazione dei diversi passaggi svolti per la 
+vettorizzazione manuale di tali funzioni, a partire dal codice originale di 
+\verb|xGetSAD8|. Abbiamo replicato il procedimento in maniera analoga per tutte 
+le altre funzioni, e non verrà pertanto ripetuto. Qualora se ne avesse 
+l'interesse, si ricorda che l'intero progetto è 
+online\footnote{Reperibile all'indirizzo https://github.com/C-piace-il-C/HM} e 
+pubblicamente accessibile.\\
 \begin{lstlisting}[language=C]
 Distortion uiSum = 0;
 
@@ -755,14 +759,12 @@ for ( ; iRows != 0; iRows -= iSubStep)
 
 Dove \verb|Distortion| è del tipo \verb|uint32_t| (rappresentante un intero 
 \emph{unsigned} a 32-bit), mentre \verb|piOrg| e \verb|piCur| sono del tipo 
-\verb|int16_t *| (rappresentanti un \emph{array} di interi \emph{signed} a 
+\verb|int16_t*| (rappresentanti un \emph{array} di interi \emph{signed} a 
 16-bit).\\
-
 Il codice si presta molto bene ad essere vettorizzato utilizzando le SIMD NEON:
 
-%TODO sostituire [language=C] con lo stile personalizzato.
 \begin{lstlisting}[language=C]
-// Set all v_iSum lanes to 0
+// Set all of v_iSum lanes to 0
 int16x8_t v_iSum = vdupq_n_s16(0);
 
 for ( ; iRows != 0; iRows -= iSubStep)
@@ -812,21 +814,22 @@ Le \emph{intrinsic} utilizzate sono le seguenti:
       \verb|vec|.      
 \end{itemize}
 
-\`E stato osservato come sia più veloce l'utilizzo di \verb|vgetq_lane_s16| su 
-ogni componente di \verb|v_iSum| al fine di ricavare la somma di tutte le 
-componenti del vettore. Degno di nota il fatto che a partire da ARMv8 sia stata 
-inserita un'\emph{intrinsic} dedicata a questa operazione.\\
-
+Abbiamo osservato come il metodo più veloce per il calcolo della somma di 
+tutte le componenti del vettore sia l'utilizzo di \verb|vgetq_lane_s16| su 
+ogni lane di \verb|v_iSum|.
+Degno di nota il fatto che a partire da ARMv8 sia stata 
+inserita l'\emph{intrinsic} \verb|vaddvq_s16(int16x8_t a)| dedicata proprio a 
+questa operazione.
+\\ \\
 Più spinosa è stata la vettorizzazione delle funzioni dedicate al calcolo della 
 trasformata Walsh–Hadamard su blocchi di immagine, già implementata nella sua 
-versione \emph{fast}. Questa categoria di funzioni è stata vettorizzata solo 
-parzialmente ma, essendo tra le più onerose, il miglioramento prestazionale è 
-stato significativo.\\
-
+versione \emph{fast}. Siamo riusciti a vettorizzare in maniera soddisfacente 
+questa categoria di funzioni solo parzialmente ma, essendo tra le più onerose, 
+il miglioramento prestazionale è stato comunque significativo.
+\\ \\
 Di seguito un estratto della versione originale di \verb|xCalcHADs4x4|, presa 
 come esempio:
 
-%TODO sostituire [language=C] con lo stile personalizzato.
 \begin{lstlisting}[language=C]
 Int k;
 Distortion satd = 0;
@@ -880,19 +883,16 @@ d[12] = m[12] - m[ 8];
 d[13] = m[13] - m[ 9];
 d[14] = m[14] - m[10];
 d[15] = m[15] - m[11];
-
-/* ... */
 \end{lstlisting}
+%non serve mettere il /*...*/ qui in quanto hai già detto che è un estratto
+%e non si tratta di parti la cui assenza compromentte la comprensione del codice
 
 Dove \verb|Int| e \verb|TCoeff| sono entrambi del tipo \verb|int32_t| 
-(rappresentanti un intero \emph{signed} a 32-bit).\\
-
-In questo caso è stata mostrata solo la porzione di codice che ha subito 
-modifiche per un migliore raffronto.\\
-
-Viene ora presentata la versione vettorizzata.
-
-%TODO usare style
+(rappresentanti un intero \emph{signed} a 32-bit). Segue la versione 
+ottimizzata.\\
+%In questo caso è stata mostrata solo la porzione di codice che ha subito 
+%modifiche per un migliore raffronto.
+%Lo hai fatto anche nel caso precedente
 \begin{lstlisting}[language=C]
 Int k;
 Distortion satd = 0;
@@ -932,11 +932,9 @@ vst1q_s32(d     , v_d[0]);
 vst1q_s32(d + 4 , v_d[1]);
 vst1q_s32(d + 8 , v_d[2]);
 vst1q_s32(d + 12, v_d[3]);
-
-/* ... */
 \end{lstlisting}
 
-In aggiunta alle precedenti \emph{intrinsic} vengono utilizzate le seguenti:
+In aggiunta alle precedenti \emph{intrinsic} abbiamo utilizzato le seguenti:
 
 \begin{itemize}
   \item \verb|vsubl_s16(int16x4_t a, int16x4_t b)| (\emph{\textbf{V}ector 
@@ -958,17 +956,13 @@ In aggiunta alle precedenti \emph{intrinsic} vengono utilizzate le seguenti:
 %       SUBSECTION 6.4.4
 %-----------------------------------
 \subsection{Switch}
-
-%TODO rivedere questa frase
 Tra le ottimizzazioni possibili è stato dedicato del tempo alla sostituzione 
 degli \verb|if| a valori costanti con equivalenti \verb|switch|.
 In questi casi, infatti, il compilatore genera una \emph{jump table} basandosi 
 sui valori che può assumere la variabile utilizzata per lo \verb|switch|.\\
-
-Avendo identificato tra le funzioni più onerose \verb|filter|, verranno ora 
-citati due spezzoni di codice da essa:
-
-%TODO aggiungere style
+In particolare, tra le funzioni più onerose, tali costrutti compaioni 
+soprattutto in \verb|filter|, di cui vengono mostrati a seguire due frammenti 
+di codice.
 \begin{lstlisting}
 c[0] = coeff[0];
 c[1] = coeff[1];
@@ -1039,7 +1033,7 @@ switch (N)
     break;
 }
 
-/* ... */
+[...]
 
 switch (N)
 {
@@ -1062,8 +1056,9 @@ switch (N)
 \end{lstlisting}
 
 Riorganizzando il codice come sopra è possibile incrementare le prestazioni: 
-viene effettuato un solo \emph{jump} all'istruzione corretta. Le seguenti sono 
-già riordinate in modo tale da velocizzare il più possibile l'esecuzione del 
+viene infatti effettuato un solo \emph{jump} all'istruzione corretta. Le 
+seguenti sono già riordinate in modo tale da velocizzare il più possibile 
+l'esecuzione del 
 codice.\\
 
 Questa modifica ha, ovviamente, un bassissimo impatto sulle prestazioni 
