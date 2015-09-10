@@ -1133,7 +1133,9 @@ performance, che in media sono rimaste invariate. \\
 %-----------------------------------
 \label{sect-multi}\subsection{Multithread}
 Nonostante l'evoluzione di software ed hardware sia ormai da anni concentrata 
-sulla parallelizzazione, HM non è stato pensato né scritto per tale 
+sulla parallelizzazione, presa in considerazione anche nello standard HEVC, HM 
+non è stato 
+pensato né scritto per tale 
 caratteristica. Ne segue che una delle ottimizzazioni più doverose è stata il 
 multithreading.
 \par Teoricamente, il limite massimo raggiungibile dallo \emph{speedup} $S$ 
@@ -1154,21 +1156,30 @@ caratterizzano il software parallelo. Le tecniche esaminate sono basate sulla
 parallelizzazione dei CTU (\emph{Wavefront Parallel Processing}, WPP) e dei 
 frame della sequenza.
 
-\paragraph*{WPP} Questa tecnica consiste nella parallelizzazione della 
-predizione e 
-dell'entropy coding a livello di CTU. Come è noto, però, i CTU non sono 
+\paragraph*{WPP} Questa tecnica consiste nella parallelizzazione della parte di 
+\emph{prediction} ed \emph{entropy coding} a livello di CTU, che vengono 
+suddivisi in righe.
+Come è noto, però, i CTU non sono 
 indipendenti tra loro, e dunque le operazioni che li riguardano non possono 
-essere parallelizzate senza i controlli adeguati. In particolare, la predizione 
-e l'entropy coding di un CTU necessita delle informazioni relative ai blocchi 
-vicini a sinistra, alto-sinitra, alto, alto-destra /*spiega perché*/. Questo 
+essere parallelizzate senza i controlli adeguati. Nello specifico la predizione 
+di un CTU, sia essa intra o inter, necessita delle informazioni relative ai 
+blocchi vicini a sinistra, alto-sinitra, alto, alto-destra, come visto nei 
+capitoli \ref{ref-intra} e \ref{ref-inter}. Questo 
 significa che i thread devono essere in grado di attendere finché le 
-informazioni necessarie al loro lavoro non diventano disponibili. \\
-Una possibile realizzazione di questa tecnica consiste nell'utilizzo di una 
+informazioni necessarie al loro lavoro non diventano disponibili. Per quanto 
+riguarda l'\emph{entropy coding}, che normalmente richiede la completa codifica 
+del CTU precedente (si veda \ref{ref-context-modeling}) impedendone la 
+parallelizzazione, WPP introduce 
+un 
+cambiamento nella procedura di encoding che consiste nell'utilizzo dello stato 
+del CABAC dopo la codifica del blocco in alto a destra. \\
+Una possibile implementazione di questa tecnica consiste nell'utilizzo di una 
 tavola condivisa tra i thread, per esempio attraverso un riferimento globale, 
-con le informazioni circa lo stato di completamento dei vari CTU. Il codice dei 
-singo thread si occupa quindi di consultare la tabella per decidere se operare 
-sui prossimi CTB oppure attendere /*meglio sleep o nop?*/.\\
-Un'altra complicazione sta nella gestione dell'ordine di esecuzione dei blocchi 
+con le informazioni circa lo stato di completamento dei vari CTU. Ogni thread 
+si deve occupare quindi di consultare la tabella per decidere se 
+operare sui prossimi CTB oppure attendere.\\
+Un'altra complicazione risiede nella gestione dell'ordine di esecuzione dei 
+blocchi 
 per evitare che più thread lavorino sullo stesso CTU. La soluzione più semplice 
 è assegnare ad ogni thread una riga diversa servendosi di \verb|threadid|, un 
 parametro normalmente impostato durante la creazione di un thread che ne 
@@ -1176,14 +1187,15 @@ rappresenta un identificativo unico e incrementale. Un generico thread lavora
 sulla riga $\verb|threadid| + r \cdot N$, dove $r$, inizialmente a $0$, viene 
 incrementato di $1$ ogni volta che si terminata una riga, e $N$ è il numero di 
 thread in parallelo.  \\
-La percentuale di codice parallelizzabile non è il $100\%$ dato che, nonostante 
-la parte predittiva e l'entropy encoding rappresentino buona parte della 
+La percentuale di programma parallelizzabile non è il $100\%$ dato che, 
+nonostante 
+la parte predittiva e di \emph{entropy coding} rappresentino buona parte della 
 codifica H.265, non ne costituiscono comunque la totalità.
 \\ \\
 La seconda tecnica di parallelizzazione consiste nella 
 suddivisione della sequenza di partenza in più parti indipendenti, intendendo 
 con ``parti'' blocchi di frame contigui.\\
-Se $N$ è il numero di core a disposizione, 
+Se $N$ è il numero di core a disposizione 
 si vuole suddividere la sequenza in $N$ parti omogenee (grandi uguale). I frame 
 chiave sono quelli predetti interamente intra, visto che rompono ogni 
 legame di dipendenza con quelli precedenti, e possono servire da riferimento 
@@ -1271,8 +1283,8 @@ Per avviare un thread è necessario costruirne la funzione principale seguendo
 il prototipo \verb|void *(*start_routine)(void*)|. Il parametro di ingresso di 
 tipo \verb|void*| può essere utilizzato per fornire al thread dei dati 
 preliminari, come \verb|threadid|, ma anche degli indirizzi di 
-memoria dove il thread può registrare eventuali risultati o comunicazioni verso 
-il resto del programma, oppure leggere eventuali comandi o dati dinamici 
+memoria dove poter registrare eventuali risultati o comunicazioni verso 
+il resto del programma, oppure leggere dinamicamente eventuali comandi o dati  
 provenienti da altri thread. \\
 Scritta la routine, è possibile richiamare \verb|pthread_create| per creare e 
 far partire il thread. \verb|pthread_join| può essere utilizzata per bloccare 
