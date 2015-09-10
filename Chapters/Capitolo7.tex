@@ -7,7 +7,7 @@
 \lhead{Capitolo 7. \emph{Risultati}} % Change X to a consecutive number; this 
 %is for the header on each page - perhaps a shortened title
 
-Completato il progetto è sono stati dedicati gli ultimi giorni ai vari 
+Completato il progetto sono stati dedicati gli ultimi giorni ai vari 
 \emph{benchmark} sulle singole tecniche di ottimizzazione applicate. 
 I test sono stati fatti sullo stesso file, utilizzando ogni volta i seguenti 
 due file di configurazione creati appositamente.\\
@@ -30,12 +30,15 @@ FramesToBeEncoded  : 72     # Number of frames to be coded
 Level              : 3.1
 \end{lstlisting}
 
-Il secondo invece specifica tutti i parametri dell'\emph{encoder}. A puro 
-scopo di test è stato definito un \textit{group of pictures} (GOP) in questo 
-modo: il primo frame è sempre un'Intra, seguito dalla seguente struttura 
-ripetuta 3 volte: ``PBBB'' (dove P sta per \textit{predicted}, B per 
-\textit{bilateral}). \\
-Verranno ora discussi i vari risultati. 
+Il secondo invece, omesso per brevità, contiene tutti i parametri 
+dell'\emph{encoder} lasciati al valore di \emph{default}, fatta eccezione per 
+il GOP. Infatti, a puro scopo di test, il GOP è stato ridefinito in questo  
+modo: il primo frame è sempre \emph{intra-predicted}, ed è seguito dalla 
+struttura  
+``PBBB''
+ripetuta 3 volte, dove P sta per \textit{predicted} e B per 
+\textit{bipredicted}.\\
+Verranno ora riassunti i risultati ottenuti. 
 \\ \\
 \textbf{Versione originale}\\
   Scaricato il codice sorgente dal \emph{repository} ufficiale di HM, è stato 
@@ -45,18 +48,19 @@ Verranno ora discussi i vari risultati.
   a $1552.86$s.
 \\ \\
 \textbf{Opzioni di compilazione}\\
-  Dopo aver dedicato il tempo necessario al test delle opzioni di compilazione, 
-  i risultati ottenuti sono stati i seguenti: in media si è ottenuto un 
-  miglioramento pari a $144.43$s, portando il tempo totale a $1408.43$s 
-  (\textit{speed-up}: $1.102$).
+  Dopo aver compreso ed aggiunto le opzioni di compilazione
+  si è ottenuto, in media, un miglioramento pari a $144.43$s, per un tempo 
+  totale di $1408.43$s 
+  (\textit{speed-up} $1.102$).
   La versione con le opzioni di compilazione è diventata poi la base per tutti 
-  gli altri test, ogni tempo è quindi da confrontarsi con quello descritto in 
-  questo paragrafo.
+  gli altri test, ogni benchmark è quindi da confrontarsi con quello descritto 
+  in questo paragrafo.
 \\ \\
 \textbf{Assembly}\\
-  I risultati delle funzioni ottimizzate a mano in \emph{assembly}, sebbene 
-  siano state un'ottima esperienza dal punto di vista didattico, purtroppo non 
-  sono stati soddisfacenti. 
+  I risultati delle funzioni ottimizzate a mano in \emph{assembly}, nonostante 
+  queste abbiano avuto un discreto successo all'interno del codice di test, non 
+  sono stati soddisfacenti in HM. %niente commenti personali qui, vanno nel cap 
+  %8
   La durata media si è allungata di $85$s, arrivando a $1493.62$s. Questa 
   opzione è stata quindi scartata.
 \\ \\
@@ -71,28 +75,29 @@ Verranno ora discussi i vari risultati.
   (\textit{speed-up}: $1.148$).
 \\ \\
 \textbf{Switch}\\
-  La sostituzione degli \verb|if| ha portato a vantaggi relativamente bassi in 
-  positivo, di seguito i risultati relativi ad essa.
-  La modifica ha migliorato l'esecuzione di soli $11.14$s, abbassando il tempo 
-  complessivo a $1397.29$s.
+  La sostituzione degli \verb|if| nella funzione \verb|filter| ha portato a 
+  vantaggi relativamente bassi. Più precisamente, la modifica ha migliorato 
+  l'esecuzione di $11.14$s, abbassando il tempo complessivo a $1397.29$s.
 \\ \\
 \textbf{Attributi}\\
-  L'aggiunta di attributi al codice in alcuni casi peggiorava drasticamente il 
-  tempo di esecuzione, in altri invece non lo cambiava affatto. La modifica è 
-  stata infine accantonata, non avendo ottenuto risultati migliori della 
-  versione con le sole opzioni di compilazione, presa come riferimento.
+  L'aggiunta di attributi al codice in alcuni casi ha allungato il tempo di 
+  esecuzione, in altri invece lo ha accorciato, mantenendo la media invariata 
+  rispetto alla versione di riferimento, 
+  indice del fatto che non ha apportato cambiamenti significativi. 
+  Per questo motivo, la modifica è stata accantonata.
 \\ \\
 \textbf{Multithreading}\\
   Il passaggio da un singolo \emph{tread} a due, secondo le modalità 
   specificate nel capitolo dedicato, ha portato grossolanamente ad un raddoppio 
-  delle prestazioni del programma. L'esecuzione si è accorciata di ben 
+  delle prestazioni del programma. La durata dell'esecuzione si è accorciata di 
   $666.87$s, arrivando a $741.56$s (\textit{speed-up}: $1.899$).
 \\ \\
 \textbf{Prestazioni complessive}\\
   Di tutte le modifiche effettuate, che risiedono in \textit{branch} separati 
-  nella \textit{repository} su GitHub, sono state selezionate ed inglobate solo 
-  quelle che avevano portato a miglioramenti nelle prestazioni.
-  Come risultato finale il tempo complessivo si è abbassato dagli originali 
+  nella \textit{repository} su GitHub, sono state selezionate ed inglobate 
+  nella versione finale solo 
+  quelle che hanno portato a miglioramenti nelle prestazioni.
+  Come risultato il tempo complessivo si è abbassato dagli originali 
   $1552.86$s a $660.92$s, ottenendo quindi uno \textit{speed-up} pari a $2.351$.
   
 %TODO IF
