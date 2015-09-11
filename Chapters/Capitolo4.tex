@@ -116,7 +116,7 @@ quest'ultimo.
 %è ancora stato codificato!
 
 \paragraph*{Pre-filtering}
-Prima di effettuare una delle due predizioni è possibile eseguire uno 
+Prima di effettuare una delle predizioni è possibile eseguire uno 
 \emph{smoothing filter} sui campioni di riferimento, che dipende dal tipo di 
 predizione che verrà successivamente eseguita. Le due possibilità sono le 
 seguenti:
@@ -257,7 +257,7 @@ p(x,0)\mathrel{+}=\left(\frac{p(x,-1)-p(-1,-1)}{2}\right)
 \item{ \emph{DC prediction}, posto $\text{dcVal}$ il valore della posizione: \\
 	%reso \text perché altrimenti TeX mette spazio tra V ed a
 \begin{align*}
-p(0,0)=(p(-1,0)+2\ \text{dcVal}+p(0,-1)+2)*4
+p(0,0)=\left[p(-1,0)+2\ \text{dcVal}+p(0,-1)+2\right]\cdot4
 \end{align*}
 
 Con i campioni ai bordi filtrati nel seguente modo:
