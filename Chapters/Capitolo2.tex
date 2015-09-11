@@ -11,8 +11,8 @@ lessico comune il termine \emph{computer}, si è ampiamente esteso. Nei primi
 anni del XIX secolo vennero poste le basi concettuali del computer programmabile, 
 il primo modernamente definibile Turing-completo, da parte di Charles Babbage 
 (non a caso considerato il padre del computer\citep{CBabbage})
-e negli anni '30 del XX secolo proprio Alan Turing definì i principi dell' 
-odierno computer. 
+e negli anni '30 del XX secolo proprio Alan Turing definì i principi 
+dell'odierno computer. 
 \\
 Il calcolatore, dunque, passa dall'essere uno strumento usato per
 eseguire semplici calcoli matematici (in questa categoria potrebbe rientrare
@@ -74,8 +74,8 @@ comuni per stimare una generica potenza di calcolo:
 \item Potenza \emph{grezza} del processore (MIPS, MFLOPS)
 \item Latenza degli accessi in memoria
 \item Latenza delle interfacce I/O
-\item Bandwidth
-\item Throughput
+\item \textit{Bandwidth}
+\item \textbf{Throughput}
 \end{itemize}
 Ognuno di questi fattori ha subito negli anni dei miglioramenti, sopratutto il
 primo grazie alla continua diminuzione della dimensione dei transistor. 
@@ -211,8 +211,8 @@ elementi servono $N^2$ operazioni), quindi la debolezza di questo algoritmo
 %continui a confondere algoritmo e implementazione
 si percepisce di più al crescere della sequenza: %la debolezza non aumenta: 
 %sono i suoi effetti che aumentano
- se quest'ultima fosse lunga 4'096 elementi
-sarebbero necessarie quasi diciassette milioni di somme e moltiplicazioni. \\
+ se quest'ultima fosse lunga $4\,096$ elementi sarebbero necessarie quasi 
+ diciassette milioni di somme e moltiplicazioni. \\
 Se invece si sfruttano le proprietà di simmetria della DFT calcolando 
 quest'ultima attraverso una suddivisione ricorsiva su DFT più piccole 
 (\emph{decimazione nel tempo}) si ottiene un peso computazionale pari a 
@@ -220,7 +220,7 @@ $N\log_{2}N$, che scende a $\frac{N}{2}\log_{2}\frac{N}{2}$ se la sequenza è
 reale, %Se la sequenza è reale devo calcolarla su N/2 punti..
 come nella grande maggioranza dei casi. %davvero troppi incisi
 \\ Riutilizzando l'esempio precedente, si nota che in presenza di una sequenza 
-di 4096 elementi diventano necessarie solo circa 50'000 somme e 
+di $4\,096$ elementi diventano necessarie solo circa $50\,000$ somme e 
 moltiplicazioni. %nell'esempio precedente non si parla di sequenze reali, 
 %comunque sarebbe 4096/2 log2(4096/2) = 22528, quindi circa 22'500.. non 
 %sarebbe comunque bello parlare solo qui di sequenze reali in quanto sembra 
