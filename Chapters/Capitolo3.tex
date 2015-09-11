@@ -23,10 +23,8 @@ Lo standard prevede una risoluzione pari a $352{\times}288$ pixel ed un
 prendendo in considerazione una codifica senza compressione in uno spazio
 colore RGB con 8 bit per canale ed applicando la formula
 \begin{align*}
-  \displaystyle Throughput = \frac{
-  W \cdot H \cdot bit\_depth\footnotemark[1] \cdot 
-  fps\footnotemark[2]}{8\cdot10^6} 
-  \ \nicefrac{\text{MB}}{\text{s}}
+  \frac{W \cdot H \cdot bit\_depth\footnotemark[1] \cdot fps\footnotemark[2]} 
+  {8\cdot10^6} \ \nicefrac{\text{MB}}{\text{s}}
 \end{align*}%Perché bit_depth/3? così si ottiene il peso per la trasmissione di 
 %un solo canale..
 %ragazzi.. W*H*bit_depth*fps è il numero di bit per un secondo di video.. 

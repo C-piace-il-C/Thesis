@@ -46,7 +46,7 @@ maggiore compressione dell'immagine finale, resa ammissibile dalla maggiore
 sensibilità dell'apparato visivo umano alla luminanza rispetto al colore.
 \begin{figure}[H]
   \centering
-    \includegraphics[scale=0.35]{Figures/CTU-CTB}
+    \includegraphics[width=.7\textwidth]{Figures/CTU-CTB}
   \caption{Suddivisione del CTU in CTB}
 \end{figure}
 Il CTB può essere ulteriormente suddiviso in \emph{coding blocks} (CB), che 
@@ -62,7 +62,7 @@ codificato il tipo di predizione. La scelta di quest'ultima è autonoma per ogni
 CU.
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.50]{Figures/CTB-CU-CB}
+  \includegraphics[width=.7\textwidth]{Figures/CTB-CU-CB}
   \caption[Suddivisione del CTB in CU]{Suddivisione di un CTB $64{\times}64$ in 
   una 
 struttura a \emph{quadtree}}
@@ -74,7 +74,7 @@ i \emph{coding block} in \emph{prediction block} (PB), che, in caso di
 blocchi precedenti:
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.75]{Figures/PB}
+  \includegraphics[width=.7\textwidth]{Figures/PB}
   \caption{Possibili strutture di un \emph{prediction block}}
 \end{figure}
 Un PB definisce una regione che, per effettuare una predizione, utilizza gli 
@@ -157,7 +157,7 @@ dell'\textit{encoder}.
 \begin{figure}[H]
   \centering
   \captionsetup{justification=raggedright}
-  \includegraphics[scale=0.6]{Figures/Angular_prediction}
+  \includegraphics[width=1\textwidth]{Figures/Angular_prediction}
   \caption[Definizione degli angoli nella \emph{angular prediction}]
 	  {Definizione degli angoli nella \emph{angular prediction} di HEVC,
            numerati da 2 a 34 con i relativi parametri di spostamento.}
@@ -216,7 +216,7 @@ dove $N{\times}N$ è la dimensione del PB.
 \begin{figure}[H]
   \centering
   \captionsetup{justification=raggedright}
-  \includegraphics[scale=0.25]{Figures/Planar}
+  \includegraphics[width=.9\textwidth]{Figures/Planar}
   \caption[Esempio di \emph{planar prediction}]
           {Esempio di \emph{planar predicition}: il risultato (c) risulta essere
            la media di due interpolazioni, una orizzontale (a) e una verticale 
@@ -276,7 +276,7 @@ L'immagine seguente mostra un esempio di CTB Luma interamente predetto intra: \\
 \begin{figure}[H]
   \centering
   \captionsetup{justification=raggedright}
-  \includegraphics[scale=0.5]{Figures/Intra_coding_example}
+  \includegraphics[width=.8\textwidth]{Figures/Intra_coding_example}
   \caption[Esempio di predizione \emph{intra}]
           {CTB 64$\times$64 dove (a) è l'immagine originale, (b) i possibili
            modi di \emph{intra prediction} sulla base dei CU con predizione
@@ -300,7 +300,7 @@ decodificati, supponendo che siano traslati nel PB predetto:
 \begin{figure}[H]
   \centering
   \captionsetup{justification=raggedright}
-  \includegraphics[scale=0.3]{Figures/Inter_pred}
+  \includegraphics[width=1\textwidth]{Figures/Inter_pred}
   \caption{Concetti e parametri della \emph{inter prediction}}
 \end{figure}
 
@@ -343,7 +343,7 @@ complessità di codifica troppo elevate.
 \begin{figure}[H]
   \captionsetup{justification=raggedright}
   \centering
-  \includegraphics[scale=0.45]{Figures/Inter_pred_2}
+  \includegraphics[width=.9\textwidth]{Figures/Inter_pred_2}
     \caption[Numero massimo di \emph{motion vector} in H.265 e H.264]
     {Numero massimo di \emph{motion vector} in H.265 (a sinistra) e H.264 \\
       (a destra). CTU0 possiede 16 PB Luma 8x4 contigui a CTU1 che è composto da
@@ -420,7 +420,7 @@ uguali parametri di predizione in modo da trasmetterne una sola copia.
 \begin{figure}[H]
   \centering
   \captionsetup{justification=raggedright}
-  \includegraphics[scale=0.30]{Figures/Block_merging}
+  \includegraphics[width=1\textwidth]{Figures/Block_merging}
   \caption[Esempio di \emph{block merging}]
           {Esempio di \emph{block merging} dove a) è l'immagine originale, b)
            l'immagine scomposta in PB secondo la struttura a \emph{quadtree}
@@ -569,7 +569,7 @@ una certa soglia, che dipende dal passo di quantizzazione $Q_p$ secondo una
 \begin{figure}[H]
   \captionsetup{justification=raggedright}
   \centering
-  \includegraphics[scale=0.3]{Figures/Deblocking_filter}
+  \includegraphics[width=.35\textwidth]{Figures/Deblocking_filter}
   %era veramente troppo grande
     \caption[Filtraggio \emph{deblocking} di tipo \textbf{normal}]
     {Filtraggio \emph{deblocking} di tipo \textbf{normal}: la linea nera mostra
@@ -597,7 +597,7 @@ sono meno importanti per il sistema visivo umano.
 \begin{figure}[H]
   \centering
   \captionsetup{justification=raggedright}
-  \includegraphics[scale=.42]{Figures/deblocking_filter_example}
+  \includegraphics[width=.75\textwidth]{Figures/deblocking_filter_example}
   %una volta stampata, questa era visivamente più grande dell'img originale
   \caption[Esempio di \emph{deblocking filtering}]
           {Esempio di \emph{deblocking filtering} per un CTB, dove le linee
@@ -627,7 +627,7 @@ phenomenon}) mostrato nell'immagine.
 \begin{figure}[H]
   \centering
   \captionsetup{justification=raggedright}
-  \includegraphics[scale=0.3]{Figures/SAO_Gibbs}
+  \includegraphics[width=.65\textwidth]{Figures/SAO_Gibbs}
   \caption[Fenomeno di Gibbs]
   	  {Fenomeno di Gibbs, dove la linea tratteggiata rappresenta i
 	   campioni originali mentre la linea continua mostra i campioni
@@ -656,7 +656,7 @@ costante al variare dei campioni e può essere corretto, almeno in media, con un
 \begin{figure}[H]
   \centering
   \captionsetup{justification=raggedright}
-	  \includegraphics[scale=0.37]{Figures/Band_offset}
+	  \includegraphics[width=.75\textwidth]{Figures/Band_offset}
 	  %abbiamo la fissa per le cose grosse, eh?
   \caption[Esempio di \emph{Band Offset}]
   	  {Esempio di \emph{Band Offset}, in cui la linea tratteggiata
@@ -698,7 +698,7 @@ dell'\textit{encoder} video ibrido. \\
 \begin{figure}[H]
   \centering
   \captionsetup{justification=raggedright}
-  \includegraphics[scale=0.35]{Figures/Cabac_overview}
+  \includegraphics[width=1\textwidth]{Figures/Cabac_overview}
   \caption[Percorso di un \emph{syntax element} dentro CABAC]
 	  {Percorso di un singolo \emph{syntax element} all'interno di CABAC,
 	   con i possibili colli di bottiglia segnati in rosso.}
