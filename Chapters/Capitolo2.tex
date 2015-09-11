@@ -77,7 +77,7 @@ comuni per stimare una generica potenza di calcolo:
 \item \textit{Bandwidth}
 \item \textit{Throughput}
 \end{itemize}
-Ognuno di questi fattori ha subito negli anni dei miglioramenti, sopratutto il
+  Ognuno di questi fattori ha subito negli anni dei miglioramenti, sopratutto il
 primo grazie alla continua diminuzione della dimensione dei transistor. 
 %diminuzione del processo costruttivo non ha senso
 \\ \\
@@ -215,10 +215,9 @@ si percepisce di più al crescere della sequenza: %la debolezza non aumenta:
  diciassette milioni di somme e moltiplicazioni. \\
 Se invece si sfruttano le proprietà di simmetria della DFT calcolando 
 quest'ultima attraverso una suddivisione ricorsiva su DFT più piccole 
-(\emph{decimazione nel tempo}) si ottiene un peso computazionale pari a 
-$N\log_{2}N$, che scende a $\frac{N}{2}\log_{2}\frac{N}{2}$ se la sequenza è 
-reale, %Se la sequenza è reale devo calcolarla su N/2 punti..
-come nella grande maggioranza dei casi. %davvero troppi incisi
+(\emph{decimazione nel tempo}) si ottiene che il numero di prodotti scende a
+$N\log_{2}N$ ($\frac{N}{2}\log_2N$ se la sequenza è 
+reale, come nella grande maggioranza dei casi). %davvero troppi incisi
 \\ Riutilizzando l'esempio precedente, si nota che in presenza di una sequenza 
 di $4\,096$ elementi diventano necessarie solo circa $50\,000$ somme e 
 moltiplicazioni. %nell'esempio precedente non si parla di sequenze reali, 
