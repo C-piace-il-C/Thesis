@@ -144,15 +144,15 @@ interpolazioni lineari dei campioni agli estremi (b)
 %-----------------------------------
 
 \subsection{Angular prediction}
-Per la predizione angolare l'encoder deve scegliere uno tra 33 possibili angoli:
- questo tipo di predizione stima in modo accurato le strutture direzionali che 
-sono tipicamente presenti nelle foto, tra cui le più frequenti risultano essere
- quelle orizzontali e verticali.
+Per la predizione angolare l'\textit{encoder} deve scegliere uno tra 33 
+possibili angoli: questo tipo di predizione stima in modo accurato le strutture 
+direzionali che sono tipicamente presenti nelle foto, tra cui le più frequenti 
+risultano essere quelle orizzontali e verticali.
 Per far fronte a quest'ultima circostanza, H.265 predispone gli angoli in modo 
 che siano presenti in numero maggiore intorno alle due direzioni più frequenti;
  il numero totale di angoli e la loro disposizione è il risultato della ricerca 
 di un buon \emph{trade-off} tra qualità e complessità computazionale 
-dell'encoder.
+dell'\textit{encoder}.
 
 \begin{figure}[H]
   \centering
@@ -178,12 +178,12 @@ sigla $H+2$ corrisponde al modo predittivo 9, la sigla $H-2$ al modo predittivo
 11 e così via.
 \\ \\
 Per effettuare le predizioni dei campioni di un blocco viene prima costruito, 
-per comodità, un array che contiene i campioni di riferimento riposizionati 
-nell'ordine che risulta più conveniente per il modo predittivo scelto; infatti 
-ogni campione $p[x][y]$ da predire viene ottenuto mediante l'interpolazione dei 
-due campioni contigui all'interno dell'array di riferimento, con il fattore di 
-interpolazione che risulta essere proporzionale all'angolo - o modo predittivo 
-- selezionato.
+per comodità, un \textit{array} che contiene i campioni di riferimento 
+riposizionati nell'ordine che risulta più conveniente per il modo predittivo 
+scelto; infatti ogni campione $p[x][y]$ da predire viene ottenuto mediante 
+l'interpolazione dei due campioni contigui all'interno dell'\textit{array} di 
+riferimento, con il fattore di interpolazione che risulta essere proporzionale 
+all'angolo - o modo predittivo - selezionato.
 %-----------------------------------
 %       SUBSECTION 2
 %-----------------------------------
@@ -467,11 +467,11 @@ eseguire l'antitrasformata DCT e DST per tutte le possibili dimensioni dei
 blocchi: $4{\times}4$, $8{\times}8$, $16{\times}16$ e $32{\times}32$.
 Queste matrici contengono approssimazioni ad interi con precisione finita dei 
 coefficienti di trasformazione DCT-II; questo sistema riduce di molto la 
-complessità di encoder e decoder, e risolve un problema che era presente in 
-H.261, ovvero la deriva dovuta a lievi disallineamenti nella rappresentazione 
-fixed point dei coefficienti tra la matrice di trasformazione, costruita 
-arbitrariamente dall'implementatore dell'encoder, e quella di antitrasformazione
-fornita dallo standard. \\
+complessità di \textit{encoder} e \textit{decoder}, e risolve un problema che 
+era presente in H.261, ovvero la deriva dovuta a lievi disallineamenti nella 
+rappresentazione \textit{fixed point} dei coefficienti tra la matrice di 
+trasformazione, costruita arbitrariamente dall'implementatore 
+dell'\textit{encoder}, e quella di antitrasformazione fornita dallo standard. \\
 Errori di questo tipo si ripercuotono amplificati in ogni immagine successiva, 
 costringendo a dover trovare un modo di ovviare al problema (il sopracitato 
 H.261 costringeva un aggiornamento periodico del segnale che consisteva in una 
@@ -527,12 +527,12 @@ etc.). Per porre rimedio a questi artefatti lo standard HEVC specifica due
 filtraggi: il \emph{deblocking filter} e il \emph{sample adaptive offset} (SAO).
 \\ \\
 Questi filtraggi sono chiamati \emph{in-loop filters} perché vengono eseguiti 
-all'interno dei cicli di encoding/decoding, e i risultati vengono utilizzati 
-nei cicli successivi oltre che durante la visualizzazione delle sequenze 
-decodificate; in questo modo si trae vantaggio dalla procedura di filtraggio 
-anche durante
- il decoding dei frame successivi, perché le predizioni inter vengono effettuate
- a valle di frame reference di maggiore qualità.
+all'interno dei cicli di \textit{encoding}/\textit{decoding}, e i risultati 
+vengono utilizzati nei cicli successivi oltre che durante la visualizzazione 
+delle sequenze decodificate; in questo modo si trae vantaggio dalla procedura 
+di filtraggio anche durante il \textit{decoding} dei \textit{frame} successivi, 
+perché le predizioni inter vengono effettuate a valle di \textit{frame 
+reference} di maggiore qualità.
 \\ \\
 Il \emph{deblocking filter} si occupa di smussare i confini tra due blocchi in 
 cui è presente una discontinuità, cercando di lavorare solo su quelle 
@@ -550,10 +550,11 @@ sono additivi se eseguiti insieme.
 
 \subsection{Deblocking Filter}
 Il \emph{deblocking filter} si applica solo ai confini tra blocchi di tipo CU, 
-PU o TU e non al loro interno; durante la codifica  l'encoder considera gruppi 
-di quattro vettori di campioni perpendicolari ai confini dei blocchi. 
-Specificamente l'encoder esegue alcuni controlli sul primo e sul quarto vettore 
-per decidere:
+PU o TU e non al loro interno; durante la codifica  l'\textit{encoder} 
+considera gruppi di quattro vettori di campioni perpendicolari ai confini dei 
+blocchi. 
+Specificamente l'\textit{encoder} esegue alcuni controlli sul primo e sul 
+quarto vettore per decidere:
 \begin{itemize}
 \item Se eseguire il filtraggio o meno;
 \item In caso positivo quale filtraggio applicare tra \textbf{normal} e 
@@ -667,13 +668,13 @@ Eventualmente, HEVC permette ulteriori miglioramenti specificando quattro
 \emph{offset}. \\
 Il range dei valori dei campioni viene suddiviso in 32 bande omogenee; se i 
 campioni fossero ad 8 bit, con valori da 0 a 255, le bande avrebbero ampiezza 
-pari a 8. A questo punto l'encoder sceglie le quattro bande contigue che 
-raccolgono la maggior percentuale di errore rispetto al segnale originale e 
+pari a 8. A questo punto l'\textit{encoder} sceglie le quattro bande contigue 
+che raccolgono la maggior percentuale di errore rispetto al segnale originale e 
 determina quattro valori di offset, ovverosia uno per ogni banda. 
 Successivamente viene applicato l'\emph{offset} corrispettivo a tutti i campioni
 il cui valore rientra all'interno di una delle suddette quattro bande; per ogni 
-blocco BO l'encoder deve dunque comunicare l'indice della prima delle quattro 
-bande e i valori di offset.
+blocco BO l'\textit{encoder} deve dunque comunicare l'indice della prima delle 
+quattro bande e i valori di offset.
 
 %-------------------------------------------------------------------------------
 %       SECTION 6
@@ -683,16 +684,16 @@ bande e i valori di offset.
 Il \emph{Context-Based Adaptive Binary Arithmetic Coding} (CABAC) è il blocco 
 finale all'interno del ciclo di codifica che esegue una compressione 
 \emph{lossless} sui dati binari che vengono posti subito dopo in uscita 
-all'encoder. La compressione si basa sulle proprietà statistiche dei dati 
-relative al loro contesto di codifica (da qui il \emph{context-based}), cercando
-di rendere la dimensione in bit di una parola di codice proporzionale in modo 
-logaritmico alla probabilità del dato che essa codifica (dal primo 
+all'\textit{encoder}. La compressione si basa sulle proprietà statistiche dei 
+dati relative al loro contesto di codifica (da qui il \emph{context-based}), 
+cercando di rendere la dimensione in bit di una parola di codice proporzionale 
+in modo logaritmico alla probabilità del dato che essa codifica (dal primo 
 teorema di Shannon: la codifica ottima pesa $-log_2p$). \\
 CABAC opera solamente sui \emph{syntax element} all'interno del \emph{binary 
 stream}, ovvero quei dati che contengono principalmente i parametri che 
 riguardano gli algoritmi di codifica; il suo compito è dunque quello di ridurre
 l'\emph{overhead} della \emph{side information} dovuta alla flessibilità 
-dell'encoder video ibrido. \\
+dell'\textit{encoder} video ibrido. \\
 
 \begin{figure}[H]
   \centering
