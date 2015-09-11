@@ -11,11 +11,11 @@
 %-------------------------------------------------------------------------------
 %	SECTION 6.1
 %-------------------------------------------------------------------------------
-\section{Il Setup della Piattaforma}
+\section{Il \textit{Setup} della Piattaforma}
 Nella prima fase del progetto ci siamo occupati della sistemazione della 
 piattaforma e dell'ambiente di lavoro scegliendo ed installando il sistema 
 operativo e tutti gli strumenti necessari, e abbiamo selezionato il software di 
-riferimento per l'encoder di HEVC.
+riferimento per l'\textit{encoder} di HEVC.
 %-------------------------------------------------------------------------------
 %	SECTION 6.1.1
 %-------------------------------------------------------------------------------
@@ -135,7 +135,7 @@ Il primo è stato subito scartato non appena è stato chiaro che il sorgente non
 è compatibile con la piattaforma in nostro possesso (il codice è stato scritto 
 unicamente per architettura x86).\\
 x265 ha mostrato già in partenza ottime performance riuscendo a 
-codificare una sequenza in formato CIF a 1.52 fsps, nonostante la versione per 
+codificare una sequenza in formato CIF a 1.52 fps, nonostante la versione per 
 ARM fosse completamente priva delle funzioni in Assembly presenti per le altre 
 architetture.\\
 HM, infine, nuovamente privo di codice Assembly e scritto in C++ generico, si è 
@@ -165,8 +165,8 @@ conviene concentrasi sulle parti che influiscono maggiormente sulle performance
 del software, i \emph{common case}.
 
 In quest'ottica abbiamo adoperato il \emph{profiler} Valgrind per trovare le 
-funzioni più pesanti dell'encoder HM. Nello specifico, abbiamo utilizzato lo 
-strumento Callgrind attraverso il comando seguente. \\
+funzioni più pesanti dell'\textit{encoder} HM. Nello specifico, abbiamo 
+utilizzato lo strumento Callgrind attraverso il comando seguente. \\
 
 \begin{lstlisting}[breaklines]
 valgrind --tool=callgrind TAppEncoderStatic 
@@ -197,7 +197,8 @@ ciclo di codifica della sequenza di test \verb|highway_cif.yuv|. \\
   \centering
   \begin{tabular}{|r|c|r|}
     \hline
-    Funzione & \% & Instruction Fetch \\ \hline \hline \hline
+    Funzione                 & \%      & Instruction Fetch       \\ 
+    \hline \hline \hline
     \verb|filter|            & $30.38$ & $1\,359\,764\,918\,025$ \\ \hline
     \verb|xCalcHADs8x8|      & $25.39$ & $1\,136\,031\,192\,219$ \\ \hline
     \verb|xRateDistOptQuant| & $ 5.09$ & $   227\,619\,416\,384$ \\ \hline
@@ -277,14 +278,15 @@ encoding, HM compreso, richiedono un ingresso \verb|yuv|.\\
 Per far chiarezza, il termine \verb|yuv| non fa riferimento ad un vero e 
 proprio formato di sequenze video, ma allo spazio dei colori in cui sono 
 codificati i frame che compongono la sequenza. In origine il termine indicava 
-una codifica analogica del colore per trasmissioni televisive, mentre YCrCb, 
-come discusso nella sezione -ref-, descrive la codifica digitale del colore. 
-Oggi, yuv è utilizzato per quelle sequenze video i cui colori sono 
+una codifica analogica del colore per trasmissioni televisive, mentre YCrCb
+%,come discusso nella sezione -ref-, 
+descrive la codifica digitale del colore. 
+Oggi, \verb|yuv| è utilizzato per quelle sequenze video i cui colori sono 
 rappresentati in YCrCb.
-In sostanza un file con estensione yuv contiene semplicemente il contenuto 
-binario dei frame, uno dopo l'altro, senza altre informazioni. \`E compito 
-dell'utilizzatore specificare il formato di subsampling e la risoluzione 
-corretti. \\
+In sostanza un file con estensione \verb|yuv| contiene semplicemente il 
+contenuto binario dei frame, uno dopo l'altro, senza altre informazioni. \`E 
+compito dell'utilizzatore specificare il formato di subsampling e la 
+risoluzione corretti. \\
 Il formato \verb|y4m|, acronimo per \verb|YUV4MPEG2|, differisce leggermente 
 dai file \verb|yuv| in quanto inizia con un \textit{header} dalla dimensione 
 variabile che contiene parametri come larghezza ed altezza dei \textit{frame}, 
@@ -320,9 +322,8 @@ questo lavoro è stato svolto con l'intenzione di velocizzare un programma su
 di una piattaforma specifica. Effetti collaterali tipici e tollerati possono 
 essere, di conseguenza, la comparsa di codice dipendente dall'architettura, 
 vale a dire non funzionante su sistemi incompatibili come potrebbe essere un 
-comune 
-personal computer x86, e l'utilizzo di più risorse - principalmente memoria, 
-sia volatile sia di massa. \\
+comune personal computer x86, e l'utilizzo di più risorse - principalmente 
+memoria, sia volatile sia di massa. \\
 Oltre all'obiettivo, è anche importante individuare la tipologia delle 
 ottimizzazioni 
 che abbiamo applicato. Le ottimizzazioni del software possono 
@@ -648,9 +649,9 @@ Nel nostro codice la terza linea compendia quello che in C sarebbe
 aggiorna anche il registro \verb|CPSR|, così, se il risultato è positivo (i.e. 
 \verb|r3| $>$ 0), si procede con le istruzioni 5 e 6 che sostituiscono 
 \verb|maxVal| a \verb|r3| nel caso in cui \verb|r3| $>$ \verb|maxVal|.
-\par Nonostante gli esiti positivi dell'ottimizzazione in fase di testing, dopo 
-l'implementazione effettiva all'interno di HM la performance dell'encoder è 
-calata, come mostra la tabella.
+\par Nonostante gli esiti positivi dell'ottimizzazione in fase di 
+\textit{testing}, dopo l'implementazione effettiva all'interno di HM la 
+performance dell'\textit{encoder} è calata, come mostra la tabella.
 
 \begin{table}[H]
 	\centering
@@ -678,9 +679,9 @@ con un codice di test compilato in \verb|-Ofast| /*INSERISCI IL CODICE IN
 APPENDICE*/ e di $5$ prove con il software HM eseguito sui primi $72$ 
 frame della sequenza \verb|highway_cif.yuv|.\newline
 Il motivo di tale discrepanza può essere visto nel fatto che, vicino alla 
-funzione Assembly inline, GCC è costretto ad inserire un prologo ed un epilogo 
-in cui salva e carica lo stato del programma, mentre nella serie di test ciò 
-non è necessario.\newline
+funzione Assembly \textit{inline}, GCC è costretto ad inserire un prologo ed un 
+epilogo in cui salva e carica lo stato del programma, mentre nella serie di 
+test ciò non è necessario.\newline
 Una possibile soluzione consiste nel riscrivere almeno parzialmente la funzione 
 \verb|filter| in Assembly per predisporre correttamente i dati, eventualmente
 ottimizzando anche altre parti del codice, ma è un'operazione che al momento 
@@ -1115,7 +1116,7 @@ per l'ottimizzazione, anche se in seguito non sono stati sfruttati tutti.
 	che, essendo \verb|pure|, la funzione non ha effetti collaterali sul 
 	programma e 
 	può quindi essere richiamata meno volte di quanto accade esplicitamente nel 
-	codice, o, addiriturra, in posizioni diverse, a patto di non modificare i 
+	codice, o, addirittura, in posizioni diverse, a patto di non modificare i 
 	parametri in ingresso. \verb|pure| è stato applicato a tutte le 
 	funzioni \verb|xCalcHADs|.
 	
@@ -1228,9 +1229,9 @@ prodotte. \\
 Come evidente, questa tecnica annulla ogni tipo di \emph{overhead} di 
 sincronizzazione e gestione dei thread e permette di coprire il $100\%$ del 
 codice per la parallelizzazione. Il difetto in questo caso non sta nel codice 
-ma nei dati, perché per raggiungere lo speedup massimale è necessario che i 
-frame intra siano disposti secondo una certa logica. Tuttavia, per garantire 
-bunoi livelli di parallelismo, è sufficiente che il valore di 
+ma nei dati, perché per raggiungere lo \textit{speed-up} massimale è necessario 
+che i frame intra siano disposti secondo una certa logica. Tuttavia, per 
+garantire buoni livelli di parallelismo, è sufficiente che il valore di 
 \verb|intraperiod| (numero di frame tra due intra) sia sufficientemente più 
 basso del numero complessivo di frame della sequenza da codificare. \\
 Naturalmente anche in condizioni perfette non si può raggiungere uno speedup di 
@@ -1344,8 +1345,8 @@ di input per il secondo thread, \verb|argc| e \verb|argv|.
 La tabella mostra la media dei risultati ottenuti eseguendo $5$ volte 
 l'encoding dei primi $72$ frame del file di prova \verb|highway_cif.yuv| con il 
 software HM compilato in \verb|-Ofast| nella sua versione \emph{singlethread} e 
-\emph{multithread}. Il fattore di speedup è di circa $1.9$. Si noti comunque 
-che i valori mostrati sono una media in cui, per motivi di tempo, il numero di 
-prove non è molto alto, mentre la variabilità è elevata (abbiamo registrato un 
-massimo di $20$ secondi di differenza tra due cicli di encoding della stessa 
-sequenza con le medesime configurazioni).
+\emph{multithread}. Il fattore di \textit{speed-up} è di circa $1.9$. Si noti 
+comunque che i valori mostrati sono una media in cui, per motivi di tempo, il 
+numero di prove non è molto alto, mentre la variabilità è elevata (abbiamo 
+registrato un massimo di $20$ secondi di differenza tra due cicli di encoding 
+della stessa sequenza con le medesime configurazioni).
