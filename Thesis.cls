@@ -187,7 +187,9 @@
 %	defined as \examname above so you cite it as \examname
 %----------------------------------------------------------------------------------------
 
-\thesistitle{Test ed ottimizzazione di un algoritmo per video compressione H265 su piattaforma ARM embedded} % Your thesis title - this is used in the title and abstract
+\thesistitle{Test ed Ottimizzazione di un Algoritmo per Video Compressione 
+H.265 su Piattaforma ARM Embedded} % Your thesis title - this is used in the 
+%title and abstract
 %-------------------------------------------------  
 \supervisor{(Titoli) Marco \textsc{Raggio} } % You supervisor's name - this is used in the title page
 %-------------------------------------------------
